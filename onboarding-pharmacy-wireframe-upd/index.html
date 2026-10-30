@@ -347,7 +347,7 @@ const shiftCard=(n,d,date,rate,addr)=>`<button class="shift" onclick="go('shift'
   <div class="ln">${I.pin}<span class="v">${addr}</span></div></button>`;
 V.home=()=>`${status()}${header({back:false,title:'Shifts'})}<div class="scroll stack">
   <div class="card"><div class="card-h"><b>Finish your profile</b><button class="link" onclick="go('all')">View all</button></div>
-    <div class="prow"><div class="bar"><div style="width:58%"></div></div><span>7 items left</span></div>
+    <div class="prow"><div class="bar"><div style="width:58%"></div></div><span>8 items left</span></div>
     <div class="next"><span class="row ic" style="border:0;padding:0;width:36px;height:36px;border-radius:8px;background:var(--bg)"></span><span style="flex:1"><div class="t" style="font-weight:500;font-size:15px">Credential certificates</div><div class="s" style="font-size:13px;color:var(--sub)">Next up · needed to apply</div></span><button class="btn primary small" onclick="soon()">Upload</button></div>
   </div>
   <div class="overline" style="margin:4px 0 0">SHIFTS NEAR YOU</div>
@@ -356,9 +356,9 @@ V.home=()=>`${status()}${header({back:false,title:'Shifts'})}<div class="scroll 
   </div><div class="tabs">${['Shifts','Jobs','Calendar','Chat','Profile'].map((t,i)=>`<div class="${i?'':'on'}"><i></i>${t}</div>`).join('')}</div>`;
 
 V.all=()=>`${status()}${header({title:'Finish your profile'})}<div class="scroll">
-  ${titleBlock('7 items left','Complete these to apply for shifts.')}
+  ${titleBlock('8 items left','Complete these to apply for shifts.')}
   <div class="overline">TO DO</div><div class="stack tight">
-  ${[['Credential certificates','Select your credentials, then upload certificates','Upload'],['Bank details','Takes about 1 minute','Add'],['Super fund','Fund details or choice form','Add'],['Business details','ABN, business name, entity type','Add'],['Immunisation','Are you able to vaccinate?','Add'],['Professional certificates','Immunisation, First Aid, CPR, COVID','Upload'],['Other insurance','Any other policies you hold','Upload']].map(([t,s,l])=>row({t,s,tagL:l,tagK:'required',on:'soon()'})).join('')}</div>
+  ${[['Mobile number','Verify with a code by SMS','Verify'],['Credential certificates','Select your credentials, then upload certificates','Upload'],['Bank details','Takes about 1 minute','Add'],['Super fund','Fund details or choice form','Add'],['Business details','ABN, business name, entity type','Add'],['Immunisation','Are you able to vaccinate?','Add'],['Professional certificates','Immunisation, First Aid, CPR, COVID','Upload'],['Other insurance','Any other policies you hold','Upload']].map(([t,s,l])=>row({t,s,tagL:l,tagK:'required',on:'soon()'})).join('')}</div>
   <div class="overline">GET BETTER MATCHES · OPTIONAL</div><div class="stack tight">
   ${row({t:'Experience and software',s:'Prefilled from your resume',tagL:'Check',tagK:'ai',on:'soon()'})}
   ${row({t:'Work preferences',s:'Days, shift type, preferred states',tagL:'Add',tagK:'neutral',on:'soon()'})}
@@ -371,7 +371,7 @@ V.all=()=>`${status()}${header({title:'Finish your profile'})}<div class="scroll
   </div>`;
 
 V.shift=()=>`${status()}${header({title:'Shift'})}<div class="scroll stack">
-  <div class="notice"><b>Finish your profile to apply</b><span>Pharmacies can only see complete profiles. You have 7 items left.</span></div>
+  <div class="notice"><b>Finish your profile to apply</b><span>Pharmacies can only see complete profiles. You have 8 items left.</span></div>
   <div class="img"></div>
   <div>${titleBlock('Locum Pharmacist','Priceline Pharmacy · Surry Hills NSW')}</div>
   ${row({t:'Sat 14 Nov · 8:00–17:00',s:'9 hours',chev:false})}
