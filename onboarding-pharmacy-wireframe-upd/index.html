@@ -379,10 +379,10 @@ V.shift=()=>`${status()}${header({title:'Shift'})}<div class="scroll stack">
 
 /* ---------- sheets ---------- */
 const SH={};
-SH.docsInfo=()=>`<div class="inner">${titleBlock('Have these documents ready','We\'ll read them and fill most of your profile and apply for the job. You can add them later too.')}
-  <div class="overline">REQUIRED</div><div>${DOCS.filter(d=>d.req).map(d=>item(d.t,d.hint,'Required','required')).join('')}</div>
-  <div class="overline">OPTIONAL — SAVES TIME</div>${item('Super choice form','','Optional','neutral')}
-  <div style="height:16px"></div>${btn('Continue','primary','docsInfoContinue()')}</div>`;
+SH.docsInfo=()=>`<div class="inner" style="padding-top:16px">${titleBlock('Have these documents ready','We\'ll read them and fill most of your profile and apply for the job. You can add them later too.')}
+  <div class="overline" style="margin-top:24px">REQUIRED</div><div>${DOCS.filter(d=>d.req).map(d=>item(d.t,d.hint,'Required','required')).join('')}</div>
+  <div class="overline" style="margin-top:24px">OPTIONAL — SAVES TIME</div>${item('Super choice form','','Optional','neutral')}
+  <div style="height:24px"></div>${btn('Continue','primary','docsInfoContinue()')}</div>`;
 SH.otp=()=>`<div class="inner">${titleBlock('Check your inbox',`We sent a 5-digit code to ${esc(S.email)}`)}
   <div class="otp">${[0,1,2,3,4].map(i=>`<div class="${i===S.otp.length?'cur':''}">${S.otp[i]||''}</div>`).join('')}</div>
   <p class="help" style="font-size:13px;color:var(--sub)">Didn't get the code? Check spam or <span id="resend">resend in 0:${String(timerV).padStart(2,'0')}</span></p>
