@@ -194,7 +194,7 @@ const DOCS=[
   {id:'cred',t:'Credential certificates',hint:'One or more files',req:true,done:'2 certificates added'},
   {id:'super',t:'Super choice form',hint:'Fills in your super details',req:false,done:'Fund details added'}
 ];
-const fresh=()=>({stack:['welcome'],social:false,role:'Pharmacist',work:'Shift work',email:'andrii@example.com',otp:'',docs:{},idType:'Driver licence',gender:'',sheet:null,photo:null});
+const fresh=()=>({stack:['welcome'],social:false,role:'',work:'',email:'andrii@example.com',otp:'',docs:{},idType:'Driver licence',gender:'',sheet:null,photo:null});
 let S=fresh();
 const SCREENS=[
   ['welcome','00 Welcome'],['role','01 Role'],['roleSheet','02 Required documents'],['account','03 Create account'],['otp','04 Email code'],
@@ -285,7 +285,7 @@ V.role=()=>`${status()}${header({step:1})}<div class="scroll">
   ${titleBlock('What do you do?','We\'ll tailor your profile and the shifts you see.',1)}
   <div class="overline">I AM A</div>${chips(['Pharmacist','Dispensary technician','Student / Intern','Retail staff'],S.role,'setRole')}
   <div class="overline">I'M LOOKING FOR</div>${chips(['Full-time / Part-time','Shift work'],S.work,'setWork')}
-  </div><div class="foot">${btn('Continue','primary','roleContinue()')}</div>`;
+  </div><div class="foot">${btn('Continue','primary','roleContinue()',!(S.role&&S.work))}</div>`;
 
 V.account=()=>`${status()}${header({step:2})}<div class="scroll stack">
   <div>${titleBlock('Create your account','You can browse shifts right after this.',2)}</div>
