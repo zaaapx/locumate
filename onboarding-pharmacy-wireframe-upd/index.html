@@ -83,6 +83,11 @@
   .field input{width:100%;height:52px;border:1px solid var(--line);border-radius:12px;padding:0 16px;font-size:16px;outline:none}
   .field input:focus{border-color:var(--ink)}
   .field .help{font-size:12px;color:var(--sub);margin-top:6px}
+  .field{position:relative}
+  .sugg{position:absolute;left:0;right:0;top:82px;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.08);z-index:5;overflow:hidden}
+  .sugg button{display:block;width:100%;text-align:left;padding:12px 16px;font-size:15px}
+  .sugg button small{display:block;font-size:12px;color:var(--sub)}
+  .sugg button:hover{background:var(--bg)}
 
   /* rows */
   .row{display:flex;align-items:center;gap:12px;padding:14px 16px;border:1px solid var(--line);border-radius:14px;background:#fff;text-align:left;width:100%}
@@ -194,7 +199,7 @@ const DOCS=[
   {id:'cred',t:'Credential certificates',hint:'One or more files',req:true,done:'2 certificates added'},
   {id:'super',t:'Super choice form',hint:'Fills in your super details',req:false,done:'Fund details added'}
 ];
-const fresh=()=>({stack:['welcome'],social:false,role:'',work:'',email:'andrii@example.com',otp:'',docs:{},idType:'Driver licence',gender:'',sheet:null,photo:null});
+const fresh=()=>({stack:['welcome'],social:false,role:'',work:'',email:'andrii@example.com',otp:'',docs:{},idType:'Driver licence',gender:'',f:{},focus:null,sheet:null,photo:null});
 let S=fresh();
 const SCREENS=[
   ['welcome','00 Welcome'],['role','01 Role'],['roleSheet','02 Required documents'],['account','03 Create account'],['otp','04 Email code'],
@@ -212,6 +217,12 @@ const tag=(label,kind='')=>label?`<span class="tag ${kind}">${label}</span>`:'';
 const row=({t,s,tagL,tagK,chev=true,on='',cls=''})=>`<button class="row ${on?'':'static'} ${cls}" ${on?`onclick="${on}"`:'tabindex="-1"'}><span class="ic"></span><span class="tx"><div class="t">${t}</div>${s?`<div class="s">${s}</div>`:''}</span>${tag(tagL,tagK)}${chev?`<span class="chev">${I.chev}</span>`:''}</button>`;
 const chips=(items,sel,fn)=>`<div class="chips">${items.map(x=>`<button class="chip ${x===sel?'on':''}" onclick="${fn}('${x}')">${x}</button>`).join('')}</div>`;
 const input=(label,val,help='',type='text',id='')=>`<div class="field"><label>${label}</label><input ${id?`id="${id}"`:''} type="${type}" value="${esc(val)}">${help?`<div class="help">${help}</div>`:''}</div>`;
+/* empty input with a tap-to-fill suggestion */
+const sinput=(label,id,sugg,help='',type='text',note='Suggested')=>{const v=S.f[id]||'';return `<div class="field"><label>${label}</label><input id="${id}" type="${type}" value="${esc(v)}" onfocus="focusF('${id}')" oninput="S.f['${id}']=this.value" autocomplete="off">${help?`<div class="help">${help}</div>`:''}${S.focus===id&&!v?`<div class="sugg"><button onmousedown="fillF('${id}')">${type==='password'?'••••••••••':esc(sugg)}<small>${note}</small></button></div>`:''}</div>`;};
+const SUG={};
+function focusF(id){if(S.focus===id)return;S.focus=id;render();const el=document.getElementById(id);if(el){el.focus();}}
+function fillF(id){S.f[id]=SUG[id];if(id==='pw1')S.f.pw2=SUG.pw2;S.focus=null;render();}
+document.addEventListener('mousedown',e=>{if(S.focus&&!e.target.closest('.field')){S.focus=null;render();}});
 const btn=(label,cls='primary',on='',dis=false)=>`<button class="btn ${cls}" ${dis?'disabled':''} onclick="${on}">${label}</button>`;
 let toastT;
 function toast(msg){clearTimeout(toastT);const p=$('#phone');p.querySelector('.toast')?.remove();p.insertAdjacentHTML('beforeend',`<div class="toast">${msg}</div>`);toastT=setTimeout(()=>p.querySelector('.toast')?.remove(),2200);}
@@ -247,7 +258,7 @@ function startSocial(){S.social=true;go('role');}
 function startEmail(){S.social=false;go('role');}
 function roleContinue(){openSheet('docsInfo');}
 function docsInfoContinue(){S.sheet=null;S.stack.push(S.social?'docs':'account');render();}
-function accountContinue(){S.email=($('#email')?.value||S.email);S.otp='';openSheet('otp');startTimer();}
+function accountContinue(){S.email=(S.f.email||S.email);S.focus=null;S.otp='';openSheet('otp');startTimer();}
 let timerV=42,timerT;
 function startTimer(){clearInterval(timerT);timerV=42;timerT=setInterval(()=>{timerV=Math.max(0,timerV-1);const el=$('#resend');if(el)el.textContent=timerV?`resend in 0:${String(timerV).padStart(2,'0')}`:'resend now';if(!timerV)clearInterval(timerT);},1000);}
 function key(k){
@@ -289,10 +300,10 @@ V.role=()=>`${status()}${header({step:1})}<div class="scroll">
 
 V.account=()=>`${status()}${header({step:2})}<div class="scroll stack">
   <div>${titleBlock('Create your account','You can browse shifts right after this.',2)}</div>
-  ${input('Email *',S.email,'','email','email')}
-  ${input('Password *','password1','At least 8 characters, including a number','password')}
-  ${input('Confirm password *','password1','','password')}
-  </div><div class="foot">${btn('Continue','primary','accountContinue()')}</div>`;
+  ${sinput('Email *','email',SUG.email='andrii@example.com','','email','From this device')}
+  ${sinput('Password *','pw1',SUG.pw1='password1','At least 8 characters, including a number','password','Use a strong password')}
+  ${sinput('Confirm password *','pw2',SUG.pw2='password1','','password','Use a strong password')}
+  </div><div class="foot">${btn('Continue','primary','accountContinue()',!(S.f.email&&S.f.pw1&&S.f.pw2))}</div>`;
 
 const docState=()=>{const req=DOCS.filter(d=>d.req);const up=req.filter(d=>S.docs[d.id]).length;const reading=Object.values(S.docs).includes('reading');return {req,up,reading,any:Object.keys(S.docs).length>0};};
 const docRow=d=>{const st=S.docs[d.id];
@@ -309,17 +320,17 @@ V.docsDone=V.docs;
 
 V.general=()=>`${status()}${header({step:4})}<div class="scroll stack">
   <div>${titleBlock('Your general info','',4)}</div>
-  ${input('First name *','Andrii')}${input('Last name *','Petrenko')}${input('Date of birth *','19/07/1990')}
+  ${sinput('First name *','fn',SUG.fn='Andrii','','text','From your driver licence')}${sinput('Last name *','ln',SUG.ln='Petrenko','','text','From your driver licence')}${sinput('Date of birth *','dob',SUG.dob='19/07/1990','','text','From your driver licence')}
   <div class="field"><label>Gender *</label>${chips(['Female','Male','Other'],S.gender,'setGender')}<div class="help">Used for super and AHPRA checks</div></div>
-  ${input('Home address *','10 George St, Sydney NSW 2000')}${input('Apartment / unit','Unit 5')}
-  </div><div class="foot">${btn('Confirm details','primary','go(\'ahpra\')')}</div>`;
+  ${sinput('Home address *','addr',SUG.addr='10 George St, Sydney NSW 2000','','text','From your driver licence')}${sinput('Apartment / unit','unit',SUG.unit='Unit 5','','text','From your driver licence')}
+  </div><div class="foot">${btn('Confirm details','primary','go(\'ahpra\')',!(S.f.fn&&S.f.ln&&S.f.dob&&S.gender&&S.f.addr))}</div>`;
 
 V.ahpra=()=>`${status()}${header({step:5})}<div class="scroll stack">
   <div>${titleBlock('AHPRA and tax details','',5)}</div>
-  ${input('AHPRA registration number','PHA0001234567','3 letters and 10 digits, e.g. PHA0001234567')}
-  ${input('AHPRA expiry date','12/10/2028')}
+  ${sinput('AHPRA registration number','ahpra',SUG.ahpra='PHA0001234567','3 letters and 10 digits, e.g. PHA0001234567','text','Found in your AHPRA record')}
+  ${sinput('AHPRA expiry date','exp',SUG.exp='12/10/2028','','text','Found in your AHPRA record')}
   <div class="note">We'll verify it with AHPRA. This usually takes 1 business day.</div>
-  ${input('Tax file number (TFN)','123 456 782','We need it to pay you. It\'s stored securely.')}
+  ${sinput('Tax file number (TFN)','tfn',SUG.tfn='123 456 782','We need it to pay you. It\'s stored securely.','text','Saved on this device')}
   </div><div class="foot">${btn('See shifts','primary','go(\'home\')')}</div>`;
 
 const shiftCard=(n,d,date,rate,addr)=>`<button class="shift" onclick="go('shift')"><div class="top"><span class="logo"></span><span style="flex:1"><div class="name">${n}</div><div class="dist">${d}</div></span></div><hr>
