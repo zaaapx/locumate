@@ -329,7 +329,7 @@ V.general=()=>`${status()}${header({step:4})}<div class="scroll stack">
   ${sinput('First name *','fn',SUG.fn='Andrii','','text','From your driver licence')}${sinput('Last name *','ln',SUG.ln='Petrenko','','text','From your driver licence')}${sinput('Date of birth *','dob',SUG.dob='19/07/1990','','text','From your driver licence')}
   <div class="field"><label>Gender *</label>${chips(['Female','Male','Other'],S.gender,'setGender')}<div class="help">Used for super and AHPRA checks</div></div>
   ${sinput('Home address *','addr',SUG.addr='10 George St, Sydney NSW 2000','','text','From your driver licence')}${sinput('Apartment / unit','unit',SUG.unit='Unit 5','','text','From your driver licence')}
-  </div><div class="foot">${btn('Confirm details','primary','go(\'ahpra\')',!(S.f.fn&&S.f.ln&&S.f.dob&&S.gender&&S.f.addr))}</div>`;
+  </div><div class="foot">${btn('Continue','primary','go(\'ahpra\')',!(S.f.fn&&S.f.ln&&S.f.dob&&S.gender&&S.f.addr))}</div>`;
 
 V.ahpra=()=>`${status()}${header({step:5})}<div class="scroll stack">
   <div>${titleBlock('AHPRA and tax details','',5)}</div>
