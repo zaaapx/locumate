@@ -281,7 +281,7 @@ function photoNext(){ const sh=S.sheet; const twoSided=sh.doc==='id'&&S.idType==
   S.sheet=null; readDoc(sh.doc); }
 function retake(){ toast('Camera opens again'); }
 function readDoc(id){ S.docs[id]='reading'; render(); setTimeout(()=>{S.docs[id]='done'; if(cur()==='docs')render();}, 2200); }
-function prefill(){ if(S.docs.id==='done'){ const v={fn:'Andrii',ln:'Petrenko',dob:'19/07/1990',addr:'10 George St, Sydney NSW 2000',unit:'Unit 5'}; for(const k in v) if(!S.f[k]) S.f[k]=v[k]; S.prefilled=true; } }
+function prefill(){ if(S.docs.id==='done'){ const pass=S.idType==='Passport'; const v=pass?{fn:'Andrii',ln:'Petrenko',dob:'19/07/1990'}:{fn:'Andrii',ln:'Petrenko',dob:'19/07/1990',addr:'10 George St, Sydney NSW 2000',unit:'Unit 5'}; for(const k in v) if(!S.f[k]) S.f[k]=v[k]; if(pass&&!S.gender) S.gender='Male'; S.prefilled=pass?'passport':'licence'; } }
 function docsContinue(){ prefill(); go('general'); }
 function cur(){return S.stack[S.stack.length-1];}
 
@@ -327,7 +327,7 @@ V.docs=()=>{const {up,reading,any}=docState();return `${status()}${header({step:
 V.docsDone=V.docs;
 
 V.general=()=>`${status()}${header({step:4})}<div class="scroll stack">
-  <div>${titleBlock('Your general info',S.prefilled?'We filled this in from your driver licence. Check it\'s correct.':'',4)}</div>
+  <div>${titleBlock('Your general info',S.prefilled==='passport'?'We filled this in from your passport. Add your home address.':S.prefilled?'We filled this in from your driver licence. Check it\'s correct.':'',4)}</div>
   ${sinput('First name *','fn',SUG.fn='Andrii','','text','From your driver licence')}${sinput('Last name *','ln',SUG.ln='Petrenko','','text','From your driver licence')}${sinput('Date of birth *','dob',SUG.dob='19/07/1990','','text','From your driver licence')}
   <div class="field"><label>Gender *</label>${chips(['Female','Male','Other'],S.gender,'setGender')}<div class="help">Used for super and AHPRA checks</div></div>
   ${sinput('Home address *','addr',SUG.addr='10 George St, Sydney NSW 2000','','text','From your driver licence')}${sinput('Apartment / unit','unit',SUG.unit='Unit 5','','text','From your driver licence')}
