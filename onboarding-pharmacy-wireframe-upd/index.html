@@ -97,6 +97,10 @@
   .row .s{font-size:13px;color:var(--sub);margin-top:2px}
   .row .chev{flex:none}
   .row.static{cursor:default}
+  .li{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #EEEEEE}
+  .li .t{font-weight:500;font-size:15px}
+  .li .s{font-size:13px;color:var(--sub);margin-top:2px}
+  .li .tx{flex:1;min-width:0}
   .tag{padding:4px 10px;border-radius:99px;font-weight:500;font-size:12px;white-space:nowrap;background:var(--bg);color:var(--ink)}
   .tag.neutral{color:var(--sub)}
   .tag.required{background:var(--req-bg);color:var(--req-fg)}
@@ -216,6 +220,7 @@ const header=({back=true,title='',step=0,skip=false}={})=>`<div class="hdr">${ba
 const titleBlock=(t,d,step)=>`${step?`<div class="eyebrow">Step ${step}/5</div>`:''}<h2>${t}</h2>${d?`<p class="desc">${d}</p>`:''}`;
 const tag=(label,kind='')=>label?`<span class="tag ${kind}">${label}</span>`:'';
 const row=({t,s,tagL,tagK,chev=true,on='',cls=''})=>`<button class="row ${on?'':'static'} ${cls}" ${on?`onclick="${on}"`:'tabindex="-1"'}><span class="ic"></span><span class="tx"><div class="t">${t}</div>${s?`<div class="s">${s}</div>`:''}</span>${tag(tagL,tagK)}${chev?`<span class="chev">${I.chev}</span>`:''}</button>`;
+const item=(t,s,tagL,tagK)=>`<div class="li"><span class="tx"><div class="t">${t}</div>${s?`<div class="s">${s}</div>`:''}</span>${tag(tagL,tagK)}</div>`;
 const chips=(items,sel,fn)=>`<div class="chips">${items.map(x=>`<button class="chip ${x===sel?'on':''}" onclick="${fn}('${x}')">${x}</button>`).join('')}</div>`;
 const input=(label,val,help='',type='text',id='')=>`<div class="field"><label>${label}</label><input ${id?`id="${id}"`:''} type="${type}" value="${esc(val)}">${help?`<div class="help">${help}</div>`:''}</div>`;
 /* empty input with a tap-to-fill suggestion */
@@ -375,8 +380,8 @@ V.shift=()=>`${status()}${header({title:'Shift'})}<div class="scroll stack">
 /* ---------- sheets ---------- */
 const SH={};
 SH.docsInfo=()=>`<div class="inner">${titleBlock('Have these documents ready','We\'ll read them and fill most of your profile and apply for the job. You can add them later too.')}
-  <div class="overline">REQUIRED</div><div class="stack tight">${DOCS.filter(d=>d.req).map(d=>row({t:d.t,s:d.hint,tagL:'Required',tagK:'required',chev:false})).join('')}</div>
-  <div class="overline">OPTIONAL — SAVES TIME</div>${row({t:'Super choice form',tagL:'Optional',tagK:'neutral',chev:false})}
+  <div class="overline">REQUIRED</div><div>${DOCS.filter(d=>d.req).map(d=>item(d.t,d.hint,'Required','required')).join('')}</div>
+  <div class="overline">OPTIONAL — SAVES TIME</div>${item('Super choice form','','Optional','neutral')}
   <div style="height:16px"></div>${btn('Continue','primary','docsInfoContinue()')}</div>`;
 SH.otp=()=>`<div class="inner">${titleBlock('Check your inbox',`We sent a 5-digit code to ${esc(S.email)}`)}
   <div class="otp">${[0,1,2,3,4].map(i=>`<div class="${i===S.otp.length?'cur':''}">${S.otp[i]||''}</div>`).join('')}</div>
