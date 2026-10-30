@@ -251,6 +251,7 @@ function jump(id){
   if(id==='photoFront'){S.stack=['welcome','role','account','docs'];S.docs={};return openSheet('photo',{doc:'id',side:'front'});}
   if(id==='photoBack'){S.stack=['welcome','role','account','docs'];S.docs={};return openSheet('photo',{doc:'id',side:'back'});}
   if(id==='docsDone'){S.stack=['welcome','role','account','docs'];S.docs={id:'done',cv:'done'};}
+  if(i>=seq.indexOf('general')) prefill();
   render();
 }
 function resetAll(){S=fresh();render();}
@@ -280,7 +281,8 @@ function photoNext(){ const sh=S.sheet; const twoSided=sh.doc==='id'&&S.idType==
   S.sheet=null; readDoc(sh.doc); }
 function retake(){ toast('Camera opens again'); }
 function readDoc(id){ S.docs[id]='reading'; render(); setTimeout(()=>{S.docs[id]='done'; if(cur()==='docs')render();}, 2200); }
-function docsContinue(){ go('general'); }
+function prefill(){ if(S.docs.id==='done'){ const v={fn:'Andrii',ln:'Petrenko',dob:'19/07/1990',addr:'10 George St, Sydney NSW 2000',unit:'Unit 5'}; for(const k in v) if(!S.f[k]) S.f[k]=v[k]; S.prefilled=true; } }
+function docsContinue(){ prefill(); go('general'); }
 function cur(){return S.stack[S.stack.length-1];}
 
 /* ---------- screens ---------- */
@@ -325,7 +327,7 @@ V.docs=()=>{const {up,reading,any}=docState();return `${status()}${header({step:
 V.docsDone=V.docs;
 
 V.general=()=>`${status()}${header({step:4})}<div class="scroll stack">
-  <div>${titleBlock('Your general info','',4)}</div>
+  <div>${titleBlock('Your general info',S.prefilled?'We filled this in from your driver licence. Check it\'s correct.':'',4)}</div>
   ${sinput('First name *','fn',SUG.fn='Andrii','','text','From your driver licence')}${sinput('Last name *','ln',SUG.ln='Petrenko','','text','From your driver licence')}${sinput('Date of birth *','dob',SUG.dob='19/07/1990','','text','From your driver licence')}
   <div class="field"><label>Gender *</label>${chips(['Female','Male','Other'],S.gender,'setGender')}<div class="help">Used for super and AHPRA checks</div></div>
   ${sinput('Home address *','addr',SUG.addr='10 George St, Sydney NSW 2000','','text','From your driver licence')}${sinput('Apartment / unit','unit',SUG.unit='Unit 5','','text','From your driver licence')}
