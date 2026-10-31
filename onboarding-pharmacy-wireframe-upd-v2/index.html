@@ -326,7 +326,7 @@ V.account=()=>`${status()}${header({step:2})}<div class="scroll stack">
 
 const docState=()=>{const req=DOCS.filter(d=>d.req);const up=req.filter(d=>S.docs[d.id]).length;const reading=Object.values(S.docs).includes('reading');return {req,up,reading,any:Object.keys(S.docs).length>0};};
 const docRow=d=>{const st=S.docs[d.id];
-  if(st==='done') return row({t:d.t,s:d.done,tagL:'Done',tagK:'done',on:`openDoc('${d.id}')`});
+  if(st==='done') return row({t:d.t,s:d.done,tagL:'In review',tagK:'neutral',on:`openDoc('${d.id}')`});
   if(st==='reading') return row({t:d.t,s:d.id==='cv'?'CV_Andrii.pdf':'Uploaded',tagL:'<span class="spin"></span>Reading…',tagK:'neutral',on:`openDoc('${d.id}')`});
   return row({t:d.t,s:d.req?'Tap to add':d.hint,tagL:d.req?'Required':'Optional',tagK:d.req?'required':'neutral',on:`openDoc('${d.id}')`});};
 V.docs=()=>{const {up,reading,any}=docState();return `${status()}${header({step:3})}<div class="scroll">
