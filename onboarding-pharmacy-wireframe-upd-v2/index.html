@@ -201,6 +201,11 @@
   .notif p{font-size:14px;margin-top:2px;line-height:1.3}
   .qt{display:block;width:calc(100% + 32px);background:#D1D3D9;text-align:center;padding:6px 0;margin:0 -16px}
   .qt small{display:block;font-size:11px;color:#5A5A60}.qt b{font-size:16px}
+  .phone-in{display:flex;align-items:center;height:52px;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .phone-in:focus-within{border-color:var(--ink)}
+  .phone-in span{padding:0 12px 0 16px;border-right:1px solid var(--line);font-size:16px;line-height:24px}
+  .phone-in input{border:0;height:50px;flex:1;min-width:0;padding:0 14px;font-size:16px;outline:none}
+  .field input::placeholder,.phone-in input::placeholder{color:#9E9E9E}
   .toast{position:absolute;left:16px;right:16px;top:52px;background:var(--ink);color:#fff;border-radius:12px;padding:12px 16px;font-size:14px;z-index:60;animation:down .2s}
   @keyframes down{from{transform:translateY(-16px);opacity:0}}
 </style>
@@ -260,9 +265,9 @@ const ITEMS=[
   {id:'prof',t:'Professional certificates',s:'Immunisation, First Aid, CPR, COVID',a:'Upload'},
   {id:'other',t:'Other insurance',s:'Any other policies you hold',a:'Upload'}];
 const FORMS={
-  bank:{t:'Bank details',d:'We pay you here after each shift.',f:[['bank_name','Account name *','Andrii Petrenko',''],['bank_bsb','BSB *','062 000',"6 digits. We'll find your bank from it."],['bank_acc','Account number *','1234 5678','']]},
-  super:{t:'Super fund',d:'We pay your super with every shift.',f:[['sup_fund','Fund name *','AustralianSuper',''],['sup_mem','Member number *','123456789','']],extra:"Have a super choice form instead? You can upload it from the Documents section."},
-  tax:{t:'Tax and business details',d:'You work as a contractor, so we need these to pay you.',f:[['tax_tfn','Tax file number (TFN) *','123 456 782',"It's stored securely."],['tax_abn','ABN *','51 824 753 556',"11 digits. Don't have one? Apply for free at abr.gov.au"],['tax_bn','Business name','A. Petrenko Pharmacy Services','Filled in from your ABN'],['tax_et','Entity type','Sole trader','Filled in from your ABN']]},
+  bank:{t:'Bank details',d:'We pay you here after each shift.',f:[['bank_name','Account name *','Andrii Petrenko','','Name on your account'],['bank_bsb','BSB *','062 000','','000 000'],['bank_acc','Account number *','12345678','','12345678']]},
+  super:{t:'Super fund',d:'We pay your super with every shift.',f:[['sup_fund','Fund name *','AustralianSuper','','e.g. AustralianSuper'],['sup_name','Name registered with the fund *','Andrii Petrenko','','As on your super statement'],['sup_mem','Member number *','123456789','','e.g. 123456789']],extra:"Have a super choice form instead? You can upload it from the Documents section."},
+  tax:{t:'Tax and business details',d:'You work as a contractor, so we need these to pay you.',f:[['tax_tfn','Tax file number (TFN) *','123 456 782','','000 000 000'],['tax_abn','ABN *','51 824 753 556',"Don't have one? Apply for free at abr.gov.au",'00 000 000 000'],['tax_bn','Business name','A. Petrenko Pharmacy Services','','Filled in from your ABN'],['tax_et','Entity type','Sole trader','','Filled in from your ABN']]},
   imm:{t:'Immunisation',d:'Some pharmacies need a pharmacist who can vaccinate.',chips:['Yes','No'],ck:'imm_ans',q:'Are you able to vaccinate? *'},
   prof:{t:'Professional certificates',d:'Immunisation, First Aid, CPR or COVID training.',file:true},
   other:{t:'Other insurance',d:'Add any other policies you hold.',file:true}
@@ -280,7 +285,7 @@ const item=(t,s,tagL,tagK)=>`<div class="li"><span class="tx"><div class="t">${t
 const chips=(items,sel,fn)=>`<div class="chips">${items.map(x=>`<button class="chip ${x===sel?'on':''}" onclick="${fn}('${x}')">${x}</button>`).join('')}</div>`;
 const input=(label,val,help='',type='text',id='')=>`<div class="field"><label>${label}</label><input ${id?`id="${id}"`:''} type="${type}" value="${esc(val)}">${help?`<div class="help">${help}</div>`:''}</div>`;
 /* empty input with a tap-to-fill suggestion */
-const sinput=(label,id,sugg,help='',type='text',note='Suggested')=>{const v=S.f[id]||'';return `<div class="field"><label>${label}</label><input id="${id}" type="${type}" value="${esc(v)}" onfocus="focusF('${id}')" oninput="S.f['${id}']=this.value" autocomplete="off">${help?`<div class="help">${help}</div>`:''}${S.focus===id&&!v?`<div class="sugg"><button onmousedown="fillF('${id}')">${type==='password'?'••••••••••':esc(sugg)}<small>${note}</small></button></div>`:''}</div>`;};
+const sinput=(label,id,sugg,help='',type='text',note='Suggested',ph='')=>{const v=S.f[id]||'';return `<div class="field"><label>${label}</label><input id="${id}" type="${type}" value="${esc(v)}" placeholder="${esc(ph)}" onfocus="focusF('${id}')" oninput="S.f['${id}']=this.value" autocomplete="off">${help?`<div class="help">${help}</div>`:''}${S.focus===id&&!v?`<div class="sugg"><button onmousedown="fillF('${id}')">${type==='password'?'••••••••••':esc(sugg)}<small>${note}</small></button></div>`:''}</div>`;};
 const SUG={};
 function focusF(id){if(S.focus===id)return;S.focus=id;render();const el=document.getElementById(id);if(el){el.focus();}}
 function fillF(id){S.f[id]=SUG[id];if(id==='pw1')S.f.pw2=SUG.pw2;S.focus=null;render();}
@@ -330,7 +335,7 @@ function jump(k){
   S.stack={push:['push'],home:['home'],all:['home','all'],shift:['home','shiftV'],apply:['home','shiftV'],mobile:['home','shiftV','mobile'],sms:['home','shiftV','mobile'],bank:['home','shiftV','form'],alert:['home','shiftV','form'],tax:['home','shiftV','form'],ready:['home','shiftV'],applied:['home','shiftV','applied']}[id];
   if(['apply','mobile','sms','bank','alert','tax'].includes(id))S.applyFlow=true;
   if(id==='apply')S.sheet={name:'apply'};
-  if(id==='mobile'||id==='sms'){S.formId='mobile';if(id==='sms'){S.f.mob='0412 345 678';S.otp='';S.sheet={name:'sms'};startTimer();}}
+  if(id==='mobile'||id==='sms'){S.formId='mobile';if(id==='sms'){S.f.mob='412 345 678';S.otp='';S.sheet={name:'sms'};startTimer();}}
   if(id==='bank'||id==='alert'){S.formId='bank';S.items.mobile=true;if(id==='alert'){S.f.bank_name='Andrii Petrenko';S.f.bank_bsb='062 000';S.alert='unsaved';}}
   if(id==='tax'){S.formId='tax';S.items.mobile=true;S.items.bank=true;}
   if(id==='ready'||id==='applied')ITEMS.forEach(i=>S.items[i.id]=true);
@@ -499,16 +504,16 @@ V.checking=()=>`${status()}<div class="hdr"></div><div class="scroll stack">
 V.push=()=>`<div class="lock"><div class="status" style="align-self:stretch;color:#fff"><span>9:41</span><span></span></div><div class="d">Wednesday 5 November</div><div class="c">9:41</div>
   <button class="notif" onclick="openPush()"><i></i><span style="flex:1"><div class="h">You're verified<small>now</small></div><p>You can now see pharmacy names and addresses. Finish your profile to apply.</p></span></button></div>`;
 
-V.mobile=()=>{SUG.mob='0412 345 678';return `${status()}${header({close:true})}<div class="scroll stack">
+V.mobile=()=>{SUG.mob='412 345 678';return `${status()}${header({close:true})}<div class="scroll stack">
   <div>${titleBlock('Mobile number',"Pharmacies use it to reach you about a shift. We'll text you a code to check it.")}</div>
-  ${sinput('Mobile number *','mob','0412 345 678','Australian mobile, starts with 04','tel','From this device')}
-  </div><div class="foot">${btn('Send code','primary','sendSms()',!S.f.mob)}</div>`;};
+  <div class="field"><label>Mobile number *</label><div class="phone-in"><span>+61</span><input id="mob" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="412 345 678" value="${esc(S.f.mob||'')}" onfocus="focusF('mob')" oninput="S.f.mob=this.value;document.getElementById('sendBtn').disabled=!this.value"></div>${S.focus==='mob'&&!S.f.mob?`<div class="sugg"><button onmousedown="fillF('mob')">+61 412 345 678<small>From this device</small></button></div>`:''}</div>
+  </div><div class="foot">${btn('Send code','primary','sendSms()',!S.f.mob).replace('<button','<button id="sendBtn"')}</div>`;};
 
 const FKEYS=id=>{const F=FORMS[id];if(F.f)return F.f.map(x=>x[0]);if(F.chips)return [F.ck];return [id+'_file'];};
 const dirty=id=>FKEYS(id).some(k=>S.f[k]);
 const valid=id=>{const F=FORMS[id];if(F.f)return F.f.filter(x=>x[1].includes('*')).every(x=>S.f[x[0]]);return FKEYS(id).every(k=>S.f[k]);};
 V.form=()=>{const id=S.formId,F=FORMS[id];let body='';
-  if(F.f)body=F.f.map(([k,l,v,h])=>{SUG[k]=v;return sinput(l,k,v,h,'text','Suggested');}).join('');
+  if(F.f)body=F.f.map(([k,l,v,h,ph])=>{SUG[k]=v;return sinput(l,k,v,h,'text','Suggested',ph);}).join('');
   if(F.chips)body=`<div class="field"><label>${F.q}</label>${chips(F.chips,S.f[F.ck],'setImm')}</div>`;
   if(F.file)body=S.f[id+'_file']?row({t:'certificate.pdf',s:'Uploaded',tagL:'Remove',tagK:'neutral',on:`delete S.f['${id}_file'];render()`}):row({t:'Choose a file',s:'JPG, PNG or PDF, up to 10 MB',on:`pickFile('${id}_file')`});
   return `${status()}${header({close:true})}<div class="scroll stack"><div>${titleBlock(F.t,F.d)}</div>${body}${F.extra?`<div class="note">${F.extra}</div>`:''}</div>
@@ -580,7 +585,7 @@ SH.photo=()=>{const {doc,side}=S.sheet;const d=DOCS.find(x=>x.id===doc);const li
 SH.apply=()=>{const L=ITEMS.filter(i=>!S.items[i.id]);return `<div class="inner" style="padding-top:16px">${titleBlock(`${pl(L.length)} left before you apply`,"Tap any item to fill it in. We'll bring you back to this shift when you're done.")}
   <div class="stack tight" style="margin-top:16px">${L.map(i=>row({t:i.t,on:`openItem('${i.id}')`})).join('')}</div>
   <div style="height:20px"></div>${btn('Start','primary',`openItem('${L[0].id}')`)}</div>`;};
-SH.sms=()=>`<div class="inner" style="overflow:visible">${titleBlock('Check your messages',`We sent a 5-digit code to ${esc(S.f.mob||'0412 345 678')}`)}
+SH.sms=()=>`<div class="inner" style="overflow:visible">${titleBlock('Check your messages',`We sent a 5-digit code to +61 ${esc(S.f.mob||'412 345 678')}`)}
   <div class="otp">${[0,1,2,3,4].map(i=>`<div class="${i===S.otp.length?'cur':''}">${S.otp[i]||''}</div>`).join('')}</div>
   <p class="help" style="font-size:13px;color:var(--sub)">Didn't get the code? <span id="resend">Resend in 0:${String(timerV).padStart(2,'0')}</span></p>
   <div style="height:16px"></div>
