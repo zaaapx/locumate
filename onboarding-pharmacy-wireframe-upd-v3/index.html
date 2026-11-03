@@ -603,7 +603,7 @@ SH.apply=()=>{const L=ITEMS.filter(i=>!S.items[i.id]);const later=L.filter(i=>S.
   const first=todo[0]||later[0];const anyDone=done.length>0;
   const desc=!anyDone?"About 6 minutes. Have your bank details, TFN and ABN, and certificates ready. We'll bring you back to this shift.":(todo.length?"Everything you've added is saved. Pick up where you left off.":'Add these when you have the files. Everything else is saved.');
   const r=(i,tag,k,on)=>row({t:i.t,tagL:tag,tagK:k,chev:!!on,on});
-  return `<div class="inner" style="padding-top:16px">${titleBlock(`${pl(L.length)} left before you apply`,desc)}
+  return `<div class="inner" style="padding-top:16px"><div style="display:flex;gap:12px;align-items:flex-start"><div style="flex:1">${titleBlock(`${pl(L.length)} left before you apply`,desc)}</div><button class="close" aria-label="Close" style="margin-top:4px" onclick="closeSheet()">${I.x}</button></div>
   <div class="stack tight" style="margin-top:16px">${later.map(i=>r(i,'Later','required',`openItem('${i.id}')`)).join('')}${todo.map(i=>r(i,'To do','neutral',`openItem('${i.id}')`)).join('')}${done.map(i=>r(i,'Done','done','')).join('')}</div>
   <div style="height:20px"></div>${btn(anyDone?`Continue: ${first.t}`:'Continue','primary',`openItem('${first.id}')`)}</div>`;};
 SH.sms=()=>`<div class="inner" style="overflow:visible">${titleBlock('Check your messages',`We sent a 5-digit code to +61 ${esc(S.f.mob||'412 345 678')}`)}
