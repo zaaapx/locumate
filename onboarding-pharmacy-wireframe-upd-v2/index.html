@@ -448,7 +448,8 @@ V.home=()=>{const ver=S.ver,L=left(),nx=firstLeft(),v=ver==='verified';let card;
   if(ver==='missing'){const d=vdocs()[0];card=d?homeCard('Add your documents to get verified',`We need your ${vdocs().map(x=>x==='id'?'photo ID':'insurance').join(' and ')}`,DN[d],'Needed to see shift details','Upload',`openSheet('fix',{mode:'add',doc:'${d}'})`):'';}
   else if(ver==='attention')card=homeCard('Your photo ID needs attention',"We couldn't read it. Upload a clearer photo.",'Photo ID','Photo is blurry','Re-upload',`openSheet('fix',{mode:'fix',doc:'id'})`,'warn');
   else if(!L)card=(S.hideAllSet?'':`<div class="card"><div class="card-h"><b>You're all set</b><button class="close" aria-label="Close" onclick="S.hideAllSet=true;render()">${I.xs}</button></div><div class="prow"><span>${v?'You can apply for shifts':"We'll let you know when you're verified"}</span></div></div>`)
-    +(S.hideOpt?'':`<div class="card"><div class="card-h"><b>Get better matches</b><span style="display:flex;gap:16px;align-items:center"><button class="link" onclick="go('all')">View all</button><button class="close" aria-label="Close" onclick="S.hideOpt=true;render()">${I.xs}</button></span></div><div class="prow"><span>4 optional items · pharmacies see a fuller profile</span></div><div class="next"><span class="row ic" style="border:0;padding:0;width:36px;height:36px;border-radius:8px;background:var(--bg)"></span><span style="flex:1"><div class="t" style="font-weight:500;font-size:15px">Experience and software</div><div class="s" style="font-size:13px;color:var(--sub)">Prefilled from your resume</div></span><button class="btn primary small" onclick="soon()">Check</button></div></div>`);
+    +(S.hideOpt?'':`<div class="card"><div class="card-h"><b>Stand out to pharmacies</b><span style="display:flex;gap:16px;align-items:center"><button class="link" onclick="go('all')">View all</button><button class="close" aria-label="Close" onclick="S.hideOpt=true;render()">${I.xs}</button></span></div><div class="prow"><span>2 optional items · pharmacies see these on your profile</span></div><div class="next"><span class="row ic" style="border:0;padding:0;width:36px;height:36px;border-radius:8px;background:var(--bg)"></span><span style="flex:1"><div class="t" style="font-weight:500;font-size:15px">Experience and software</div><div class="s" style="font-size:13px;color:var(--sub)">Prefilled from your resume</div></span><button class="btn primary small" onclick="soon()">Check</button></div></div>`)
+    +`<button class="hint" style="background:var(--req-bg)" onclick="soon()"><span><b style="color:var(--ink)">Set your shift filters</b><span style="color:var(--sub)">Days, location, rate and distance. We'll show matching shifts first.</span></span></button>`;
   else card=homeCard('Finish your account setup',`${v?"You're verified · ":''}${pl(L)} left to apply`,nx.t,'Needed to apply',nx.a,`S.applyFlow=false;openItem('${nx.id}')`);
   return `${status()}${header({back:false,title:'Shifts'})}<div class="scroll stack">${card}
   <div class="overline" style="margin:4px 0 0">SHIFTS NEAR YOU</div>
@@ -469,11 +470,12 @@ V.all=()=>{const ver=S.ver,L=left(),miss=ver==='missing'?vdocs().length:0;
   ${titleBlock(`${pl(L+miss)} left`,desc)}
   ${ver!=='verified'?vgroup:''}
   ${todo.length?`<div class="overline">TO APPLY</div><div class="stack tight">${todo.map(i=>row({t:i.t,s:i.s,tagL:i.a,tagK:'required',on:`S.applyFlow=false;openItem('${i.id}')`})).join('')}</div>`:''}
-  <div class="overline">GET BETTER MATCHES · OPTIONAL</div><div class="stack tight">
+  <div class="overline">YOUR PROFILE · OPTIONAL</div><div class="stack tight">
   ${row({t:'Experience and software',s:'Prefilled from your resume',tagL:'Check',tagK:'ai',on:'soon()'})}
-  ${row({t:'Work preferences',s:'Days, shift type, preferred states',tagL:'Add',tagK:'neutral',on:'soon()'})}
-  ${row({t:'Rate and travel',s:'Hourly rate, distance, longer assignments',tagL:'Add',tagK:'neutral',on:'soon()'})}
   ${row({t:'Advanced credentials',s:'Only if you hold any. Select them, then upload certificates',tagL:'Add',tagK:'neutral',on:'soon()'})}</div>
+  <div class="overline">SHIFT FILTERS · ONLY YOU SEE THESE</div><div class="stack tight">
+  ${row({t:'Work preferences',s:'Days, shift type, states',tagL:'Add',tagK:'neutral',on:'soon()'})}
+  ${row({t:'Rate and travel',s:'Minimum rate and travel distance',tagL:'Add',tagK:'neutral',on:'soon()'})}</div>
   <div class="overline">DONE</div><div class="stack tight">
   ${row({t:'Resume',s:'CV_Andrii.pdf',tagL:'Done',tagK:'done',on:'soon()'})}${done.map(i=>row({t:i.t,s:'Saved',tagL:'Done',tagK:'done',on:`S.applyFlow=false;openItem('${i.id}')`})).join('')}${ver==='verified'?vrow('AHPRA registration','PHA0001234567')+vrow('Photo ID','Driver licence','id')+vrow('Indemnity insurance','Expires 30/06/2027','ins'):''}</div>
   <div style="height:24px"></div>
