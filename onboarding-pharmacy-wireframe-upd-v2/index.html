@@ -223,6 +223,7 @@
 <script>
 /* ---------- icons ---------- */
 const I={
+  xs:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="#757575" stroke-width="2" stroke-linecap="round"/></svg>',
   x:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="#212121" stroke-width="2" stroke-linecap="round"/></svg>',
   back:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="#212121" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
   chev:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="#9E9E9E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
@@ -254,7 +255,7 @@ const SC={
   signup:{t:'1 · Sign up → in review',l:SCREENS},
   later:{t:'2 · Documents added later',l:[['L:docs','05 Documents hub — tap Upload later'],['L:home','10c Home — documents missing'],['L:all','10d All items — documents missing'],['L:fix','Add photo ID — sheet']]},
   att:{t:'3 · Document needs attention',l:[['A:home','10e Home — needs attention'],['A:fix','10f Upload a new photo ID — sheet'],['A:all','10g All items — needs attention']]},
-  verified:{t:'4 · Verified → apply',l:[['V:push',"11b You're verified — notification"],['V:home','12 Home — verified'],['V:all','12a All items — verified'],['V:shift','13 Shift — verified'],['V:apply','14 Before you apply — sheet'],['V:mobile','15 Mobile number'],['V:sms','15a SMS code — sheet'],['V:bank','16 Bank details'],['V:alert','16a Close with changes — alert'],['V:tax','17 Tax and business details'],['V:ready','18 Shift — ready to apply'],['V:applied','19 Applied']]}
+  verified:{t:'4 · Verified → apply',l:[['V:push',"11b You're verified — notification"],['V:home','12 Home — verified'],['V:all','12a All items — verified'],['V:shift','13 Shift — verified'],['V:apply','14 Before you apply — sheet'],['V:mobile','15 Mobile number'],['V:sms','15a SMS code — sheet'],['V:bank','16 Bank details'],['V:alert','16a Close with changes — alert'],['V:tax','17 Tax and business details'],['V:ready','18 Shift — ready to apply'],['V:allset',"12b Home — you're all set"],['V:allsetX','12c Home — all set card closed'],['V:applied','19 Applied']]}
 };
 const ITEMS=[
   {id:'mobile',t:'Mobile number',s:'Verify with a code by SMS',a:'Verify'},
@@ -332,13 +333,14 @@ function jump(k){
     base('missing',{cv:'done'});S.scen='later';S.stack=['home'];if(id==='all')S.stack.push('all');if(id==='fix')S.sheet={name:'fix',mode:'add',doc:'id'};return render();}
   if(p==='A'){base('attention');S.scen='att';S.stack=['home'];if(id==='all')S.stack.push('all');if(id==='fix')S.sheet={name:'fix',mode:'fix',doc:'id'};return render();}
   base(id==='push'?'review':'verified');S.scen='verified';
-  S.stack={push:['push'],home:['home'],all:['home','all'],shift:['home','shiftV'],apply:['home','shiftV'],mobile:['home','shiftV','mobile'],sms:['home','shiftV','mobile'],bank:['home','shiftV','form'],alert:['home','shiftV','form'],tax:['home','shiftV','form'],ready:['home','shiftV'],applied:['home','shiftV','applied']}[id];
+  S.stack={push:['push'],home:['home'],all:['home','all'],shift:['home','shiftV'],apply:['home','shiftV'],mobile:['home','shiftV','mobile'],sms:['home','shiftV','mobile'],bank:['home','shiftV','form'],alert:['home','shiftV','form'],tax:['home','shiftV','form'],ready:['home','shiftV'],allset:['home'],allsetX:['home'],applied:['home','shiftV','applied']}[id];
   if(['apply','mobile','sms','bank','alert','tax'].includes(id))S.applyFlow=true;
   if(id==='apply')S.sheet={name:'apply'};
   if(id==='mobile'||id==='sms'){S.formId='mobile';if(id==='sms'){S.f.mob='412 345 678';S.otp='';S.sheet={name:'sms'};startTimer();}}
   if(id==='bank'||id==='alert'){S.formId='bank';S.items.mobile=true;if(id==='alert'){S.f.bank_name='Andrii Petrenko';S.f.bank_bsb='062 000';S.alert='unsaved';}}
   if(id==='tax'){S.formId='tax';S.items.mobile=true;S.items.bank=true;}
-  if(id==='ready'||id==='applied')ITEMS.forEach(i=>S.items[i.id]=true);
+  if(['ready','applied','allset','allsetX'].includes(id))ITEMS.forEach(i=>S.items[i.id]=true);
+  if(id==='allsetX')S.hideAllSet=true;
   render();}
 
 /* ---------- actions ---------- */
@@ -445,7 +447,8 @@ const homeCard=(h,sub,t,s,a,on,cls='')=>`<div class="card ${cls}"><div class="ca
 V.home=()=>{const ver=S.ver,L=left(),nx=firstLeft(),v=ver==='verified';let card;
   if(ver==='missing'){const d=vdocs()[0];card=d?homeCard('Add your documents to get verified',`We need your ${vdocs().map(x=>x==='id'?'photo ID':'insurance').join(' and ')}`,DN[d],'Needed to see shift details','Upload',`openSheet('fix',{mode:'add',doc:'${d}'})`):'';}
   else if(ver==='attention')card=homeCard('Your photo ID needs attention',"We couldn't read it. Upload a clearer photo.",'Photo ID','Photo is blurry','Re-upload',`openSheet('fix',{mode:'fix',doc:'id'})`,'warn');
-  else if(!L)card=homeCard("You're all set",v?'You can apply for shifts':"We'll let you know when you're verified");
+  else if(!L)card=(S.hideAllSet?'':`<div class="card"><div class="card-h"><b>You're all set</b><button class="close" aria-label="Close" onclick="S.hideAllSet=true;render()">${I.xs}</button></div><div class="prow"><span>${v?'You can apply for shifts':"We'll let you know when you're verified"}</span></div></div>`)
+    +(S.hideOpt?'':`<div class="card"><div class="card-h"><b>Get better matches</b><span style="display:flex;gap:16px;align-items:center"><button class="link" onclick="go('all')">View all</button><button class="close" aria-label="Close" onclick="S.hideOpt=true;render()">${I.xs}</button></span></div><div class="prow"><span>4 optional items · pharmacies see a fuller profile</span></div><div class="next"><span class="row ic" style="border:0;padding:0;width:36px;height:36px;border-radius:8px;background:var(--bg)"></span><span style="flex:1"><div class="t" style="font-weight:500;font-size:15px">Experience and software</div><div class="s" style="font-size:13px;color:var(--sub)">Prefilled from your resume</div></span><button class="btn primary small" onclick="soon()">Check</button></div></div>`);
   else card=homeCard('Finish your account setup',`${v?"You're verified · ":''}${pl(L)} left to apply`,nx.t,'Needed to apply',nx.a,`S.applyFlow=false;openItem('${nx.id}')`);
   return `${status()}${header({back:false,title:'Shifts'})}<div class="scroll stack">${card}
   <div class="overline" style="margin:4px 0 0">SHIFTS NEAR YOU</div>
@@ -605,7 +608,7 @@ function curKey(){const c=cur(),sh=S.sheet&&S.sheet.name;
   if(S.scen==='later'){if(sh==='fix')return 'L:fix';return 'L:'+c;}
   if(S.scen==='att'){if(sh==='fix')return 'A:fix';return 'A:'+c;}
   if(S.alert==='unsaved')return 'V:alert';if(sh==='apply')return 'V:apply';if(sh==='sms')return 'V:sms';
-  if(c==='form')return 'V:'+S.formId;if(c==='shiftV')return left()?'V:shift':'V:ready';return 'V:'+c;}
+  if(c==='form')return 'V:'+S.formId;if(c==='home'&&!left())return S.hideAllSet?'V:allsetX':'V:allset';if(c==='shiftV')return left()?'V:shift':'V:ready';return 'V:'+c;}
 
 /* sheets that sit on top of which screen */
 const SHEET_BASE={docsInfo:'role',otp:'account',upload:'docs',photo:'docs',sms:'mobile',apply:'shiftV'};
