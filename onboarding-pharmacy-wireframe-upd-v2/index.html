@@ -211,15 +211,15 @@ const DOCS=[
   {id:'id',t:'Photo ID',hint:'Passport or driver licence',req:true,done:'Name, date of birth and address added'},
   {id:'cv',t:'Resume',hint:'PDF',req:true,done:'CV_Andrii.pdf'},
   {id:'ins',t:'Indemnity insurance',hint:'Certificate of currency',req:true,done:'Insurer and expiry date added'},
-  {id:'cred',t:'Credential certificates',hint:'One or more files',req:true,done:'2 certificates added'},
-  {id:'super',t:'Super choice form',hint:'Fills in your super details',req:false,done:'Fund details added'}
+  {id:'super',t:'Super choice form',hint:'Fills in your super details',req:false,done:'Fund details added'},
+  {id:'cred',t:'Credential certificates',hint:'Only if you hold advanced credentials',req:false,done:'2 certificates added'}
 ];
 const fresh=()=>({stack:['welcome'],social:false,role:'',work:'',email:'andrii@example.com',otp:'',docs:{},idType:'Driver licence',gender:'',f:{},focus:null,sheet:null,photo:null});
 let S=fresh();
 const SCREENS=[
   ['welcome','00 Welcome'],['role','01 Role'],['roleSheet','02 Required documents'],['account','03 Create account'],['otp','04 Email code'],
   ['docs','05 Documents hub'],['upload','06 Upload options'],['photoFront','06b Check photo · front'],['photoBack','06c Check photo · back'],['docsDone','07 Documents uploaded'],
-  ['general','08 Your general info'],['ahpra','09 AHPRA and tax'],['home','10 Home — in review'],['hidden','10a Why details are hidden'],['all','10b All required items'],['shift','11 Shift — not verified'],['homeV','12 Home — verified'],['shiftV','13 Shift — verified, can\'t apply yet']
+  ['general','08 Your general info'],['ahpra','09 AHPRA registration'],['home','10 Home — in review'],['hidden','10a Why details are hidden'],['all','10b All required items'],['shift','11 Shift — not verified'],['homeV','12 Home — verified'],['shiftV','13 Shift — verified, can\'t apply yet']
 ];
 
 /* ---------- helpers ---------- */
@@ -318,7 +318,7 @@ V.role=()=>`${status()}${header({step:1})}<div class="scroll">
   </div><div class="foot">${btn('Continue','primary','roleContinue()',!(S.role&&S.work))}</div>`;
 
 V.account=()=>`${status()}${header({step:2})}<div class="scroll stack">
-  <div>${titleBlock('Create your account','You can browse shifts right after this.',2)}</div>
+  <div>${titleBlock('Create your account','You\'ll confirm your email with a code.',2)}</div>
   ${sinput('Email *','email',SUG.email='andrii@example.com','','email','From this device')}
   ${sinput('Password *','pw1',SUG.pw1='password1','At least 8 characters, including a number','password','Use a strong password')}
   ${sinput('Confirm password *','pw2',SUG.pw2='password1','','password','Use a strong password')}
@@ -331,7 +331,7 @@ const docRow=d=>{const st=S.docs[d.id];
   return row({t:d.t,s:d.req?'Tap to add':d.hint,tagL:d.req?'Required':'Optional',tagK:d.req?'required':'neutral',on:`openDoc('${d.id}')`});};
 V.docs=()=>{const {up,reading,any}=docState();return `${status()}${header({step:3})}<div class="scroll">
   ${titleBlock('Upload your documents','We\'ll use them to fill in your profile and show shifts that suit you. Upload a photo or a file.',3)}
-  <div style="margin:16px 0 12px"><div class="eyebrow">${up} of 4 required documents uploaded</div><div class="bar"><div style="width:${up/4*100}%"></div></div></div>
+  <div style="margin:16px 0 12px"><div class="eyebrow">${up} of 3 required documents uploaded</div><div class="bar"><div style="width:${up/3*100}%"></div></div></div>
   <div class="stack tight">${DOCS.filter(d=>d.req).map(docRow).join('')}</div>
   <div class="overline">OPTIONAL</div><div class="stack tight">${DOCS.filter(d=>!d.req).map(docRow).join('')}</div>
   </div><div class="foot">${any?btn(reading?'Reading your documents…':'Continue','primary','docsContinue()',reading):btn('Upload later','primary','docsContinue()')}</div>`;};
@@ -345,11 +345,10 @@ V.general=()=>`${status()}${header({step:4})}<div class="scroll stack">
   </div><div class="foot">${btn('Continue','primary','go(\'ahpra\')',!(S.f.fn&&S.f.ln&&S.f.dob&&S.gender&&S.f.addr))}</div>`;
 
 V.ahpra=()=>`${status()}${header({step:5})}<div class="scroll stack">
-  <div>${titleBlock('AHPRA and tax details','',5)}</div>
-  ${sinput('AHPRA registration number','ahpra',SUG.ahpra='PHA0001234567','3 letters and 10 digits, e.g. PHA0001234567','text','Found in your AHPRA record')}
-  ${sinput('AHPRA expiry date','exp',SUG.exp='12/10/2028','','text','Found in your AHPRA record')}
+  <div>${titleBlock('AHPRA registration','',5)}</div>
+  ${sinput('AHPRA registration number *','ahpra',SUG.ahpra='PHA0001234567','3 letters and 10 digits, e.g. PHA0001234567','text','Found in your AHPRA record')}
+  ${sinput('AHPRA expiry date *','exp',SUG.exp='12/10/2028','','text','Found in your AHPRA record')}
   <div class="note">Our team checks it with your ID and insurance. This usually takes 24–48 hours.</div>
-  ${sinput('Tax file number (TFN)','tfn',SUG.tfn='123 456 782','We need it to pay you. It\'s stored securely.','text','Saved on this device')}
   </div><div class="foot">${btn('See shifts','primary','go(\'home\')')}</div>`;
 
 const LOCK='<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="5" y="11" width="14" height="10" rx="2" stroke="#29336F" stroke-width="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3" stroke="#29336F" stroke-width="2"/></svg>';
@@ -363,7 +362,7 @@ const shiftCard=(x,verified)=>{const nm=verified?x.n:'Pharmacy Name Here', ad=ve
   <div class="ln">${I.dollar}<span><div class="lb">Hourly rate (excl. super)</div><div class="v">${x.rate}</div></span></div>
   <div class="ln">${I.pin}<span class="v${h}">${ad}</span></div></button></div>`;};
 const tabs=()=>`<div class="tabs">${['Shifts','Jobs','Calendar','Chat','Profile'].map((t,i)=>`<div class="${i?'':'on'}"><i></i>${t}</div>`).join('')}</div>`;
-const nextItem=sub=>`<div class="next"><span class="row ic" style="border:0;padding:0;width:36px;height:36px;border-radius:8px;background:var(--bg)"></span><span style="flex:1"><div class="t" style="font-weight:500;font-size:15px">Credential certificates</div><div class="s" style="font-size:13px;color:var(--sub)">${sub}</div></span><button class="btn primary small" onclick="soon()">Upload</button></div>`;
+const nextItem=sub=>`<div class="next"><span class="row ic" style="border:0;padding:0;width:36px;height:36px;border-radius:8px;background:var(--bg)"></span><span style="flex:1"><div class="t" style="font-weight:500;font-size:15px">Mobile number</div><div class="s" style="font-size:13px;color:var(--sub)">${sub}</div></span><button class="btn primary small" onclick="soon()">Verify</button></div>`;
 V.home=()=>`${status()}${header({back:false,title:'Shifts'})}<div class="scroll stack">
   <div class="card"><div class="card-h"><b>Checking your documents</b><button class="link" onclick="go('all')">View all</button></div>
     <div class="prow"><span>Usually takes 24–48 hours. We'll let you know.</span></div>
@@ -375,7 +374,7 @@ V.home=()=>`${status()}${header({back:false,title:'Shifts'})}<div class="scroll 
   </div>${tabs()}`;
 V.homeV=()=>`${status()}${header({back:false,title:'Shifts'})}<div class="scroll stack">
   <div class="card"><div class="card-h"><b>Finish your profile</b><button class="link" onclick="go('all')">View all</button></div>
-    <div class="prow"><div class="bar"><div style="width:58%"></div></div><span>8 items left</span></div>
+    <div class="prow"><div class="bar"><div style="width:58%"></div></div><span>7 items left</span></div>
     ${nextItem('Next up · needed to apply')}
   </div>
   <div class="overline" style="margin:4px 0 0">SHIFTS NEAR YOU</div>
@@ -383,13 +382,14 @@ V.homeV=()=>`${status()}${header({back:false,title:'Shifts'})}<div class="scroll
   </div>${tabs()}`;
 
 V.all=()=>`${status()}${header({title:'Finish your profile'})}<div class="scroll">
-  ${titleBlock('8 items left','Complete these to apply for shifts.')}
+  ${titleBlock('7 items left','Complete these to apply for shifts.')}
   <div class="overline">TO DO</div><div class="stack tight">
-  ${[['Mobile number','Verify with a code by SMS','Verify'],['Credential certificates','Select your credentials, then upload certificates','Upload'],['Bank details','Takes about 1 minute','Add'],['Super fund','Fund details or choice form','Add'],['Business details','ABN, business name, entity type','Add'],['Immunisation','Are you able to vaccinate?','Add'],['Professional certificates','Immunisation, First Aid, CPR, COVID','Upload'],['Other insurance','Any other policies you hold','Upload']].map(([t,s,l])=>row({t,s,tagL:l,tagK:'required',on:'soon()'})).join('')}</div>
+  ${[['Mobile number','Verify with a code by SMS','Verify'],['Bank details','Takes about 1 minute','Add'],['Super fund','Fund details or choice form','Add'],['Tax and business details','TFN, ABN, business name, entity type','Add'],['Immunisation','Are you able to vaccinate?','Add'],['Professional certificates','Immunisation, First Aid, CPR, COVID','Upload'],['Other insurance','Any other policies you hold','Upload']].map(([t,s,l])=>row({t,s,tagL:l,tagK:'required',on:'soon()'})).join('')}</div>
   <div class="overline">GET BETTER MATCHES · OPTIONAL</div><div class="stack tight">
   ${row({t:'Experience and software',s:'Prefilled from your resume',tagL:'Check',tagK:'ai',on:'soon()'})}
   ${row({t:'Work preferences',s:'Days, shift type, preferred states',tagL:'Add',tagK:'neutral',on:'soon()'})}
-  ${row({t:'Rate and travel',s:'Hourly rate, distance, longer assignments',tagL:'Add',tagK:'neutral',on:'soon()'})}</div>
+  ${row({t:'Rate and travel',s:'Hourly rate, distance, longer assignments',tagL:'Add',tagK:'neutral',on:'soon()'})}
+  ${row({t:'Advanced credentials',s:'Only if you hold any. Select them, then upload certificates',tagL:'Add',tagK:'neutral',on:'soon()'})}</div>
   <div class="overline">IN REVIEW · USUALLY 24–48 HOURS</div><div class="stack tight">
   ${row({t:'AHPRA registration',s:'PHA0001234567',tagL:'In review',tagK:'neutral',chev:false})}
   ${row({t:'Photo ID',s:'Driver licence',tagL:'In review',tagK:'neutral',chev:false})}
@@ -407,7 +407,7 @@ V.shift=()=>`${status()}${header({title:'Shift'})}<div class="scroll stack">
   ${row({t:'<span class="hide">00 Street Name, Suburb NSW 0000</span>',s:'Inner Sydney · ~3 km',chev:false})}
   </div><div class="foot">${btn('View verification status','primary','openSheet(\'hidden\')')}${btn('Apply','primary','',true)}</div>`;
 V.shiftV=()=>`${status()}${header({title:'Shift'})}<div class="scroll stack">
-  <div class="notice"><b>Finish your profile to apply</b><span>Pharmacies can only see complete profiles. You have 8 items left.</span></div>
+  <div class="notice"><b>Finish your profile to apply</b><span>Pharmacies can only see complete profiles. You have 7 items left.</span></div>
   <div class="img"></div>
   <div>${titleBlock('Locum Pharmacist','Priceline Pharmacy · Surry Hills NSW')}</div>
   ${row({t:'Sat 14 Nov · 8:00–17:00',s:'9 hours',chev:false})}
@@ -419,7 +419,7 @@ V.shiftV=()=>`${status()}${header({title:'Shift'})}<div class="scroll stack">
 const SH={};
 SH.docsInfo=()=>`<div class="inner" style="padding-top:16px">${titleBlock('Have these documents ready','We\'ll read them and fill most of your profile and apply for the job. You can add them later too.')}
   <div class="overline" style="margin-top:24px">REQUIRED</div><div>${DOCS.filter(d=>d.req).map(d=>item(d.t,d.hint,'Required','required')).join('')}</div>
-  <div class="overline" style="margin-top:24px">OPTIONAL — SAVES TIME</div>${item('Super choice form','','Optional','neutral')}
+  <div class="overline" style="margin-top:24px">OPTIONAL — SAVES TIME</div>${DOCS.filter(d=>!d.req).map(d=>item(d.t,d.id==='cred'?d.hint:'','Optional','neutral')).join('')}
   <div style="height:24px"></div>${btn('Continue','primary','docsInfoContinue()')}</div>`;
 SH.otp=()=>`<div class="inner" style="overflow:visible">${titleBlock('Check your inbox',`We sent a 5-digit code to ${esc(S.email)}`)}
   <div class="otp">${[0,1,2,3,4].map(i=>`<div class="${i===S.otp.length?'cur':''}">${S.otp[i]||''}</div>`).join('')}</div>
