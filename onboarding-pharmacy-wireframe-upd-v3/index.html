@@ -334,7 +334,7 @@ function jump(k){
   if(p==='A'){base('attention');S.scen='att';S.stack=['home'];if(id==='all')S.stack.push('all');if(id==='fix')S.sheet={name:'fix',mode:'fix',doc:'id'};return render();}
   base(id==='push'?'review':'verified');S.scen='verified';
   S.stack={push:['push'],home:['home'],all:['home','all'],shift:['home','shiftV'],apply:['home','shiftV'],mobile:['home','shiftV','mobile'],sms:['home','shiftV','mobile'],bank:['home','shiftV','form'],tax:['home','shiftV','form'],super:['home','shiftV','form'],later:['home','shiftV'],ready:['home','shiftV'],allset:['home'],allsetX:['home'],applied:['home','shiftV','applied']}[id];
-  if(['apply','mobile','sms','bank','tax','super','later'].includes(id))S.applyFlow=true;
+  if(['apply','mobile','sms','bank','tax','super','later'].includes(id)){S.applyFlow=true;S.ctx='apply';}
   if(id==='apply'||id==='later')S.sheet={name:'apply'};
   if(id==='super'){S.formId='super';['mobile','bank','tax'].forEach(x=>S.items[x]=true);}
   if(id==='later'){ITEMS.forEach(i=>S.items[i.id]=true);delete S.items.super;delete S.items.prof;S.later={super:true,prof:true};}
@@ -452,7 +452,7 @@ V.home=()=>{const ver=S.ver,L=left(),nx=firstLeft(),v=ver==='verified';let card;
   else if(!L)card=(S.hideAllSet?'':`<div class="card"><div class="card-h"><b>You're all set</b><button class="close" aria-label="Close" onclick="S.hideAllSet=true;render()">${I.xs}</button></div><div class="prow"><span>${v?'You can apply for shifts':"We'll let you know when you're verified"}</span></div></div>`)
     +(S.hideOpt?'':`<div class="card"><div class="card-h"><b>Stand out to pharmacies</b><span style="display:flex;gap:16px;align-items:center"><button class="link" onclick="go('all')">View all</button><button class="close" aria-label="Close" onclick="S.hideOpt=true;render()">${I.xs}</button></span></div><div class="prow"><span>2 optional items · pharmacies see these on your profile</span></div><div class="next"><span class="row ic" style="border:0;padding:0;width:36px;height:36px;border-radius:8px;background:var(--bg)"></span><span style="flex:1"><div class="t" style="font-weight:500;font-size:15px">Experience and software</div><div class="s" style="font-size:13px;color:var(--sub)">Prefilled from your resume</div></span><button class="btn primary small" onclick="soon()">Check</button></div></div>`)
     +`<button class="hint" style="background:var(--req-bg)" onclick="soon()"><span><b style="color:var(--ink)">Set your shift filters</b><span style="color:var(--sub)">Days, location, rate and distance. We'll show matching shifts first.</span></span></button>`;
-  else card=homeCard('Finish your account setup',`${v?"You're verified · ":''}${pl(L)} left to apply`,nx.t,'Needed to apply',nx.a,`S.applyFlow=false;openItem('${nx.id}')`);
+  else card=homeCard('Finish your account setup',`${v?"You're verified · ":''}${pl(L)} left to apply`,nx.t,'Needed to apply',nx.a,`S.applyFlow=true;S.ctx='setup';openItem('${nx.id}')`);
   return `${status()}${header({back:false,title:'Shifts'})}<div class="scroll stack">${card}
   <div class="overline" style="margin:4px 0 0">SHIFTS NEAR YOU</div>
   ${v?'':`<button class="hint" onclick="openSheet('hidden')">${LOCK}<span><b>Names and addresses are hidden</b><span>${ver==='missing'?'Add your ID and insurance so we can verify you.':"You'll see them once we've verified your documents."}</span></span></button>`}
@@ -471,7 +471,7 @@ V.all=()=>{const ver=S.ver,L=left(),miss=ver==='missing'?vdocs().length:0;
   return `${status()}${header({title:'Finish your profile'})}<div class="scroll">
   ${titleBlock(`${pl(L+miss)} left`,desc)}
   ${ver!=='verified'?vgroup:''}
-  ${todo.length?`<div class="overline">TO APPLY</div><div class="stack tight">${todo.map(i=>row({t:i.t,s:i.s,tagL:i.a,tagK:'required',on:`S.applyFlow=false;openItem('${i.id}')`})).join('')}</div>`:''}
+  ${todo.length?`<div class="overline">TO APPLY</div><div class="stack tight">${todo.map(i=>row({t:i.t,s:i.s,tagL:i.a,tagK:'required',on:`S.applyFlow=true;S.ctx='setup';openItem('${i.id}')`})).join('')}</div>`:''}
   <div class="overline">YOUR PROFILE · OPTIONAL</div><div class="stack tight">
   ${row({t:'Experience and software',s:'Prefilled from your resume',tagL:'Check',tagK:'ai',on:'soon()'})}
   ${row({t:'Advanced credentials',s:'Only if you hold any. Select them, then upload certificates',tagL:'Add',tagK:'neutral',on:'soon()'})}</div>
@@ -479,7 +479,7 @@ V.all=()=>{const ver=S.ver,L=left(),miss=ver==='missing'?vdocs().length:0;
   ${row({t:'Work preferences',s:'Days, shift type, states',tagL:'Add',tagK:'neutral',on:'soon()'})}
   ${row({t:'Rate and travel',s:'Minimum rate and travel distance',tagL:'Add',tagK:'neutral',on:'soon()'})}</div>
   <div class="overline">DONE</div><div class="stack tight">
-  ${row({t:'Resume',s:'CV_Andrii.pdf',tagL:'Done',tagK:'done',on:'soon()'})}${done.map(i=>row({t:i.t,s:'Saved',tagL:'Done',tagK:'done',on:`S.applyFlow=false;openItem('${i.id}')`})).join('')}${ver==='verified'?vrow('AHPRA registration','PHA0001234567')+vrow('Photo ID','Driver licence','id')+vrow('Indemnity insurance','Expires 30/06/2027','ins'):''}</div>
+  ${row({t:'Resume',s:'CV_Andrii.pdf',tagL:'Done',tagK:'done',on:'soon()'})}${done.map(i=>row({t:i.t,s:'Saved',tagL:'Done',tagK:'done',on:`S.applyFlow=true;S.ctx='setup';openItem('${i.id}')`})).join('')}${ver==='verified'?vrow('AHPRA registration','PHA0001234567')+vrow('Photo ID','Driver licence','id')+vrow('Indemnity insurance','Expires 30/06/2027','ins'):''}</div>
   <div style="height:24px"></div>
   </div>`;};
 
@@ -512,7 +512,7 @@ V.push=()=>`<div class="lock"><div class="status" style="align-self:stretch;colo
   <button class="notif" onclick="openPush()"><i></i><span style="flex:1"><div class="h">You're verified<small>now</small></div><p>You can now see pharmacy names and addresses. Finish your profile to apply.</p></span></button></div>`;
 
 V.mobile=()=>{SUG.mob='412 345 678';return `${status()}${header({close:true})}<div class="scroll stack">
-  <div>${S.applyFlow?`<div class="eyebrow">1 of 7 · Before you apply</div>`:''}${titleBlock('Mobile number',"Pharmacies use it to reach you about a shift. We'll text you a code to check it.")}</div>
+  <div>${S.applyFlow?`<div class="eyebrow">1 of 7 · ${S.ctx==='setup'?'Account setup':'Before you apply'}</div>`:''}${titleBlock('Mobile number',"Pharmacies use it to reach you about a shift. We'll text you a code to check it.")}</div>
   <div class="field"><label>Mobile number *</label><div class="phone-in"><span>+61</span><input id="mob" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="412 345 678" value="${esc(S.f.mob||'')}" onfocus="focusF('mob')" oninput="S.f.mob=this.value;document.getElementById('sendBtn').disabled=!this.value"></div>${S.focus==='mob'&&!S.f.mob?`<div class="sugg"><button onmousedown="fillF('mob')">+61 412 345 678<small>From this device</small></button></div>`:''}</div>
   </div><div class="foot">${btn('Send code','primary','sendSms()',!S.f.mob).replace('<button','<button id="sendBtn"')}</div>`;};
 
@@ -524,7 +524,7 @@ V.form=()=>{const id=S.formId,F=FORMS[id];let body='';
   if(F.chips)body=`<div class="field"><label>${F.q}</label>${chips(F.chips,S.f[F.ck],'setImm')}</div>`;
   if(F.file)body=S.f[id+'_file']?row({t:'certificate.pdf',s:'Uploaded',tagL:'Remove',tagK:'neutral',on:`delete S.f['${id}_file'];render()`}):row({t:'Choose a file',s:'JPG, PNG or PDF, up to 10 MB',on:`pickFile('${id}_file')`});
   const nx=S.applyFlow?nextAfter(id,!!S.later[id]):null;
-  return `${status()}${header({close:true})}<div class="scroll stack"><div>${S.applyFlow?`<div class="eyebrow">${pos(id)} of 7 · Before you apply</div>`:''}${titleBlock(F.t,F.d)}</div>${body}${F.extra?`<div class="note">${F.extra}</div>`:''}</div>
+  return `${status()}${header({close:true})}<div class="scroll stack"><div>${S.applyFlow?`<div class="eyebrow">${pos(id)} of 7 · ${S.ctx==='setup'?'Account setup':'Before you apply'}</div>`:''}${titleBlock(F.t,F.d)}</div>${body}${F.extra?`<div class="note">${F.extra}</div>`:''}</div>
   <div class="foot">${S.applyFlow?btn(nx?`Next: ${nx.t}`:'Finish','primary','saveForm()',!valid(id))+(DOCITEMS.includes(id)?btn('Do this later','text','laterItem()'):''):btn('Save','primary','saveForm()',!valid(id))}</div>`;};
 
 V.applied=()=>`${status()}<div class="hdr"></div><div class="scroll stack">
@@ -539,14 +539,15 @@ function toHome(){S.alert=null;S.sheet=null;S.stack=['home'];render();}
 function goHome(){S.applyFlow=false;toHome();}
 function openPush(){S.ver='verified';S.scen='verified';S.stack=['home'];render();}
 function openItem(id){S.sheet=null;S.focus=null;S.formId=id;S.stack.push(id==='mobile'?'mobile':'form');render();}
-function startApply(){if(!left())return go('applied');S.applyFlow=true;openSheet('apply');}
-function exitForm(){S.alert=null;S.sheet=null;S.focus=null;S.stack.pop();if(S.applyFlow&&left())S.sheet={name:'apply'};render();}
+function startApply(){if(!left())return go('applied');S.applyFlow=true;S.ctx='apply';openSheet('apply');}
+function exitForm(){S.alert=null;S.sheet=null;S.focus=null;S.stack.pop();if(S.applyFlow&&S.ctx==='apply'&&left())S.sheet={name:'apply'};render();}
 const DOCITEMS=['super','prof','other'];
 const pos=id=>ITEMS.findIndex(i=>i.id===id)+1;
 function nextAfter(id,catchUp){let open=ITEMS.filter(i=>!S.items[i.id]&&!S.later[i.id]&&i.id!==id);if(!open.length&&catchUp)open=ITEMS.filter(i=>!S.items[i.id]&&i.id!==id);const k=pos(id);return open.find(i=>pos(i.id)>k)||open[0];}
 function advance(id,catchUp){const n=nextAfter(id,catchUp);S.alert=null;S.sheet=null;S.focus=null;S.stack.pop();
   if(n){openItem(n.id);return;}
   if(!left()){render();toast('Your profile is complete');return;}
+  if(S.ctx==='setup'){render();toast('Saved. Add the rest when you have the files.');return;}
   S.sheet={name:'apply'};render();}
 function laterItem(){S.later[S.formId]=true;advance(S.formId);}
 function closeForm(){const d=S.formId!=='mobile'&&dirty(S.formId)&&!S.items[S.formId];exitForm();if(d)toast('Saved. You can finish it later.');}
