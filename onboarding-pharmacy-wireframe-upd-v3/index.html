@@ -249,17 +249,17 @@ let S=fresh();
 const SCREENS=[
   ['welcome','00 Welcome'],['role','01 Role'],['roleSheet','02 Required documents'],['account','03 Create account'],['otp','04 Email code'],
   ['docs','05 Documents hub'],['upload','06 Upload options'],['photoFront','06b Check photo · front'],['photoBack','06c Check photo · back'],['docsDone','07 Documents uploaded'],
-  ['general','08 Your general info'],['ahpra','09 AHPRA registration'],['checking','09b Checking your documents'],['perm','09c Notifications — system prompt'],['home','10 Home — in review'],['hidden','10a Why details are hidden'],['all','10b All items — in review'],['shift','11 Shift — not verified']
+  ['general','08 Your general info'],['ahpra','09 AHPRA registration'],['checking','09b Checking your documents'],['perm','09c Notifications — system prompt'],['home','10 Home — in review'],['hidden','10a Hidden details — sheet'],['all','10b All items — in review'],['shift','11 Shift — not verified']
 ];
 const SC={
   signup:{t:'1 · Sign up → in review',l:SCREENS},
   later:{t:'2 · Documents added later',l:[['L:docs','05 Documents hub — tap Upload later'],['L:home','10c Home — documents missing'],['L:all','10d All items — documents missing'],['L:fix','Add photo ID — sheet']]},
-  att:{t:'3 · Document needs attention',l:[['A:home','10e Home — needs attention'],['A:fix','10f Upload a new photo ID — sheet'],['A:all','10g All items — needs attention']]},
-  verified:{t:'4 · ID verified → apply',l:[['V:push',"11b You're verified — notification"],['V:home','12 Home — verified'],['V:all','12a All items — verified'],['V:shift','13 Shift — verified'],['V:apply','14 Before you apply — sheet'],['V:mobile','15 Mobile number — 1 of 7'],['V:sms','15a SMS code'],['V:bank','16 Bank details — 2 of 7'],['V:tax','17 Tax and business — 3 of 7'],['V:super','18 Super fund — 4 of 7 (Do this later)'],['V:later','22 Before you apply — 2 left'],['V:ready','23 Shift — ready to apply'],['V:applied','24 Applied'],['V:allset',"12b Home — you're all set"],['V:allsetX','12c Home — all set card closed']]}
+  att:{t:'3 · Document needs attention',l:[['A:home','10e Home — needs attention'],['A:fix','10f Re-upload photo ID — sheet'],['A:all','10g All items — needs attention']]},
+  verified:{t:'4 · ID verified → apply',l:[['V:push',"11b You're verified — notification"],['V:home','12 Home — verified'],['V:all','12a All items — verified'],['V:shift','13 Shift — verified'],['V:apply','14 Before you apply — sheet'],['V:mobile','15 Mobile number — 1 of 7'],['V:sms','15a SMS code'],['V:bank','16 Bank details — 2 of 7'],['V:tax','17 Tax and business details — 3 of 7'],['V:super','18 Super fund — 4 of 7'],['V:later','22 Before you apply — 2 left'],['V:ready','23 Shift — ready to apply'],['V:applied','24 Applied'],['V:allset',"12b Home — you're all set"],['V:allsetX','12c Home — all set card closed']]}
 };
 const ITEMS=[
-  {id:'mobile',t:'Mobile number',s:'Verify with a code by SMS',a:'Verify'},
-  {id:'bank',t:'Bank details',s:'Takes about 1 minute',a:'Add'},
+  {id:'mobile',t:'Mobile number',s:"We'll text you a code",a:'Verify'},
+  {id:'bank',t:'Bank details',s:'Account name, BSB and account number',a:'Add'},
   {id:'tax',t:'Tax and business details',s:'TFN, ABN, business name, entity type',a:'Add'},
   {id:'super',t:'Super fund',s:'Fund details or choice form',a:'Add'},
   {id:'imm',t:'Immunisation',s:'Are you able to vaccinate?',a:'Add'},
@@ -267,11 +267,11 @@ const ITEMS=[
   {id:'other',t:'Other insurance',s:'Any other policies you hold',a:'Upload'}];
 const FORMS={
   bank:{t:'Bank details',d:'We pay you here after each shift.',f:[['bank_name','Account name *','Andrii Petrenko','','Name on your account'],['bank_bsb','BSB *','062 000','','000 000'],['bank_acc','Account number *','12345678','','12345678']]},
-  super:{t:'Super fund',d:'We pay your super with every shift.',f:[['sup_fund','Fund name *','AustralianSuper','','e.g. AustralianSuper'],['sup_name','Name registered with the fund *','Andrii Petrenko','','As on your super statement'],['sup_mem','Member number *','123456789','','e.g. 123456789']],extra:"Have a super choice form instead? You can upload it from the Documents section."},
+  super:{t:'Super fund',d:'We pay your super with every shift.',f:[['sup_fund','Fund name *','AustralianSuper','','e.g. AustralianSuper'],['sup_name','Name registered with the fund *','Andrii Petrenko','','As on your super statement'],['sup_mem','Member number *','123456789','','e.g. 123456789']],extra:"Have a super choice form? You can upload it instead, and we'll fill this in."},
   tax:{t:'Tax and business details',d:'You work as a contractor, so we need these to pay you.',f:[['tax_tfn','Tax file number (TFN) *','123 456 782','','000 000 000'],['tax_abn','ABN *','51 824 753 556',"Don't have one? Apply for free at abr.gov.au",'00 000 000 000'],['tax_bn','Business name','A. Petrenko Pharmacy Services','','Filled in from your ABN'],['tax_et','Entity type','Sole trader','','Filled in from your ABN']]},
   imm:{t:'Immunisation',d:'Some pharmacies need a pharmacist who can vaccinate.',chips:['Yes','No'],ck:'imm_ans',q:'Are you able to vaccinate? *'},
-  prof:{t:'Professional certificates',d:'Immunisation, First Aid, CPR or COVID training.',file:true},
-  other:{t:'Other insurance',d:'Add any other policies you hold.',file:true}
+  prof:{t:'Professional certificates',d:"Add the ones you hold. We'll remind you before they expire.",file:true},
+  other:{t:'Other insurance',d:'Add any other policies you hold, like public liability.',file:true}
 };
 
 /* ---------- helpers ---------- */
@@ -279,7 +279,7 @@ const $=s=>document.querySelector(s);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const status=()=>`<div class="status"><span>9:41</span><span><i></i></span></div>`;
 const header=({back=true,title='',step=0,skip=false,close=false}={})=>`<div class="hdr">${close?`<button class="close" aria-label="Close" onclick="closeForm()">${I.x}</button>`:back?`<button class="back" aria-label="Back" onclick="goBack()">${I.back}</button>`:''}${step?`<div class="prog" aria-label="Step ${step} of 5">${[1,2,3,4,5].map(i=>`<span class="${i<=step?'on':''}"></span>`).join('')}</div>`:`<div class="title">${title}</div>`}${skip?'<button class="skip">Skip</button>':''}</div>`;
-const titleBlock=(t,d,step)=>`${step?`<div class="eyebrow">Step ${step}/5</div>`:''}<h2>${t}</h2>${d?`<p class="desc">${d}</p>`:''}`;
+const titleBlock=(t,d,step)=>`${step?`<div class="eyebrow">Step ${step} of 5</div>`:''}<h2>${t}</h2>${d?`<p class="desc">${d}</p>`:''}`;
 const tag=(label,kind='')=>label?`<span class="tag ${kind}">${label}</span>`:'';
 const row=({t,s,tagL,tagK,chev=true,on='',cls=''})=>`<button class="row ${on?'':'static'} ${cls}" ${on?`onclick="${on}"`:'tabindex="-1"'}><span class="ic"></span><span class="tx"><div class="t">${t}</div>${s?`<div class="s">${s}</div>`:''}</span>${tag(tagL,tagK)}${chev?`<span class="chev">${I.chev}</span>`:''}</button>`;
 const item=(t,s,tagL,tagK)=>`<div class="li"><span class="tx"><div class="t">${t}</div>${s?`<div class="s">${s}</div>`:''}</span>${tag(tagL,tagK)}</div>`;
@@ -391,8 +391,8 @@ V.welcome=()=>`${status()}<div class="scroll" style="display:flex;flex-direction
 
 V.role=()=>`${status()}${header({step:1})}<div class="scroll">
   ${titleBlock('What do you do?','We\'ll tailor your profile and the shifts you see.',1)}
-  <div class="overline">I AM A</div>${chips(['Pharmacist','Dispensary technician','Student / Intern','Retail staff'],S.role,'setRole')}
-  <div class="overline">I'M LOOKING FOR</div>${chips(['Full-time / Part-time','Shift work'],S.work,'setWork')}
+  <div class="overline">I AM A</div>${chips(['Pharmacist','Dispensary technician','Student / intern','Retail staff'],S.role,'setRole')}
+  <div class="overline">I'M LOOKING FOR</div>${chips(['Full-time / part-time','Shift work'],S.work,'setWork')}
   </div><div class="foot">${btn('Continue','primary','roleContinue()',!(S.role&&S.work))}</div>`;
 
 V.account=()=>`${status()}${header({step:2})}<div class="scroll stack">
@@ -406,7 +406,7 @@ const docState=()=>{const req=DOCS.filter(d=>d.req);const up=req.filter(d=>S.doc
 const docRow=d=>{const st=S.docs[d.id];
   if(st==='done') return row({t:d.t,s:d.done,tagL:'In review',tagK:'neutral',on:`openDoc('${d.id}')`});
   if(st==='reading') return row({t:d.t,s:d.id==='cv'?'CV_Andrii.pdf':'Uploaded',tagL:'<span class="spin"></span>Reading…',tagK:'neutral',on:`openDoc('${d.id}')`});
-  return row({t:d.t,s:d.req?'Tap to add':d.hint,tagL:d.req?'Required':'Optional',tagK:d.req?'required':'neutral',on:`openDoc('${d.id}')`});};
+  return row({t:d.t,s:d.hint,tagL:d.req?'Required':'Optional',tagK:d.req?'required':'neutral',on:`openDoc('${d.id}')`});};
 V.docs=()=>{const {up,reading,any}=docState();return `${status()}${header({step:3})}<div class="scroll">
   ${titleBlock('Upload your documents','We\'ll use them to fill in your profile and show shifts that suit you. Upload a photo or a file.',3)}
   <div style="margin:16px 0 12px"><div class="eyebrow">${up} of 3 required documents uploaded</div><div class="bar"><div style="width:${up/3*100}%"></div></div></div>
@@ -426,8 +426,8 @@ V.ahpra=()=>`${status()}${header({step:5})}<div class="scroll stack">
   <div>${titleBlock('AHPRA registration','',5)}</div>
   ${sinput('AHPRA registration number *','ahpra',SUG.ahpra='PHA0001234567','3 letters and 10 digits, e.g. PHA0001234567','text','Found in your AHPRA record')}
   ${sinput('AHPRA expiry date *','exp',SUG.exp='12/10/2028','','text','Found in your AHPRA record')}
-  <div class="note">Our team checks it with your ID and insurance. This usually takes 24–48 hours.</div>
-  </div><div class="foot">${btn('See shifts','primary','afterAhpra()')}</div>`;
+  <div class="note">We'll check it together with your ID and insurance.</div>
+  </div><div class="foot">${btn('Send for review','primary','afterAhpra()')}</div>`;
 
 const LOCK='<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="5" y="11" width="14" height="10" rx="2" stroke="#29336F" stroke-width="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3" stroke="#29336F" stroke-width="2"/></svg>';
 const SHIFTS=[
@@ -452,7 +452,7 @@ V.home=()=>{const ver=S.ver,L=left(),nx=firstLeft(),v=ver==='verified';let card;
   else if(!L)card=(S.hideAllSet?'':`<div class="card"><div class="card-h"><b>You're all set</b><button class="close" aria-label="Close" onclick="S.hideAllSet=true;render()">${I.xs}</button></div><div class="prow"><span>${v?'You can apply for shifts':"We'll let you know when you're verified"}</span></div></div>`)
     +(S.hideOpt?'':`<div class="card"><div class="card-h"><b>Stand out to pharmacies</b><span style="display:flex;gap:16px;align-items:center"><button class="link" onclick="go('all')">View all</button><button class="close" aria-label="Close" onclick="S.hideOpt=true;render()">${I.xs}</button></span></div><div class="prow"><span>2 optional items · pharmacies see these on your profile</span></div><div class="next"><span class="row ic" style="border:0;padding:0;width:36px;height:36px;border-radius:8px;background:var(--bg)"></span><span style="flex:1"><div class="t" style="font-weight:500;font-size:15px">Experience and software</div><div class="s" style="font-size:13px;color:var(--sub)">Prefilled from your resume</div></span><button class="btn primary small" onclick="soon()">Check</button></div></div>`)
     +`<button class="hint" style="background:var(--req-bg)" onclick="soon()"><span><b style="color:var(--ink)">Set your shift filters</b><span style="color:var(--sub)">Days, location, rate and distance. We'll show matching shifts first.</span></span></button>`;
-  else card=homeCard('Finish your account setup',`${v?"You're verified · ":''}${pl(L)} left to apply`,nx.t,'Needed to apply',nx.a,`S.applyFlow=true;S.ctx='setup';openItem('${nx.id}')`);
+  else card=homeCard('Finish your account setup',`${pl(L)} left to apply`,nx.t,'Needed to apply',nx.a,`S.applyFlow=true;S.ctx='setup';openItem('${nx.id}')`);
   return `${status()}${header({back:false,title:'Shifts'})}<div class="scroll stack">${card}
   <div class="overline" style="margin:4px 0 0">SHIFTS NEAR YOU</div>
   ${v?'':`<button class="hint" onclick="openSheet('hidden')">${LOCK}<span><b>Names and addresses are hidden</b><span>${ver==='missing'?'Add your ID and insurance so we can verify you.':"You'll see them once we've verified your documents."}</span></span></button>`}
@@ -463,18 +463,18 @@ V.all=()=>{const ver=S.ver,L=left(),miss=ver==='missing'?vdocs().length:0;
   const vrow=(t,s,d)=>{
     if(ver==='verified')return row({t,s,tagL:'Verified',tagK:'done',chev:false});
     if(ver==='missing'&&d&&S.docs[d]!=='done')return row({t,s:d==='id'?'Passport or driver licence':'Certificate of currency',tagL:'Upload',tagK:'required',on:`openSheet('fix',{mode:'add',doc:'${d}'})`});
-    if(ver==='attention'&&d==='id')return row({t,s:'Photo is blurry. Upload a new one',tagL:'Re-upload',tagK:'required',on:`openSheet('fix',{mode:'fix',doc:'id'})`});
+    if(ver==='attention'&&d==='id')return row({t,s:'Photo is blurry. Upload a clearer one',tagL:'Re-upload',tagK:'required',on:`openSheet('fix',{mode:'fix',doc:'id'})`});
     return row({t,s,tagL:'In review',tagK:'neutral',chev:false});};
   const vgroup=`<div class="overline">${ver==='verified'?'VERIFIED':ver==='review'?'TO GET VERIFIED · USUALLY 24–48 HOURS':'TO GET VERIFIED'}</div><div class="stack tight">${vrow('AHPRA registration','PHA0001234567')}${vrow('Photo ID','Driver licence','id')}${vrow('Indemnity insurance','Expires 30/06/2027','ins')}</div>`;
   const todo=ITEMS.filter(i=>!S.items[i.id]),done=ITEMS.filter(i=>S.items[i.id]);
   const desc={review:"We're checking your documents. Finish the rest so you can apply as soon as you're verified.",missing:'Add your photo ID and insurance so we can verify you. Then finish the rest to apply.',attention:'Your photo ID needs a new upload. AHPRA and insurance are still in review.',verified:"You're verified. Finish these to apply for shifts."}[ver];
-  return `${status()}${header({title:'Finish your profile'})}<div class="scroll">
+  return `${status()}${header({title:'Account setup'})}<div class="scroll">
   ${titleBlock(`${pl(L+miss)} left`,desc)}
   ${ver!=='verified'?vgroup:''}
   ${todo.length?`<div class="overline">TO APPLY</div><div class="stack tight">${todo.map(i=>row({t:i.t,s:i.s,tagL:i.a,tagK:'required',on:`S.applyFlow=true;S.ctx='setup';openItem('${i.id}')`})).join('')}</div>`:''}
   <div class="overline">YOUR PROFILE · OPTIONAL</div><div class="stack tight">
   ${row({t:'Experience and software',s:'Prefilled from your resume',tagL:'Check',tagK:'ai',on:'soon()'})}
-  ${row({t:'Advanced credentials',s:'Only if you hold any. Select them, then upload certificates',tagL:'Add',tagK:'neutral',on:'soon()'})}</div>
+  ${row({t:'Advanced credentials',s:'Only if you hold any',tagL:'Add',tagK:'neutral',on:'soon()'})}</div>
   <div class="overline">SHIFT FILTERS · ONLY YOU SEE THESE</div><div class="stack tight">
   ${row({t:'Work preferences',s:'Days, shift type, states',tagL:'Add',tagK:'neutral',on:'soon()'})}
   ${row({t:'Rate and travel',s:'Minimum rate and travel distance',tagL:'Add',tagK:'neutral',on:'soon()'})}</div>
@@ -486,7 +486,7 @@ V.all=()=>{const ver=S.ver,L=left(),miss=ver==='missing'?vdocs().length:0;
 V.shift=()=>`${status()}${header({title:'Shift'})}<div class="scroll stack">
   <div class="notice info"><b>Shift details unlock after verification</b><span>${S.ver==='missing'?'Add your ID and insurance so we can verify you.':'We\'re checking your AHPRA, ID and insurance. This usually takes 24–48 hours.'}</span></div>
   <div class="img hide"></div>
-  <div><h2>Locum Pharmacist</h2><p class="desc hide">Pharmacy Name Here · Suburb NSW</p></div>
+  <div><h2>Locum pharmacist</h2><p class="desc hide">Pharmacy Name Here · Suburb NSW</p></div>
   ${row({t:'Sat 14 Nov · 8:00–17:00',s:'9 hours',chev:false})}
   ${row({t:'$62.00 per hour',s:'Excl. super',chev:false})}
   ${row({t:'<span class="hide">00 Street Name, Suburb NSW 0000</span>',s:'Inner Sydney · ~3 km',chev:false})}
@@ -494,7 +494,7 @@ V.shift=()=>`${status()}${header({title:'Shift'})}<div class="scroll stack">
 V.shiftV=()=>{const L=left();return `${status()}${header({title:'Shift'})}<div class="scroll stack">
   ${L?`<div class="notice"><b>${pl(L)} left before you can apply</b><span>Tap Apply. We'll ask only for what's missing, then bring you back here.</span></div>`:`<div class="notice ok"><b>Your profile is complete</b><span>You can apply for this shift now.</span></div>`}
   <div class="img"></div>
-  <div>${titleBlock('Locum Pharmacist','Priceline Pharmacy · Surry Hills NSW')}</div>
+  <div>${titleBlock('Locum pharmacist','Priceline Pharmacy · Surry Hills NSW')}</div>
   ${row({t:'Sat 14 Nov · 8:00–17:00',s:'9 hours',chev:false})}
   ${row({t:'$62.00 per hour',s:'Excl. super',chev:false})}
   ${row({t:'120 Crown St, Surry Hills NSW 2010',s:'3 km away',chev:false})}
@@ -509,10 +509,10 @@ V.checking=()=>`${status()}<div class="hdr"></div><div class="scroll stack">
   </div><div class="foot">${btn('Turn on notifications','primary',"S.alert='perm';render()")}${btn('Not now','text','toHome()')}</div>`;
 
 V.push=()=>`<div class="lock"><div class="status" style="align-self:stretch;color:#fff"><span>9:41</span><span></span></div><div class="d">Wednesday 5 November</div><div class="c">9:41</div>
-  <button class="notif" onclick="openPush()"><i></i><span style="flex:1"><div class="h">You're verified<small>now</small></div><p>You can now see pharmacy names and addresses. Finish your profile to apply.</p></span></button></div>`;
+  <button class="notif" onclick="openPush()"><i></i><span style="flex:1"><div class="h">You're verified<small>now</small></div><p>You can now see pharmacy names and addresses. Finish your account setup to apply.</p></span></button></div>`;
 
 V.mobile=()=>{SUG.mob='412 345 678';return `${status()}${header({close:true})}<div class="scroll stack">
-  <div>${S.applyFlow?`<div class="eyebrow">1 of 7 · ${S.ctx==='setup'?'Account setup':'Before you apply'}</div>`:''}${titleBlock('Mobile number',"Pharmacies use it to reach you about a shift. We'll text you a code to check it.")}</div>
+  <div>${S.applyFlow?`<div class="eyebrow">1 of 7 · ${S.ctx==='setup'?'Account setup':'Before you apply'}</div>`:''}${titleBlock('Mobile number',"Pharmacies use it to contact you about a shift. We'll text you a code to confirm it.")}</div>
   <div class="field"><label>Mobile number *</label><div class="phone-in"><span>+61</span><input id="mob" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="412 345 678" value="${esc(S.f.mob||'')}" onfocus="focusF('mob')" oninput="S.f.mob=this.value;document.getElementById('sendBtn').disabled=!this.value"></div>${S.focus==='mob'&&!S.f.mob?`<div class="sugg"><button onmousedown="fillF('mob')">+61 412 345 678<small>From this device</small></button></div>`:''}</div>
   </div><div class="foot">${btn('Send code','primary','sendSms()',!S.f.mob).replace('<button','<button id="sendBtn"')}</div>`;};
 
@@ -567,7 +567,7 @@ function fixDone(){const d=S.sheet.doc;S.sheet=null;S.docs[d]='done';
 
 /* ---------- sheets ---------- */
 const SH={};
-SH.docsInfo=()=>`<div class="inner" style="padding-top:16px">${titleBlock('Have these documents ready','We\'ll read them and fill most of your profile and apply for the job. You can add them later too.')}
+SH.docsInfo=()=>`<div class="inner" style="padding-top:16px">${titleBlock('Have these documents ready','We\'ll read them to fill in most of your profile. You can add them later too.')}
   <div class="overline" style="margin-top:24px">REQUIRED</div><div>${DOCS.filter(d=>d.req).map(d=>item(d.t,d.hint,'Required','required')).join('')}</div>
   <div class="overline" style="margin-top:24px">OPTIONAL — SAVES TIME</div>${DOCS.filter(d=>!d.req).map(d=>item(d.t,d.id==='cred'?d.hint:'','Optional','neutral')).join('')}
   <div style="height:24px"></div>${btn('Continue','primary','docsInfoContinue()')}</div>`;
