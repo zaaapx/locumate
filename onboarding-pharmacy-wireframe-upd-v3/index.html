@@ -365,7 +365,7 @@ const ITEMS=[
   {id:'tax',t:'Tax and business details',s:'ABN, business name, entity type, GST',a:'Add'},
   {id:'super',t:'Super fund',s:'Fund details, TFN and choice form',a:'Add'},
   {id:'imm',t:'Immunisation',s:'Are you able to vaccinate?',a:'Add'},
-  {id:'prof',t:'Professional certificates',s:'Immunisation, First Aid, CPR, COVID',a:'Upload'},
+  {id:'prof',t:'Professional certificates',s:'Immunisation, First Aid and CPR, COVID',a:'Upload'},
   {id:'other',t:'Other insurance',s:'Policy and expiry date',a:'Upload'}];
 const FORMS={
   bank:{t:'Bank details',d:'We pay you here after each shift.',pre:()=>selF('Bank name *','bank_bank','Choose your bank','BANKS'),f:[['bank_name','Account name *','Andrii Petrenko','','Name on your account'],['bank_bsb','BSB *','062 000','','000 000'],['bank_acc','Account number *','12345678','','12345678']],ok:()=>!!S.f.bank_bank,keys:['bank_bank','bank_name','bank_bsb','bank_acc']},
@@ -769,7 +769,7 @@ V.form=()=>{const id=S.formId,F=FORMS[id];let body='';
   if(F.body)body=F.body();
   if(F.f)body=F.f.map(([k,l,v,h,ph])=>{SUG[k]=v;return sinput(l,k,v,h,'text','Suggested',ph);}).join('');
   if(F.chips)body=`<div class="field"><label>${F.q}</label>${chips(F.chips,S.f[F.ck],'setImm')}</div>`;
-  if(F.multi)body=(F.picker?`<div>${pickField()}</div>`:'')+F.multi.map(([l,k,it,m,kind])=>`<div><div class="overline" style="margin-top:0">${l}</div>${kind==='sheet'?swField(k):kind==='roles'?rolesField(k):mchips('f',k,it,m)}</div>`).join('')+(F.certs&&(S.f.cred_l||[]).length?`<div><div class="overline" style="margin-top:0">CERTIFICATES</div><div class="stack tight">${S.f.cred_l.map(c=>{const u=S.f['cert_'+c];return row({t:c,s:u?'certificate.pdf':'JPG, PNG or PDF, up to 10 MB',tagL:u?'Uploaded':'Upload',tagK:u?'done':'required',on:`S.f['cert_${c}']=1;render()`});}).join('')}</div></div>`:'');
+  if(F.multi)body=(F.picker?`<div>${pickField()}</div>`:'')+F.multi.map(([l,k,it,m,kind])=>`<div>${kind==='sheet'?'':`<div class="overline" style="margin-top:0">${l}</div>`}${kind==='sheet'?swField(k):kind==='roles'?rolesField(k):mchips('f',k,it,m)}</div>`).join('')+(F.certs&&(S.f.cred_l||[]).length?`<div><div class="overline" style="margin-top:0">CERTIFICATES</div><div class="stack tight">${S.f.cred_l.map(c=>{const u=S.f['cert_'+c];return row({t:c,s:u?'certificate.pdf':'JPG, PNG or PDF, up to 10 MB',tagL:u?'Uploaded':'Upload',tagK:u?'done':'required',on:`S.f['cert_${c}']=1;render()`});}).join('')}</div></div>`:'');
   if(F.immNote&&S.f.imm_ans==='Yes')body+=`<div class="note">You said you can vaccinate, so add your immunisation training certificate too.</div>`;
   if(F.pre)body=F.pre()+body;if(F.post)body+=F.post();
   if(F.file)body+=S.f[id+'_file']?row({t:'certificate.pdf',s:'Uploaded',tagL:'Remove',tagK:'neutral',on:`delete S.f['${id}_file'];render()`}):row({t:'Choose a file',s:'JPG, PNG or PDF, up to 10 MB',on:`pickFile('${id}_file')`});
