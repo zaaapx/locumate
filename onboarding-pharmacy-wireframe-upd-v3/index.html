@@ -372,15 +372,14 @@ const SC={
   signup:{t:'1 · Sign up → in review',l:SCREENS},
   later:{t:'2 · Documents added later',l:[['L:docs','05 Documents hub — tap Upload later'],['L:home','10c Home — documents missing'],['L:all','10d All items — documents missing'],['L:fix','Add photo ID — sheet']]},
   att:{t:'3 · Document needs attention',l:[['A:home','10e Home — needs attention'],['A:fix','10f Re-upload photo ID — sheet'],['A:all','10g All items — needs attention']]},
-  verified:{t:'4 · ID verified → apply',l:[['V:push',"11b You're verified — notification"],['V:home','12 Home — verified'],['V:all','12a All items — verified'],['V:shift','13 Shift — verified'],['V:apply','14 Before you apply — sheet'],['V:mobile','15 Mobile number — 1 of 7'],['V:sms','15a SMS code'],['V:bank','16 Bank details — 2 of 7'],['V:bankpick','16a Bank name — sheet'],['V:unsaved','16b Leave unfinished — alert'],['V:tax','17 Tax and business details — 3 of 7'],['V:super','18 Super fund — 4 of 7'],['V:smsf','18a Super fund — self-managed (SMSF)'],['V:imm','19 Immunisation — 5 of 7'],['V:prof','20 Professional certificates — 6 of 7'],['V:other','21 Other insurance — 7 of 7'],['V:exp','21a Experience and software — optional'],['V:roles','21a1 Roles — sheet'],['V:sw','21b Pharmacy software — sheet'],['V:swadd','21c Pharmacy software — add your own'],['V:cred','21d Advanced credentials — optional'],['V:credpick','21e Advanced credentials — picker'],['V:travel','21f Travel requirements — optional'],['V:later','22 Before you apply — 2 left'],['V:ready','23 Shift — ready to apply'],['V:applied','24 Applied'],['V:allset',"12b Home — you're all set"],['V:allsetX','12c Home — all set card dismissed'],['V:filters','12d Shift filters — sheet']]}
+  verified:{t:'4 · ID verified → apply',l:[['V:push',"11b You're verified — notification"],['V:home','12 Home — verified'],['V:all','12a All items — verified'],['V:shift','13 Shift — verified'],['V:apply','14 Before you apply — sheet'],['V:mobile','15 Mobile number — 1 of 6'],['V:sms','15a SMS code'],['V:bank','16 Bank details — 2 of 6'],['V:bankpick','16a Bank name — sheet'],['V:unsaved','16b Leave unfinished — alert'],['V:tax','17 Tax and business details — 3 of 6'],['V:super','18 Super fund — 4 of 6'],['V:smsf','18a Super fund — self-managed (SMSF)'],['V:prof','19 Professional certificates — 5 of 6'],['V:other','20 Other insurance — 6 of 6'],['V:exp','21a Experience and software — optional'],['V:roles','21a1 Roles — sheet'],['V:sw','21b Pharmacy software — sheet'],['V:swadd','21c Pharmacy software — add your own'],['V:cred','21d Advanced credentials — optional'],['V:credpick','21e Advanced credentials — picker'],['V:travel','21f Travel requirements — optional'],['V:later','22 Before you apply — 2 left'],['V:ready','23 Shift — ready to apply'],['V:applied','24 Applied'],['V:allset',"12b Home — you're all set"],['V:allsetX','12c Home — all set card dismissed'],['V:filters','12d Shift filters — sheet']]}
 };
 const ITEMS=[
   {id:'mobile',t:'Mobile number',s:"We'll text you a code",a:'Verify'},
   {id:'bank',t:'Bank details',s:'Bank, account name, BSB, account number',a:'Add'},
   {id:'tax',t:'Tax and business details',s:'ABN, business name, entity type, GST',a:'Add'},
   {id:'super',t:'Super fund',s:'Fund details, TFN and choice form',a:'Add'},
-  {id:'imm',t:'Immunisation',s:'Are you able to vaccinate?',a:'Add'},
-  {id:'prof',t:'Professional certificates',s:'Immunisation, First Aid and CPR, COVID',a:'Upload'},
+  {id:'prof',t:'Professional certificates',s:'Vaccination, First Aid and CPR, COVID',a:'Upload'},
   {id:'other',t:'Other insurance',s:'Policy and expiry date',a:'Upload'}];
 const FORMS={
   bank:{t:'Bank details',d:'We pay you here after each shift.',pre:()=>selF('Bank name *','bank_bank','Choose your bank','BANKS'),f:[['bank_name','Account name *','Andrii Petrenko','','Name on your account'],['bank_bsb','BSB *','062 000','','000 000'],['bank_acc','Account number *','12345678','','12345678']],ok:()=>!!S.f.bank_bank,keys:['bank_bank','bank_name','bank_bsb','bank_acc']},
@@ -388,7 +387,7 @@ const FORMS={
   tax:{t:'Tax and business details',d:'You work as a contractor, so we need these to pay you.',f:[['tax_abn','ABN *','51 824 753 556',"Don't have one? Apply for free at abr.gov.au",'00 000 000 000'],['tax_bn','Business name *','A. Petrenko Pharmacy Services','','e.g. A. Petrenko Pharmacy Services']],
     post:()=>`<div class="field"><label>Entity type *</label>${mchips('f','tax_et',['Sole trader','Company / trust / partnership'],false)}</div><div><div class="overline" style="margin-top:0">ARE YOU REGISTERED FOR GST? *</div>${mchips('f','tax_gst',['Yes','No'],false)}</div>`,ok:()=>!!(S.f.tax_gst&&S.f.tax_et),keys:['tax_abn','tax_bn','tax_et','tax_gst']},
   imm:{t:'Can you vaccinate?',d:'Some pharmacies need a pharmacist who can give vaccines.',yesno:true,ck:'imm_ans'},
-  prof:{t:'Professional certificates',d:'Add a certificate for each training you hold.',immNote:true,body:()=>multiFiles('prof',i=>`<div class="field"><label>Training type *</label>${mchips('f','prof_t'+i,TRAIN,false)}</div>`,'Add another certificate'),ok:()=>!!(S.f.prof_t0&&S.f.prof_f0),keys:['prof_t0','prof_f0']},
+  prof:{t:'Professional certificates',d:'Add a certificate for each training you hold.',body:()=>`<div class="field"><label>Can you vaccinate? *</label>${chips(['Yes','No'],S.f.imm_ans,'setImm')}</div>${S.f.imm_ans==='Yes'?'<div class="note">Add your immunisation training certificate first.</div>':''}`+multiFiles('prof',i=>`<div class="field"><label>Training type *</label>${mchips('f','prof_t'+i,TRAIN,false)}</div>`,'Add another certificate'),ok:()=>!!(S.f.imm_ans&&S.f.prof_t0&&S.f.prof_f0),keys:['imm_ans','prof_t0','prof_f0']},
   other:{t:'Other insurance',d:'Add any other policies you hold, like public liability.',body:()=>multiFiles('other',i=>dateField('other_e'+i,'future',false,'Policy expiry date'),'Add another file'),ok:()=>!!(S.f.other_f0&&S.f.other_e0),keys:['other_f0','other_e0']},
   exp:{t:'Experience and software',d:"We filled this in from your resume. Check it's right.",opt:true,multi:[['YEARS OF PHARMACY EXPERIENCE','exp_y',['0–3 years','3–5 years','5–10 years','10+ years'],false],['WHAT ROLE(S) ARE YOU SEEKING?','exp_r',['Pharmacist','Pharmacy manager','Clinical pharmacist','Compounding pharmacist','Consultant pharmacist','Hospital pharmacist','Locum pharmacist','Aged care pharmacist','Specialist pharmacist (e.g. oncology, pediatrics, cardiology)','Pharmacy technician / assistant','Research or regulatory pharmacist','Pharmacy educator or sales representative'],true,'roles'],['PHARMACY SOFTWARE','exp_s',['FRED','FredNXT','Minfos','Z Software','LOTS','Mountain Top','Simple','Clear Dispense','RxOne','Amfac','ScriptPro','MyScript','Fred Dispense Plus','Pos Works','Fred Dispense','Others'],true,'sheet']],post:()=>salaryHTML()},
   travel:{t:'Travel requirements',d:'Pharmacies use this to match you with shifts away from home.',opt:true,body:()=>TRAVELQ.map((q,i)=>`<div><div class="overline" style="margin-top:0">${q}</div>${mchips('f','trv_'+i,['Yes','No'],false)}</div>`).join(''),keys:['trv_0','trv_1','trv_2','trv_3']},
@@ -565,8 +564,7 @@ function jump(k){
   if(id==='bank'||id==='bankpick'){S.formId='bank';S.items.mobile=true;if(id==='bankpick'){S.pq='';S.sheet={name:'pick',key:'bank_bank',title:'Choose your bank',list:'BANKS'};}}
   if(id==='smsf'){S.formId='super';['mobile','bank','tax'].forEach(x=>S.items[x]=true);Object.assign(S.f,{sup_type:SMSFT,sup_fund:'Petrenko Family Super Fund',sup_title:'Mr',sup_fn:'Andrii',sup_ln:'Petrenko',sup_form:1,sup_tfn:'123 456 782'});}
   if(id==='unsaved'){S.formId='bank';S.items.mobile=true;Object.assign(S.f,{bank_bank:'Commonwealth Bank',bank_name:'Andrii Petrenko'});S.alert='unsaved';}
-  if(id==='imm'){S.formId='imm';['mobile','bank','tax','super'].forEach(x=>S.items[x]=true);}
-  if(id==='prof'||id==='other'){S.formId=id;['mobile','bank','tax','super','imm'].forEach(x=>S.items[x]=true);if(id==='other')S.items.prof=true;}
+  if(id==='prof'||id==='other'){S.formId=id;['mobile','bank','tax','super'].forEach(x=>S.items[x]=true);if(id==='other')S.items.prof=true;}
   if(id==='travel'){ITEMS.forEach(i=>S.items[i.id]=true);S.items.exp=true;S.items.cred=true;S.formId='travel';}
   if(id==='tax'){S.formId='tax';S.items.mobile=true;S.items.bank=true;}
   if(['ready','applied','allset','allsetX'].includes(id))ITEMS.forEach(i=>S.items[i.id]=true);
@@ -779,7 +777,7 @@ V.push=()=>`<div class="lock"><div class="status" style="align-self:stretch;colo
   <button class="notif" onclick="openPush()"><i></i><span style="flex:1"><div class="h">You're verified<small>now</small></div><p>You can now see pharmacy names and addresses. Finish your account setup to apply.</p></span></button></div>`;
 
 V.mobile=()=>{SUG.mob='412 345 678';return `${status()}${header({close:true})}<div class="scroll stack">
-  <div>${S.applyFlow?`<div class="eyebrow">1 of 7 · ${S.ctx==='setup'?'Account setup':'Before you apply'}</div>`:''}${titleBlock('Mobile number',"Pharmacies use it to contact you about a shift. We'll text you a code to confirm it.")}</div>
+  <div>${S.applyFlow?`<div class="eyebrow">1 of ${ITEMS.length} · ${S.ctx==='setup'?'Account setup':'Before you apply'}</div>`:''}${titleBlock('Mobile number',"Pharmacies use it to contact you about a shift. We'll text you a code to confirm it.")}</div>
   <div class="field"><label>Mobile number *</label><div class="phone-in"><span>+61</span><input id="mob" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="412 345 678" value="${esc(S.f.mob||'')}" inputmode="none" onfocus="S.focus='mob'"></div></div>
   </div><div class="foot">${btn('Send code','primary','sendSms()',!mobOk()).replace('<button','<button id="sendBtn"')}
   <button class="qt" id="qt" style="${S.f.mob?'display:none':''}" onmousedown="event.preventDefault();fillMob()"><small>From this device</small><b>+61 412 345 678</b></button>
@@ -797,11 +795,10 @@ V.form=()=>{const id=S.formId,F=FORMS[id];let body='';
   if(F.f)body=F.f.map(([k,l,v,h,ph])=>{SUG[k]=v;return sinput(l,k,v,h,'text','Suggested',ph);}).join('');
   if(F.chips)body=`<div class="field"><label>${F.q}</label>${chips(F.chips,S.f[F.ck],'setImm')}</div>`;
   if(F.multi)body=(F.picker?`<div>${pickField()}</div>`:'')+F.multi.map(([l,k,it,m,kind])=>`<div>${kind==='sheet'?'':`<div class="overline" style="margin-top:0">${l}</div>`}${kind==='sheet'?swField(k):kind==='roles'?rolesField(k):mchips('f',k,it,m)}</div>`).join('')+(F.certs&&(S.f.cred_l||[]).length?`<div><div class="overline" style="margin-top:0">CERTIFICATES</div><div class="stack tight">${S.f.cred_l.map(c=>{const u=S.f['cert_'+c];return row({t:c,s:u?'certificate.pdf':'JPG, PNG or PDF, up to 10 MB',tagL:u?'Uploaded':'Upload',tagK:u?'done':'required',on:`S.f['cert_${c}']=1;render()`});}).join('')}</div></div>`:'');
-  if(F.immNote&&S.f.imm_ans==='Yes')body+=`<div class="note">You said you can vaccinate, so add your immunisation training certificate too.</div>`;
   if(F.pre)body=F.pre()+body;if(F.post)body+=F.post();
   if(F.file)body+=S.f[id+'_file']?row({t:'certificate.pdf',s:'Uploaded',tagL:'Remove',tagK:'neutral',on:`delete S.f['${id}_file'];render()`}):row({t:'Choose a file',s:'JPG, PNG or PDF, up to 10 MB',on:`pickFile('${id}_file')`});
   const nx=S.applyFlow?nextAfter(id,!!S.later[id]):null;
-  return `${status()}${header({close:true})}<div class="scroll stack"><div>${S.applyFlow?`<div class="eyebrow">${F.opt?'Optional':pos(id)+' of 7'} · ${S.ctx==='setup'?'Account setup':'Before you apply'}</div>`:''}${titleBlock(F.t,F.d)}</div>${body}${F.extra?`<div class="note">${F.extra}</div>`:''}</div>
+  return `${status()}${header({close:true})}<div class="scroll stack"><div>${S.applyFlow?`<div class="eyebrow">${F.opt?'Optional':pos(id)+' of '+ITEMS.length} · ${S.ctx==='setup'?'Account setup':'Before you apply'}</div>`:''}${titleBlock(F.t,F.d)}</div>${body}${F.extra?`<div class="note">${F.extra}</div>`:''}</div>
   <div class="foot">${F.yesno?btn('Yes','primary',"answer('Yes')")+btn('No','secondary',"answer('No')"):S.applyFlow?btn(nx?`Next: ${nx.t}`:'Finish','primary','saveForm()',!valid(id))+(F.opt?btn('Skip','text','skipItem()'):DOCITEMS.includes(id)?btn('Do this later','text','laterItem()'):''):btn('Save','primary','saveForm()',!valid(id))}</div>`;};
 
 V.applied=()=>`${status()}<div class="hdr"></div><div class="scroll stack">
@@ -838,7 +835,7 @@ function saveForm(){const id=S.formId;const wasLater=!!S.later[id];S.items[id]=t
 function alertSave(){exitForm();toast('Draft saved on this phone');}
 function alertDiscard(){FKEYS(S.formId).forEach(k=>delete S.f[k]);exitForm();}
 function alertKeep(){S.alert=null;render();}
-function setImm(v){S.f.imm_ans=v;render();}
+function setImm(v){S.f.imm_ans=v;if(v==='Yes'&&!S.f.prof_t0)S.f.prof_t0='Immunisation';render();}
 function pickFile(k){S.f[k]='certificate.pdf';render();}
 function sendSms(){S.otp='';S.focus=null;openSheet('sms');startTimer();}
 function pasteCode(){S.otp='48132';document.querySelectorAll('.otp div').forEach((b,i)=>{b.textContent=S.otp[i];b.className='';});setTimeout(smsDone,400);}
