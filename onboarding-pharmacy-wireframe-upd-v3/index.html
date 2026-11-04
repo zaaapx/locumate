@@ -241,6 +241,12 @@
   .dp-g button.on{background:var(--ink);color:#fff}
   .dp-g button[disabled]{color:#D9D9D9;cursor:default}
   .dp-g.big{grid-template-columns:repeat(4,1fr);row-gap:8px}.dp-g.big button{height:44px;border-radius:22px}
+  .dob3{border:0;padding:0;margin:0;min-width:0}
+  .dob3 legend{font-weight:500;font-size:13px;color:var(--sub);margin-bottom:6px;padding:0}
+  .dob-row{display:flex;gap:12px}
+  .dob-row label{display:block;font-size:12px;color:var(--sub);margin-bottom:4px;font-weight:400}
+  .field input.err{border-color:#C62828}
+  .errtxt{color:#C62828;font-size:13px;margin-top:6px}
   .toast{position:absolute;left:16px;right:16px;top:52px;background:var(--ink);color:#fff;border-radius:12px;padding:12px 16px;font-size:14px;z-index:60;animation:down .2s}
   @keyframes down{from{transform:translateY(-16px);opacity:0}}
 </style>
@@ -289,7 +295,7 @@ let S=fresh();
 const SCREENS=[
   ['welcome','00 Welcome'],['role','01 Role'],['roleSheet','02 Required documents'],['account','03 Create account'],['otp','04 Email code'],
   ['docs','05 Documents hub'],['upload','06 Upload options'],['photoFront','06b Check photo · front'],['photoBack','06c Check photo · back'],['docsDone','07 Documents uploaded'],
-  ['general','08 Your general info'],['avatar','08a Profile photo — sheet'],['addr','08b Home address — suggestions'],['dob','08c Date of birth — date picker'],['ahpra','09 AHPRA registration'],['checking','09b Checking your documents'],['perm','09c Notifications — system prompt'],['home','10 Home — in review'],['hidden','10a Hidden details — sheet'],['all','10b All items — in review'],['shift','11 Shift — not verified']
+  ['general','08 Your general info'],['avatar','08a Profile photo — sheet'],['addr','08b Home address — suggestions'],['dob','08c Date of birth — keypad'],['ahpra','09 AHPRA registration'],['checking','09b Checking your documents'],['perm','09c Notifications — system prompt'],['home','10 Home — in review'],['hidden','10a Hidden details — sheet'],['all','10b All items — in review'],['shift','11 Shift — not verified']
 ];
 const SC={
   signup:{t:'1 · Sign up → in review',l:SCREENS},
@@ -336,7 +342,7 @@ const sinput=(label,id,sugg,help='',type='text',note='Suggested',ph='')=>{const 
 const SUG={};
 function focusF(id){if(S.focus===id)return;S.focus=id;render();const el=document.getElementById(id);if(el){el.focus();}}
 function fillF(id){S.f[id]=SUG[id];if(id==='pw1')S.f.pw2=SUG.pw2;S.focus=null;render();}
-document.addEventListener('mousedown',e=>{if((S.focus||S.addrOpen||S.dp)&&!e.target.closest('.field,.keypad,.qt')){S.focus=null;S.addrOpen=false;S.dp=null;render();}});
+document.addEventListener('mousedown',e=>{if((S.focus||S.addrOpen)&&!e.target.closest('.field,.keypad,.qt')){S.focus=null;S.addrOpen=false;render();}});
 const btn=(label,cls='primary',on='',dis=false)=>`<button class="btn ${cls}" ${dis?'disabled':''} onclick="${on}">${label}</button>`;
 let toastT;
 function toast(msg){clearTimeout(toastT);const p=$('#phone');p.querySelector('.toast')?.remove();p.insertAdjacentHTML('beforeend',`<div class="toast">${msg}</div>`);toastT=setTimeout(()=>p.querySelector('.toast')?.remove(),2200);}
@@ -368,7 +374,7 @@ function setScen(k){S=fresh();S.scen=k;jump(SC[k].l[0][0]);}
 function base(ver,docs){S=Object.assign(fresh(),{scen:S.scen,ver,docs:docs||{id:'done',cv:'done',ins:'done'},idType:'Driver licence'});prefill();}
 function jump(k){
   if(!k.includes(':')){
-    if(k==='dob'){S.scen='signup';jumpOn('general');S.f.dob='';S.dp={y:1990,m:0,view:'date'};return render();}
+    if(k==='dob'){S.scen='signup';jumpOn('general');S.f.dob='';S.f.dob_d='19';S.f.dob_m='07';S.f.dob_y='';S.dobNav=true;render();const y=document.getElementById('dob_y');if(y)y.focus();return;}
     if(k==='avatar'||k==='addr'){S.scen='signup';jumpOn('general');if(k==='avatar')return openSheet('avatar');S.f.addr='10 George';S.addrOpen=true;return render();}
     if(['checking','perm','home','hidden','all','shift'].includes(k)){base('review');S.scen='signup';
       if(k==='checking'||k==='perm'){S.stack=['checking'];if(k==='perm')S.alert='perm';}
@@ -465,37 +471,21 @@ V.docs=()=>{const {up,reading,any}=docState();return `${status()}${header({step:
   </div><div class="foot">${any?btn(reading?'Reading your documents…':'Continue','primary','docsContinue()',reading):btn('Upload later','primary','docsContinue()')}</div>`;};
 V.docsDone=V.docs;
 
-/* date of birth: behaves like el-date-picker (format DD/MM/YYYY, default-value 1990-01-01, editable, future dates disabled) */
-const MN=['January','February','March','April','May','June','July','August','September','October','November','December'];
+/* dates are typed: Day / Month / Year fields, numeric keypad, checked on blur */
 const pad=n=>String(n).padStart(2,'0');
-function parseDob(v){const m=(v||'').match(/^(\d{2})\/(\d{2})\/(\d{4})$/);if(!m)return null;const d=+m[1],mo=+m[2]-1,y=+m[3];const dt=new Date(y,mo,d);return dt.getMonth()===mo&&dt<=new Date()?{y,m:mo,d}:null;}
-function dpOpen(){if(S.dp)return;const d=parseDob(S.f.dob);S.focus=null;S.addrOpen=false;S.dp={y:d?d.y:1990,m:d?d.m:0,view:'date'};dpUpd();}
-function dpUpd(){const el=document.getElementById('dpBox');if(el)el.innerHTML=dpHTML();}
-function dpView(v){S.dp.view=v;dpUpd();}
-function dpStep(dir,big){const p=S.dp;if(p.view==='year')p.y+=dir*10;else if(p.view==='month'||big)p.y+=dir;else{p.m+=dir;if(p.m<0){p.m=11;p.y--;}if(p.m>11){p.m=0;p.y++;}}dpUpd();}
-function dpPick(y,m,d){S.f.dob=`${pad(d)}/${pad(m+1)}/${y}`;S.dp=null;render();}
-function dpYear(y){S.dp.y=y;S.dp.view='month';dpUpd();}
-function dpMonth(m){S.dp.m=m;S.dp.view='date';dpUpd();}
-function dobType(el){const d=el.value.replace(/\D/g,'').slice(0,8);el.value=[d.slice(0,2),d.slice(2,4),d.slice(4,8)].filter(Boolean).join('/');S.f.dob=el.value;const v=parseDob(S.f.dob);if(v&&S.dp){S.dp.y=v.y;S.dp.m=v.m;S.dp.view='date';dpUpd();}genBtn();}
-function dpHTML(){if(!S.dp)return '';const {y,m,view}=S.dp,now=new Date(),sel=parseDob(S.f.dob),P='event.preventDefault();';
-  const nb=(dir,big,t)=>`<button aria-label="${dir<0?'Previous':'Next'}" onmousedown="${P}dpStep(${dir},${big})">${t}</button>`;
-  let head,grid;
-  if(view==='date'){
-    head=`<span>${nb(-1,true,'«')}${nb(-1,false,'‹')}</span><span class="ym"><button onmousedown="${P}dpView('year')">${y}</button><button onmousedown="${P}dpView('month')">${MN[m]}</button></span><span>${nb(1,false,'›')}${nb(1,true,'»')}</span>`;
-    const first=new Date(y,m,1),off=(first.getDay()+6)%7;let cells='';
-    for(let i=0;i<42;i++){const d=new Date(y,m,1-off+i),fu=d>now,on=sel&&sel.y===d.getFullYear()&&sel.m===d.getMonth()&&sel.d===d.getDate();
-      cells+=`<button class="${d.getMonth()!==m?'mu':''} ${on?'on':''}" ${fu?'disabled':''} onmousedown="${P}${fu?'':`dpPick(${d.getFullYear()},${d.getMonth()},${d.getDate()})`}">${d.getDate()}</button>`;}
-    grid=`<div class="dp-g">${['Mo','Tu','We','Th','Fr','Sa','Su'].map(x=>`<span>${x}</span>`).join('')}${cells}</div>`;
-  } else if(view==='month'){
-    head=`<span>${nb(-1,true,'«')}</span><span class="ym"><button onmousedown="${P}dpView('year')">${y}</button></span><span>${nb(1,true,'»')}</span>`;
-    grid=`<div class="dp-g big">${MN.map((n,i)=>{const fu=new Date(y,i,1)>now;return `<button class="${sel&&sel.y===y&&sel.m===i?'on':''}" ${fu?'disabled':''} onmousedown="${P}${fu?'':`dpMonth(${i})`}">${n.slice(0,3)}</button>`;}).join('')}</div>`;
-  } else {
-    const st=y-y%10;head=`<span>${nb(-1,true,'«')}</span><span class="ym"><button>${st} – ${st+9}</button></span><span>${nb(1,true,'»')}</span>`;
-    let c='';for(let yy=st-1;yy<=st+10;yy++){const fu=yy>now.getFullYear();c+=`<button class="${yy<st||yy>st+9?'mu':''} ${sel&&sel.y===yy?'on':''}" ${fu?'disabled':''} onmousedown="${P}${fu?'':`dpYear(${yy})`}">${yy}</button>`;}
-    grid=`<div class="dp-g big">${c}</div>`;
-  }
-  return `<div class="dp" role="dialog" aria-label="Choose date of birth"><div class="dp-h">${head}</div>${grid}</div>`;}
-const dobField=()=>`<div class="field"><label>Date of birth *</label><div class="dob-in"><input id="dob" type="text" inputmode="numeric" autocomplete="bday" placeholder="DD/MM/YYYY" value="${esc(S.f.dob||'')}" onfocus="dpOpen()" oninput="dobType(this)"><button aria-label="Open calendar" onmousedown="event.preventDefault();document.getElementById('dob').focus();dpOpen()">${I.cal}</button></div><div id="dpBox">${dpHTML()}</div></div>`;
+const DLBL={dob:'Date of birth',exp:'AHPRA expiry date'};
+function dateParts(k){if(S.f[k+'_d']===undefined&&S.f[k]){const [d,m,y]=S.f[k].split('/');S.f[k+'_d']=d;S.f[k+'_m']=m;S.f[k+'_y']=y;}}
+function dVal(k,dir){const d=S.f[k+'_d'],m=S.f[k+'_m'],y=S.f[k+'_y'],n=DLBL[k];
+  if(!d&&!m&&!y)return {v:'',e:''};
+  if(!d)return {e:`${n} must include a day`};if(!m)return {e:`${n} must include a month`};if(!y||y.length<4)return {e:`${n} must include a 4-digit year`};
+  const dt=new Date(+y,+m-1,+d);if(+m<1||+m>12||dt.getMonth()!==+m-1||dt.getDate()!==+d)return {e:`${n} must be a real date`};
+  const now=new Date();if(dir==='past'&&dt>now)return {e:`${n} must be in the past`};if(dir==='future'&&dt<now)return {e:`${n} must be in the future`};
+  return {v:`${pad(+d)}/${pad(+m)}/${y}`,e:''};}
+function dIn(k,p,el,dir){el.value=el.value.replace(/\D/g,'');S.f[k+'_'+p]=el.value;S.dobNav=false;const r=dVal(k,dir);S.f[k]=r.e?'':r.v;genBtn();}
+function dCheck(k,dir){setTimeout(()=>{const a=document.activeElement;if(a&&a.id&&a.id.startsWith(k+'_'))return;const r=dVal(k,dir);S.dErr=S.dErr||{};if((S.dErr[k]||'')!==r.e){S.dErr[k]=r.e;render();}},0);}
+const dateField=(k,dir,auto)=>{dateParts(k);const e=(S.dErr||{})[k];
+  const inp=(p,l,ph,w,ml,ac)=>`<div style="width:${w}px"><label for="${k}_${p}">${l}</label><input id="${k}_${p}" ${auto?`name="birthday-${ac}" autocomplete="bday-${ac}"`:'autocomplete="off"'} type="text" inputmode="numeric" maxlength="${ml}" placeholder="${ph}" value="${esc(S.f[k+'_'+p]||'')}" class="${e?'err':''}" ${e?`aria-describedby="${k}_err"`:''} oninput="dIn('${k}','${p}',this,'${dir}')" onblur="dCheck('${k}','${dir}')"></div>`;
+  return `<fieldset class="field dob3"><legend>${DLBL[k]} *</legend><div class="dob-row">${inp('d','Day','DD',72,2,'day')}${inp('m','Month','MM',72,2,'month')}${inp('y','Year','YYYY',110,4,'year')}</div>${e?`<div class="errtxt" id="${k}_err">${e}</div>`:''}</fieldset>`;};
 const ADDR=['10 George St, Sydney NSW 2000','10 George St, Parramatta NSW 2150','10 George St, Hornsby NSW 2077','10 Georges River Rd, Croydon Park NSW 2133','120 Crown St, Surry Hills NSW 2010','285 King St, Newtown NSW 2042'];
 function addrHTML(){if(!S.addrOpen)return '';const q=(S.f.addr||'').trim();
   if(!q)return S.prefilled&&S.prefilled!=='passport'?`<div class="dd"><button onmousedown="pickAddr('${esc(SUG.addr)}')">${I.pin}<span>${esc(SUG.addr)}</span></button></div>`:'';
@@ -505,11 +495,11 @@ function addrHTML(){if(!S.addrOpen)return '';const q=(S.f.addr||'').trim();
 function addrDD(){const el=document.getElementById('addrDD');if(el)el.innerHTML=addrHTML();}
 function pickAddr(a){S.f.addr=a;S.addrOpen=false;S.focus=null;render();}
 function genBtn(){const b=document.getElementById('genBtn');if(b)b.disabled=!(S.f.fn&&S.f.ln&&S.f.dob&&S.gender&&S.f.addr);}
-const addrField=()=>`<div class="field"><label>Home address *</label><div class="addr-in">${I.pin}<input id="addr" type="text" autocomplete="off" placeholder="Start typing your address" value="${esc(S.f.addr||'')}" onfocus="S.focus=null;S.dp=null;dpUpd();S.addrOpen=true;addrDD()" oninput="S.f.addr=this.value;S.addrOpen=true;addrDD();genBtn()"></div><div id="addrDD">${addrHTML()}</div></div>`;
+const addrField=()=>`<div class="field"><label>Home address *</label><div class="addr-in">${I.pin}<input id="addr" type="text" autocomplete="off" placeholder="Start typing your address" value="${esc(S.f.addr||'')}" onfocus="S.focus=null;S.addrOpen=true;addrDD()" oninput="S.f.addr=this.value;S.addrOpen=true;addrDD();genBtn()"></div><div id="addrDD">${addrHTML()}</div></div>`;
 V.general=()=>`${status()}${header({step:4})}<div class="scroll stack">
   <div>${titleBlock('Your general info',S.prefilled==='passport'?'We filled this in from your passport. Add your home address.':S.prefilled?'We filled this in from your driver licence. Check it\'s correct.':'',4)}</div>
   <div class="ava-wrap"><button class="ava2${S.avatar?' on':''}" aria-label="${S.avatar?'Change profile photo':'Add profile photo'}" onclick="openSheet('avatar')">${S.avatar?'AP':I.person}<span class="badge">${I.camw}</span></button><small>Profile photo · optional</small></div>
-  ${sinput('First name *','fn',SUG.fn='Andrii','','text','')}${sinput('Last name *','ln',SUG.ln='Petrenko','','text','')}${dobField()}
+  ${sinput('First name *','fn',SUG.fn='Andrii','','text','')}${sinput('Last name *','ln',SUG.ln='Petrenko','','text','')}${dateField('dob','past',true)}
   <div class="field"><label>Gender *</label>${chips(['Female','Male','Other'],S.gender,'setGender')}<div class="help">Used for super and AHPRA checks</div></div>
   ${(SUG.addr='10 George St, Sydney NSW 2000',addrField())}${sinput('Apartment / unit','unit',SUG.unit='Unit 5','','text','')}
   </div><div class="foot">${btn('Continue','primary','go(\'ahpra\')',!(S.f.fn&&S.f.ln&&S.f.dob&&S.gender&&S.f.addr)).replace('<button','<button id="genBtn"')}</div>`;
@@ -517,7 +507,7 @@ V.general=()=>`${status()}${header({step:4})}<div class="scroll stack">
 V.ahpra=()=>`${status()}${header({step:5})}<div class="scroll stack">
   <div>${titleBlock('AHPRA registration','',5)}</div>
   ${sinput('AHPRA registration number *','ahpra',SUG.ahpra='PHA0001234567','3 letters and 10 digits, e.g. PHA0001234567','text','Found in your AHPRA record')}
-  ${sinput('AHPRA expiry date *','exp',SUG.exp='12/10/2028','','text','Found in your AHPRA record')}
+  ${dateField('exp','future',false)}
   <div class="note">We'll check it together with your ID and insurance.</div>
   </div><div class="foot">${btn('Send for review','primary','afterAhpra()')}</div>`;
 
@@ -726,7 +716,7 @@ const AL={
   unsaved:()=>`<div class="alert"><div class="ab"><b>Save your changes?</b><span>You can come back and finish your ${itemName().toLowerCase()} later.</span></div><button class="b" onclick="alertSave()">Save and exit</button><button class="red" onclick="alertDiscard()">Exit without saving</button><button onclick="alertKeep()">Keep editing</button></div>`
 };
 function curKey(){const c=cur(),sh=S.sheet&&S.sheet.name;
-  if(S.scen==='signup'){if(S.alert==='perm')return 'perm';if(sh)return ({docsInfo:'roleSheet',otp:'otp',upload:'upload',hidden:'hidden',photo:S.sheet.side==='back'?'photoBack':'photoFront'})[sh]||sh;if(c==='general'&&S.dp)return 'dob';if(c==='general'&&S.addrOpen&&S.f.addr)return 'addr';return c==='docs'&&Object.keys(S.docs).length?'docsDone':c;}
+  if(S.scen==='signup'){if(S.alert==='perm')return 'perm';if(sh)return ({docsInfo:'roleSheet',otp:'otp',upload:'upload',hidden:'hidden',photo:S.sheet.side==='back'?'photoBack':'photoFront'})[sh]||sh;if(c==='general'&&S.dobNav)return 'dob';if(c==='general'&&S.addrOpen&&S.f.addr)return 'addr';return c==='docs'&&Object.keys(S.docs).length?'docsDone':c;}
   if(S.scen==='later'){if(sh==='fix')return 'L:fix';return 'L:'+c;}
   if(S.scen==='att'){if(sh==='fix')return 'A:fix';return 'A:'+c;}
   if(sh==='filters')return 'V:filters';if(sh==='apply')return Object.keys(S.later).length?'V:later':'V:apply';if(sh==='sms')return 'V:sms';
