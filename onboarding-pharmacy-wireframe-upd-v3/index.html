@@ -238,6 +238,7 @@
 <script>
 /* ---------- icons ---------- */
 const I={
+  flt:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 7h10M18 7h2M4 17h4M12 17h8" stroke="#212121" stroke-width="2" stroke-linecap="round"/><circle cx="16" cy="7" r="2" stroke="#212121" stroke-width="2"/><circle cx="10" cy="17" r="2" stroke="#212121" stroke-width="2"/></svg>',
   cam:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 8h3l2-3h6l2 3h3v11H4z" stroke="#757575" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="13" r="3.5" stroke="#757575" stroke-width="1.8"/></svg>',
   xs:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="#757575" stroke-width="2" stroke-linecap="round"/></svg>',
   x:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="#212121" stroke-width="2" stroke-linecap="round"/></svg>',
@@ -260,7 +261,7 @@ const DOCS=[
   {id:'super',t:'Super choice form',hint:'Fills in your super details',req:false,done:'Fund details added'},
   {id:'cred',t:'Credential certificates',hint:'Only if you hold advanced credentials',req:false,done:'2 certificates added'}
 ];
-const fresh=()=>({stack:['welcome'],social:false,role:'',work:'',email:'andrii@example.com',otp:'',docs:{},idType:'Driver licence',gender:'',f:{},focus:null,sheet:null,photo:null,ver:'review',items:{},later:{},formId:null,applyFlow:false,alert:null,scen:'signup'});
+const fresh=()=>({stack:['welcome'],social:false,role:'',work:'',email:'andrii@example.com',otp:'',docs:{},idType:'Driver licence',gender:'',f:{},focus:null,sheet:null,photo:null,ver:'review',items:{},later:{},skip:{},flt:{fd:['Mon','Tue','Sat','Sun'],ft:['Day','Weekend'],fs:['NSW','ACT'],fk:'25 km',fl:'1–4 weeks'},formId:null,applyFlow:false,alert:null,scen:'signup'});
 let S=fresh();
 const SCREENS=[
   ['welcome','00 Welcome'],['role','01 Role'],['roleSheet','02 Required documents'],['account','03 Create account'],['otp','04 Email code'],
@@ -271,7 +272,7 @@ const SC={
   signup:{t:'1 · Sign up → in review',l:SCREENS},
   later:{t:'2 · Documents added later',l:[['L:docs','05 Documents hub — tap Upload later'],['L:home','10c Home — documents missing'],['L:all','10d All items — documents missing'],['L:fix','Add photo ID — sheet']]},
   att:{t:'3 · Document needs attention',l:[['A:home','10e Home — needs attention'],['A:fix','10f Re-upload photo ID — sheet'],['A:all','10g All items — needs attention']]},
-  verified:{t:'4 · ID verified → apply',l:[['V:push',"11b You're verified — notification"],['V:home','12 Home — verified'],['V:all','12a All items — verified'],['V:shift','13 Shift — verified'],['V:apply','14 Before you apply — sheet'],['V:mobile','15 Mobile number — 1 of 7'],['V:sms','15a SMS code'],['V:bank','16 Bank details — 2 of 7'],['V:tax','17 Tax and business details — 3 of 7'],['V:super','18 Super fund — 4 of 7'],['V:later','22 Before you apply — 2 left'],['V:ready','23 Shift — ready to apply'],['V:applied','24 Applied'],['V:allset',"12b Home — you're all set"],['V:allsetX','12c Home — all set card closed']]}
+  verified:{t:'4 · ID verified → apply',l:[['V:push',"11b You're verified — notification"],['V:home','12 Home — verified'],['V:all','12a All items — verified'],['V:shift','13 Shift — verified'],['V:apply','14 Before you apply — sheet'],['V:mobile','15 Mobile number — 1 of 7'],['V:sms','15a SMS code'],['V:bank','16 Bank details — 2 of 7'],['V:tax','17 Tax and business details — 3 of 7'],['V:super','18 Super fund — 4 of 7'],['V:exp','21a Experience and software — optional'],['V:cred','21b Advanced credentials — optional'],['V:later','22 Before you apply — 2 left'],['V:ready','23 Shift — ready to apply'],['V:applied','24 Applied'],['V:allset',"12b Home — you're all set"],['V:allsetX','12c Home — all set card closed'],['V:filters','12d Shift filters — sheet']]}
 };
 const ITEMS=[
   {id:'mobile',t:'Mobile number',s:"We'll text you a code",a:'Verify'},
@@ -287,8 +288,14 @@ const FORMS={
   tax:{t:'Tax and business details',d:'You work as a contractor, so we need these to pay you.',f:[['tax_tfn','Tax file number (TFN) *','123 456 782','','000 000 000'],['tax_abn','ABN *','51 824 753 556',"Don't have one? Apply for free at abr.gov.au",'00 000 000 000'],['tax_bn','Business name','A. Petrenko Pharmacy Services','','Filled in from your ABN'],['tax_et','Entity type','Sole trader','','Filled in from your ABN']]},
   imm:{t:'Immunisation',d:'Some pharmacies need a pharmacist who can vaccinate.',chips:['Yes','No'],ck:'imm_ans',q:'Are you able to vaccinate? *'},
   prof:{t:'Professional certificates',d:"Add the ones you hold. We'll remind you before they expire.",file:true},
-  other:{t:'Other insurance',d:'Add any other policies you hold, like public liability.',file:true}
+  other:{t:'Other insurance',d:'Add any other policies you hold, like public liability.',file:true},
+  exp:{t:'Experience and software',d:"We filled this in from your resume. Check it's right.",opt:true,multi:[['YEARS OF PHARMACY EXPERIENCE','exp_y',['0–3 years','3–5 years','5–10 years','10+ years'],false],["ROLES YOU'VE WORKED IN",'exp_r',['Community pharmacist','Pharmacist in charge','Hospital pharmacist','Locum','Compounding'],true],['PHARMACY SOFTWARE','exp_s',['Fred','FredNXT','Fred Dispense','Fred Dispense Plus','Minfos','Z Software','LOTS','Mountain Top','Simple','Clear Dispense','RxOne','Amfac','ScriptPro','MyScript','POS Works','Other'],true]]},
+  cred:{t:'Advanced credentials',d:'Only if you hold any. Pick them, then upload a certificate for each.',opt:true,certs:true,multi:[['YOUR CREDENTIALS','cred_l',['S2/S3 Pharmacy Assistant','Compounding','Diabetes educator','Vaccination','Opioid substitution'],true]]}
 };
+const OPT=[{id:'exp',t:'Experience and software',s:'Prefilled from your resume',a:'Check'},{id:'cred',t:'Advanced credentials',s:'Only if you hold any',a:'Add'}];
+const FLT=[['DAYS','fd',['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],true],['SHIFT TYPE','ft',['Day','Evening','Overnight','Weekend'],true],['STATES','fs',['NSW','ACT','VIC','QLD','SA','WA','TAS','NT'],true],['DISTANCE','fk',['10 km','25 km','50 km','100 km+'],false],['LONGER ASSIGNMENTS','fl',['Not interested','1–4 weeks','5–13 weeks'],false]];
+const mchips=(store,key,items,multi)=>`<div class="chips">${items.map(x=>{const v=S[store][key];const on=multi?(v||[]).includes(x):v===x;return `<button class="chip ${on?'on':''}" onclick="tg('${store}','${key}','${esc(x)}',${multi})">${x}</button>`;}).join('')}</div>`;
+function tg(st,k,x,m){const o=S[st];if(m){const a=o[k]||[];o[k]=a.includes(x)?a.filter(y=>y!==x):[...a,x];}else o[k]=o[k]===x?'':x;render();}
 
 /* ---------- helpers ---------- */
 const $=s=>document.querySelector(s);
@@ -350,9 +357,11 @@ function jump(k){
     base('missing',{cv:'done'});S.scen='later';S.stack=['home'];if(id==='all')S.stack.push('all');if(id==='fix')S.sheet={name:'fix',mode:'add',doc:'id'};return render();}
   if(p==='A'){base('attention');S.scen='att';S.stack=['home'];if(id==='all')S.stack.push('all');if(id==='fix')S.sheet={name:'fix',mode:'fix',doc:'id'};return render();}
   base(id==='push'?'review':'verified');S.scen='verified';
-  S.stack={push:['push'],home:['home'],all:['home','all'],shift:['home','shiftV'],apply:['home','shiftV'],mobile:['home','shiftV','mobile'],sms:['home','shiftV','mobile'],bank:['home','shiftV','form'],tax:['home','shiftV','form'],super:['home','shiftV','form'],later:['home','shiftV'],ready:['home','shiftV'],allset:['home'],allsetX:['home'],applied:['home','shiftV','applied']}[id];
-  if(['apply','mobile','sms','bank','tax','super','later'].includes(id)){S.applyFlow=true;S.ctx='apply';}
+  S.stack={push:['push'],home:['home'],all:['home','all'],shift:['home','shiftV'],apply:['home','shiftV'],mobile:['home','shiftV','mobile'],sms:['home','shiftV','mobile'],bank:['home','shiftV','form'],tax:['home','shiftV','form'],super:['home','shiftV','form'],later:['home','shiftV'],exp:['home','shiftV','form'],cred:['home','shiftV','form'],filters:['home'],ready:['home','shiftV'],allset:['home'],allsetX:['home'],applied:['home','shiftV','applied']}[id];
+  if(['apply','mobile','sms','bank','tax','super','later','exp','cred'].includes(id)){S.applyFlow=true;S.ctx='apply';}
   if(id==='apply'||id==='later')S.sheet={name:'apply'};
+  if(id==='filters'){ITEMS.forEach(i=>S.items[i.id]=true);S.sheet={name:'filters'};}
+  if(id==='exp'||id==='cred'){ITEMS.forEach(i=>S.items[i.id]=true);S.formId=id;if(id==='exp'){S.f.exp_y='5–10 years';S.f.exp_r=['Community pharmacist','Pharmacist in charge','Locum'];S.f.exp_s=['Fred','Z Software'];}else{S.f.cred_l=['Compounding'];}}
   if(id==='super'){S.formId='super';['mobile','bank','tax'].forEach(x=>S.items[x]=true);}
   if(id==='later'){ITEMS.forEach(i=>S.items[i.id]=true);delete S.items.super;delete S.items.prof;S.later={super:true,prof:true};}
   if(id==='mobile'||id==='sms'){S.formId='mobile';if(id==='sms'){S.f.mob='412 345 678';S.otp='';S.sheet={name:'sms'};startTimer();}}
@@ -478,11 +487,11 @@ V.home=()=>{const ver=S.ver,L=left(),nx=firstLeft(),v=ver==='verified';let card;
   if(ver==='missing'){const d=vdocs()[0];card=d?homeCard('Add your documents to get verified',`We need your ${vdocs().map(x=>x==='id'?'photo ID':'insurance').join(' and ')}`,DN[d],'Needed to see shift details','Upload',`openSheet('fix',{mode:'add',doc:'${d}'})`):'';}
   else if(ver==='attention')card=homeCard('Your photo ID needs attention',"We couldn't read it. Upload a clearer photo.",'Photo ID','Photo is blurry','Re-upload',`openSheet('fix',{mode:'fix',doc:'id'})`,'warn');
   else if(!L)card=(S.hideAllSet?'':`<div class="card"><div class="card-h"><b>You're all set</b><button class="close" aria-label="Close" onclick="S.hideAllSet=true;render()">${I.xs}</button></div><div class="prow"><span>${v?'You can apply for shifts':"We'll let you know when you're verified"}</span></div></div>`)
-    +(S.hideOpt?'':`<div class="card"><div class="card-h"><b>Stand out to pharmacies</b><span style="display:flex;gap:16px;align-items:center"><button class="link" onclick="go('all')">View all</button><button class="close" aria-label="Close" onclick="S.hideOpt=true;render()">${I.xs}</button></span></div><div class="prow"><span>2 optional items · pharmacies see these on your profile</span></div><div class="next"><span class="row ic" style="border:0;padding:0;width:36px;height:36px;border-radius:8px;background:var(--bg)"></span><span style="flex:1"><div class="t" style="font-weight:500;font-size:15px">Experience and software</div><div class="s" style="font-size:13px;color:var(--sub)">Prefilled from your resume</div></span><button class="btn primary small" onclick="soon()">Check</button></div></div>`)
-    +`<button class="hint" style="background:var(--req-bg)" onclick="soon()"><span><b style="color:var(--ink)">Set your shift filters</b><span style="color:var(--sub)">Days, location, rate and distance. We'll show matching shifts first.</span></span></button>`;
+    +(S.hideOpt||!OPT.some(o=>!S.items[o.id])?'':`<div class="card"><div class="card-h"><b>Stand out to pharmacies</b><span style="display:flex;gap:16px;align-items:center"><button class="link" onclick="go('all')">View all</button><button class="close" aria-label="Close" onclick="S.hideOpt=true;render()">${I.xs}</button></span></div><div class="prow"><span>${pl(OPT.filter(o=>!S.items[o.id]).length).replace('item','optional item')} · pharmacies see these on your profile</span></div><div class="next"><span class="row ic" style="border:0;padding:0;width:36px;height:36px;border-radius:8px;background:var(--bg)"></span><span style="flex:1"><div class="t" style="font-weight:500;font-size:15px">${OPT.find(o=>!S.items[o.id]).t}</div><div class="s" style="font-size:13px;color:var(--sub)">${OPT.find(o=>!S.items[o.id]).s}</div></span><button class="btn primary small" onclick="S.applyFlow=true;S.ctx='setup';openItem('${OPT.find(o=>!S.items[o.id]).id}')">${OPT.find(o=>!S.items[o.id]).a}</button></div></div>`)
+    +btn('Set your shift filters','secondary',"openSheet('filters')");
   else card=homeCard('Finish your account setup',`${pl(L)} left to apply`,nx.t,'Needed to apply',nx.a,`S.applyFlow=true;S.ctx='setup';openItem('${nx.id}')`);
   return `${status()}${header({back:false,title:'Shifts'})}<div class="scroll stack">${card}
-  <div class="overline" style="margin:4px 0 0">SHIFTS NEAR YOU</div>
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px"><div class="overline" style="margin:0">SHIFTS NEAR YOU</div><button class="link" style="display:flex;gap:6px;align-items:center" onclick="openSheet('filters')">${I.flt}Filters</button></div>
   ${v?'':`<button class="hint" onclick="openSheet('hidden')">${LOCK}<span><b>Names and addresses are hidden</b><span>${ver==='missing'?'Add your ID and insurance so we can verify you.':"You'll see them once we've verified your documents."}</span></span></button>`}
   ${SHIFTS.map(x=>shiftCard(x,v)).join('')}
   </div>${tabs()}`;};
@@ -500,14 +509,9 @@ V.all=()=>{const ver=S.ver,L=left(),miss=ver==='missing'?vdocs().length:0;
   ${titleBlock(`${pl(L+miss)} left`,desc)}
   ${ver!=='verified'?vgroup:''}
   ${todo.length?`<div class="overline">TO APPLY</div><div class="stack tight">${todo.map(i=>row({t:i.t,s:i.s,tagL:i.a,tagK:'required',on:`S.applyFlow=true;S.ctx='setup';openItem('${i.id}')`})).join('')}</div>`:''}
-  <div class="overline">YOUR PROFILE · OPTIONAL</div><div class="stack tight">
-  ${row({t:'Experience and software',s:'Prefilled from your resume',tagL:'Check',tagK:'ai',on:'soon()'})}
-  ${row({t:'Advanced credentials',s:'Only if you hold any',tagL:'Add',tagK:'neutral',on:'soon()'})}</div>
-  <div class="overline">SHIFT FILTERS · ONLY YOU SEE THESE</div><div class="stack tight">
-  ${row({t:'Work preferences',s:'Days, shift type, states',tagL:'Add',tagK:'neutral',on:'soon()'})}
-  ${row({t:'Rate and travel',s:'Minimum rate and travel distance',tagL:'Add',tagK:'neutral',on:'soon()'})}</div>
+  ${OPT.some(o=>!S.items[o.id])?`<div class="overline">YOUR PROFILE · OPTIONAL</div><div class="stack tight">${OPT.filter(o=>!S.items[o.id]).map(o=>row({t:o.t,s:o.s,tagL:o.a,tagK:o.id==='exp'?'ai':'neutral',on:`S.applyFlow=true;S.ctx='setup';openItem('${o.id}')`})).join('')}</div>`:''}
   <div class="overline">DONE</div><div class="stack tight">
-  ${row({t:'Resume',s:'CV_Andrii.pdf',tagL:'Done',tagK:'done',on:'soon()'})}${done.map(i=>row({t:i.t,s:'Saved',tagL:'Done',tagK:'done',on:`S.applyFlow=true;S.ctx='setup';openItem('${i.id}')`})).join('')}${ver==='verified'?vrow('AHPRA registration','PHA0001234567')+vrow('Photo ID','Driver licence','id')+vrow('Indemnity insurance','Expires 30/06/2027','ins'):''}</div>
+  ${row({t:'Resume',s:'CV_Andrii.pdf',tagL:'Done',tagK:'done',on:'soon()'})}${[...done,...OPT.filter(o=>S.items[o.id])].map(i=>row({t:i.t,s:'Saved',tagL:'Done',tagK:'done',on:`S.applyFlow=true;S.ctx='setup';openItem('${i.id}')`})).join('')}${ver==='verified'?vrow('AHPRA registration','PHA0001234567')+vrow('Photo ID','Driver licence','id')+vrow('Indemnity insurance','Expires 30/06/2027','ins'):''}</div>
   <div style="height:24px"></div>
   </div>`;};
 
@@ -541,19 +545,26 @@ V.push=()=>`<div class="lock"><div class="status" style="align-self:stretch;colo
 
 V.mobile=()=>{SUG.mob='412 345 678';return `${status()}${header({close:true})}<div class="scroll stack">
   <div>${S.applyFlow?`<div class="eyebrow">1 of 7 · ${S.ctx==='setup'?'Account setup':'Before you apply'}</div>`:''}${titleBlock('Mobile number',"Pharmacies use it to contact you about a shift. We'll text you a code to confirm it.")}</div>
-  <div class="field"><label>Mobile number *</label><div class="phone-in"><span>+61</span><input id="mob" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="412 345 678" value="${esc(S.f.mob||'')}" onfocus="focusF('mob')" oninput="S.f.mob=this.value;document.getElementById('sendBtn').disabled=!this.value"></div>${S.focus==='mob'&&!S.f.mob?`<div class="sugg"><button onmousedown="fillF('mob')">+61 412 345 678<small>From this device</small></button></div>`:''}</div>
-  </div><div class="foot">${btn('Send code','primary','sendSms()',!S.f.mob).replace('<button','<button id="sendBtn"')}</div>`;};
+  <div class="field"><label>Mobile number *</label><div class="phone-in"><span>+61</span><input id="mob" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="412 345 678" value="${esc(S.f.mob||'')}" inputmode="none" onfocus="S.focus='mob'"></div></div>
+  </div><div class="foot">${btn('Send code','primary','sendSms()',!mobOk()).replace('<button','<button id="sendBtn"')}
+  <button class="qt" id="qt" style="${S.f.mob?'display:none':''}" onclick="fillMob()"><small>From this device</small><b>+61 412 345 678</b></button>
+  <div class="keypad">${['1','2','3','4','5','6','7','8','9','','0','del'].map(k=>k?`<button onclick="mkey('${k}')" aria-label="${k==='del'?'Delete':k}">${k==='del'?I.del:k}</button>`:'<span></span>').join('')}</div></div>`;};
+const mobOk=()=>(S.f.mob||'').replace(/\D/g,'').length===9;
+function mkey(k){let d=(S.f.mob||'').replace(/\D/g,'');if(k==='del')d=d.slice(0,-1);else if(d.length<9)d+=k;S.f.mob=[d.slice(0,3),d.slice(3,6),d.slice(6,9)].filter(Boolean).join(' ');
+  const i=document.getElementById('mob');if(i){i.value=S.f.mob;i.focus({preventScroll:true});}const b=document.getElementById('sendBtn');if(b)b.disabled=!mobOk();const q=document.getElementById('qt');if(q)q.style.display=S.f.mob?'none':'';}
+function fillMob(){S.f.mob='412 345 678';render();}
 
-const FKEYS=id=>{const F=FORMS[id];if(F.f)return F.f.map(x=>x[0]);if(F.chips)return [F.ck];return [id+'_file'];};
+const FKEYS=id=>{const F=FORMS[id];if(F.multi)return F.multi.map(x=>x[1]);if(F.f)return F.f.map(x=>x[0]);if(F.chips)return [F.ck];return [id+'_file'];};
 const dirty=id=>FKEYS(id).some(k=>S.f[k]);
-const valid=id=>{const F=FORMS[id];if(F.f)return F.f.filter(x=>x[1].includes('*')).every(x=>S.f[x[0]]);return FKEYS(id).every(k=>S.f[k]);};
+const valid=id=>{const F=FORMS[id];if(F.opt)return true;if(F.f)return F.f.filter(x=>x[1].includes('*')).every(x=>S.f[x[0]]);return FKEYS(id).every(k=>S.f[k]);};
 V.form=()=>{const id=S.formId,F=FORMS[id];let body='';
   if(F.f)body=F.f.map(([k,l,v,h,ph])=>{SUG[k]=v;return sinput(l,k,v,h,'text','Suggested',ph);}).join('');
   if(F.chips)body=`<div class="field"><label>${F.q}</label>${chips(F.chips,S.f[F.ck],'setImm')}</div>`;
+  if(F.multi)body=F.multi.map(([l,k,it,m])=>`<div><div class="overline" style="margin-top:0">${l}</div>${mchips('f',k,it,m)}</div>`).join('')+(F.certs&&(S.f.cred_l||[]).length?`<div><div class="overline" style="margin-top:0">CERTIFICATES</div><div class="stack tight">${S.f.cred_l.map(c=>{const u=S.f['cert_'+c];return row({t:c,s:u?'certificate.pdf':'JPG, PNG or PDF, up to 10 MB',tagL:u?'Uploaded':'Upload',tagK:u?'done':'required',on:`S.f['cert_${c}']=1;render()`});}).join('')}</div></div>`:'');
   if(F.file)body=S.f[id+'_file']?row({t:'certificate.pdf',s:'Uploaded',tagL:'Remove',tagK:'neutral',on:`delete S.f['${id}_file'];render()`}):row({t:'Choose a file',s:'JPG, PNG or PDF, up to 10 MB',on:`pickFile('${id}_file')`});
   const nx=S.applyFlow?nextAfter(id,!!S.later[id]):null;
-  return `${status()}${header({close:true})}<div class="scroll stack"><div>${S.applyFlow?`<div class="eyebrow">${pos(id)} of 7 · ${S.ctx==='setup'?'Account setup':'Before you apply'}</div>`:''}${titleBlock(F.t,F.d)}</div>${body}${F.extra?`<div class="note">${F.extra}</div>`:''}</div>
-  <div class="foot">${S.applyFlow?btn(nx?`Next: ${nx.t}`:'Finish','primary','saveForm()',!valid(id))+(DOCITEMS.includes(id)?btn('Do this later','text','laterItem()'):''):btn('Save','primary','saveForm()',!valid(id))}</div>`;};
+  return `${status()}${header({close:true})}<div class="scroll stack"><div>${S.applyFlow?`<div class="eyebrow">${F.opt?'Optional':pos(id)+' of 7'} · ${S.ctx==='setup'?'Account setup':'Before you apply'}</div>`:''}${titleBlock(F.t,F.d)}</div>${body}${F.extra?`<div class="note">${F.extra}</div>`:''}</div>
+  <div class="foot">${S.applyFlow?btn(nx?`Next: ${nx.t}`:'Finish','primary','saveForm()',!valid(id))+(F.opt?btn('Skip','text','skipItem()'):DOCITEMS.includes(id)?btn('Do this later','text','laterItem()'):''):btn('Save','primary','saveForm()',!valid(id))}</div>`;};
 
 V.applied=()=>`${status()}<div class="hdr"></div><div class="scroll stack">
   <div>${titleBlock('Application sent',"Priceline Pharmacy will review it. We'll let you know when they reply.")}</div>
@@ -566,20 +577,23 @@ function afterAhpra(){if(S.ver==='missing'){S.stack=['home'];render();}else go('
 function toHome(){S.alert=null;S.sheet=null;S.stack=['home'];render();}
 function goHome(){S.applyFlow=false;toHome();}
 function openPush(){S.ver='verified';S.scen='verified';S.stack=['home'];render();}
-function openItem(id){S.sheet=null;S.focus=null;S.formId=id;S.stack.push(id==='mobile'?'mobile':'form');render();}
+function openItem(id){if(id==='exp'&&!S.f.exp_y){S.f.exp_y='5–10 years';S.f.exp_r=['Community pharmacist','Pharmacist in charge','Locum'];S.f.exp_s=['Fred','Z Software'];}if(id==='mobile')S.focus='mob';S.sheet=null;S.focus=null;S.formId=id;S.stack.push(id==='mobile'?'mobile':'form');render();}
 function startApply(){if(!left())return go('applied');S.applyFlow=true;S.ctx='apply';openSheet('apply');}
 function exitForm(){S.alert=null;S.sheet=null;S.focus=null;S.stack.pop();if(S.applyFlow&&S.ctx==='apply'&&left())S.sheet={name:'apply'};render();}
 const DOCITEMS=['super','prof','other'];
 const pos=id=>ITEMS.findIndex(i=>i.id===id)+1;
-function nextAfter(id,catchUp){let open=ITEMS.filter(i=>!S.items[i.id]&&!S.later[i.id]&&i.id!==id);if(!open.length&&catchUp)open=ITEMS.filter(i=>!S.items[i.id]&&i.id!==id);const k=pos(id);return open.find(i=>pos(i.id)>k)||open[0];}
+function nextAfter(id,catchUp){const oi=OPT.findIndex(o=>o.id===id);const nOpt=from=>OPT.slice(from).find(o=>o.id!==id&&!S.items[o.id]&&!S.skip[o.id]);
+  if(oi>=0)return nOpt(oi+1);
+  let open=ITEMS.filter(i=>!S.items[i.id]&&!S.later[i.id]&&i.id!==id);if(!open.length&&catchUp)open=ITEMS.filter(i=>!S.items[i.id]&&i.id!==id);const k=pos(id);return open.find(i=>pos(i.id)>k)||open[0]||nOpt(0);}
 function advance(id,catchUp){const n=nextAfter(id,catchUp);S.alert=null;S.sheet=null;S.focus=null;S.stack.pop();
   if(n){openItem(n.id);return;}
   if(!left()){render();toast('Your profile is complete');return;}
   if(S.ctx==='setup'){render();toast('Saved. Add the rest when you have the files.');return;}
   S.sheet={name:'apply'};render();}
+function skipItem(){S.skip[S.formId]=true;advance(S.formId);}
 function laterItem(){S.later[S.formId]=true;advance(S.formId);}
 function closeForm(){const d=S.formId!=='mobile'&&dirty(S.formId)&&!S.items[S.formId];exitForm();if(d)toast('Saved. You can finish it later.');}
-function itemName(){return (ITEMS.find(i=>i.id===S.formId)||{t:''}).t;}
+function itemName(){return ([...ITEMS,...OPT].find(i=>i.id===S.formId)||{t:''}).t;}
 function saveForm(){const id=S.formId;const wasLater=!!S.later[id];S.items[id]=true;delete S.later[id];if(S.applyFlow)return advance(id,wasLater);const t=itemName();exitForm();toast(left()?`${t} saved`:'Your profile is complete');}
 function alertSave(){if(valid(S.formId))return saveForm();exitForm();toast('Saved. You can finish it later.');}
 function alertDiscard(){FKEYS(S.formId).forEach(k=>delete S.f[k]);exitForm();}
@@ -627,6 +641,9 @@ SH.photo=()=>{const {doc,side}=S.sheet;const d=DOCS.find(x=>x.id===doc);const li
   <div class="checks"><div>${I.check}All four corners are in the frame</div><div>${I.check}${back?'Card number is readable':'Text is sharp and readable'}</div><div>${I.check}No glare or shadows</div></div>
   <div class="stack tight">${btn(lic&&!back?'Next':'Confirm','primary','photoNext()')}${btn('Retake photo','secondary','retake()')}</div></div>`;};
 
+SH.filters=()=>`<div class="inner" style="padding-top:8px"><div style="display:flex;align-items:center;gap:16px"><h2 style="flex:1">Filters</h2><button class="link" style="color:var(--sub)" onclick="S.flt={};render()">Reset</button><button class="close" aria-label="Close" onclick="closeSheet()">${I.x}</button></div>
+  ${FLT.map(([l,k,it,m])=>`<div class="overline">${l}</div>${mchips('flt',k,it,m)}${k==='fk'?`<div class="field" style="margin-top:16px"><label>Minimum hourly rate (excl. super)</label><input id="frate" type="text" inputmode="decimal" placeholder="e.g. $60" value="${esc(S.flt.rate||'')}" oninput="S.flt.rate=this.value"></div>`:''}`).join('')}
+  <div style="height:20px"></div>${btn('Show 18 shifts','primary',"closeSheet();toast('Filters saved')")}</div>`;
 SH.avatar=()=>`<div class="inner" style="padding-top:16px">${titleBlock('Profile photo','Use a clear, recent photo of your face. Pharmacies see it on your profile.')}<div style="height:16px"></div><div class="stack tight">${row({t:'Take a photo',on:'setAvatar()'})}${row({t:'Choose from library',on:'setAvatar()'})}${S.avatar?row({t:'Remove photo',on:'S.avatar=false;closeSheet()'}):''}</div></div>`;
 function setAvatar(){S.avatar=true;closeSheet();toast('Photo added');}
 SH.apply=()=>{const L=ITEMS.filter(i=>!S.items[i.id]);const later=L.filter(i=>S.later[i.id]),todo=L.filter(i=>!S.later[i.id]),done=ITEMS.filter(i=>S.items[i.id]);
@@ -655,7 +672,7 @@ function curKey(){const c=cur(),sh=S.sheet&&S.sheet.name;
   if(S.scen==='signup'){if(S.alert==='perm')return 'perm';if(sh)return ({docsInfo:'roleSheet',otp:'otp',upload:'upload',hidden:'hidden',photo:S.sheet.side==='back'?'photoBack':'photoFront'})[sh]||sh;if(c==='general'&&S.addrOpen&&S.f.addr)return 'addr';return c==='docs'&&Object.keys(S.docs).length?'docsDone':c;}
   if(S.scen==='later'){if(sh==='fix')return 'L:fix';return 'L:'+c;}
   if(S.scen==='att'){if(sh==='fix')return 'A:fix';return 'A:'+c;}
-  if(sh==='apply')return Object.keys(S.later).length?'V:later':'V:apply';if(sh==='sms')return 'V:sms';
+  if(sh==='filters')return 'V:filters';if(sh==='apply')return Object.keys(S.later).length?'V:later':'V:apply';if(sh==='sms')return 'V:sms';
   if(c==='form')return 'V:'+S.formId;if(c==='home'&&!left())return S.hideAllSet?'V:allsetX':'V:allset';if(c==='shiftV')return left()?'V:shift':'V:ready';return 'V:'+c;}
 
 /* sheets that sit on top of which screen */
@@ -668,6 +685,7 @@ function render(){
   const an=S.anim?' anim':'';S.anim=false;
   p.innerHTML=`<section class="screen">${V[id]()}</section>${S.sheet?`<div class="overlay${an}" onclick="${['otp','sms'].includes(S.sheet.name)?'':'closeSheet()'}"></div><div class="sheet${an}" role="dialog"><div class="grab"></div>${SH[S.sheet.name]()}</div>`:''}${S.alert?`<div class="alert-wrap" role="alertdialog">${AL[S.alert]()}</div>`:''}<div class="homebar"></div>`;
   $('#scen').innerHTML=Object.entries(SC).map(([k,v])=>`<button class="${k===S.scen?'on':''}" onclick="setScen('${k}')">${v.t}</button>`).join('');
+  if(cur()==='mobile'&&!S.sheet){const m=document.getElementById('mob');if(m)m.focus({preventScroll:true});}
   const ak=curKey();
   $('#nav').innerHTML=SC[S.scen].l.map(([k,l])=>`<li><button class="${k===ak?'on':''}" onclick="jump('${k}')">${l}</button></li>`).join('');
 }
