@@ -371,7 +371,7 @@ const SC={
   signup:{t:'1 · Sign up → in review',l:SCREENS},
   later:{t:'2 · Documents added later',l:[['L:docs','05 Documents hub — tap Upload later'],['L:home','10c Home — documents missing'],['L:all','10d All items — documents missing'],['L:fix','Add photo ID — sheet']]},
   att:{t:'3 · Document needs attention',l:[['A:home','10e Home — needs attention'],['A:fix','10f Re-upload photo ID — sheet'],['A:all','10g All items — needs attention']]},
-  verified:{t:'4 · ID verified → apply',l:[['V:push',"11b You're verified — notification"],['V:home','12 Home — verified'],['V:all','12a All items — verified'],['V:shift','13 Shift — verified'],['V:apply','14 Before you apply — sheet'],['V:mobile','15 Mobile number — 1 of 7'],['V:sms','15a SMS code'],['V:bank','16 Bank details — 2 of 7'],['V:bankpick','16a Bank name — sheet'],['V:tax','17 Tax and business details — 3 of 7'],['V:super','18 Super fund — 4 of 7'],['V:smsf','18a Super fund — self-managed (SMSF)'],['V:imm','19 Immunisation — 5 of 7'],['V:prof','20 Professional certificates — 6 of 7'],['V:other','21 Other insurance — 7 of 7'],['V:exp','21a Experience and software — optional'],['V:roles','21a1 Roles — sheet'],['V:sw','21b Pharmacy software — sheet'],['V:swadd','21c Pharmacy software — add your own'],['V:cred','21d Advanced credentials — optional'],['V:credpick','21e Advanced credentials — picker'],['V:travel','21f Travel requirements — optional'],['V:later','22 Before you apply — 2 left'],['V:ready','23 Shift — ready to apply'],['V:applied','24 Applied'],['V:allset',"12b Home — you're all set"],['V:allsetX','12c Home — all set card dismissed'],['V:filters','12d Shift filters — sheet']]}
+  verified:{t:'4 · ID verified → apply',l:[['V:push',"11b You're verified — notification"],['V:home','12 Home — verified'],['V:all','12a All items — verified'],['V:shift','13 Shift — verified'],['V:apply','14 Before you apply — sheet'],['V:mobile','15 Mobile number — 1 of 7'],['V:sms','15a SMS code'],['V:bank','16 Bank details — 2 of 7'],['V:bankpick','16a Bank name — sheet'],['V:unsaved','16b Leave unfinished — alert'],['V:tax','17 Tax and business details — 3 of 7'],['V:super','18 Super fund — 4 of 7'],['V:smsf','18a Super fund — self-managed (SMSF)'],['V:imm','19 Immunisation — 5 of 7'],['V:prof','20 Professional certificates — 6 of 7'],['V:other','21 Other insurance — 7 of 7'],['V:exp','21a Experience and software — optional'],['V:roles','21a1 Roles — sheet'],['V:sw','21b Pharmacy software — sheet'],['V:swadd','21c Pharmacy software — add your own'],['V:cred','21d Advanced credentials — optional'],['V:credpick','21e Advanced credentials — picker'],['V:travel','21f Travel requirements — optional'],['V:later','22 Before you apply — 2 left'],['V:ready','23 Shift — ready to apply'],['V:applied','24 Applied'],['V:allset',"12b Home — you're all set"],['V:allsetX','12c Home — all set card dismissed'],['V:filters','12d Shift filters — sheet']]}
 };
 const ITEMS=[
   {id:'mobile',t:'Mobile number',s:"We'll text you a code",a:'Verify'},
@@ -547,8 +547,8 @@ function jump(k){
     base('missing',{cv:'done'});S.scen='later';S.stack=['home'];if(id==='all')S.stack.push('all');if(id==='fix')S.sheet={name:'fix',mode:'add',doc:'id'};return render();}
   if(p==='A'){base('attention');S.scen='att';S.stack=['home'];if(id==='all')S.stack.push('all');if(id==='fix')S.sheet={name:'fix',mode:'fix',doc:'id'};return render();}
   base(id==='push'?'review':'verified');S.scen='verified';
-  S.stack={push:['push'],home:['home'],all:['home','all'],shift:['home','shiftV'],apply:['home','shiftV'],mobile:['home','shiftV','mobile'],sms:['home','shiftV','mobile'],bank:['home','shiftV','form'],tax:['home','shiftV','form'],super:['home','shiftV','form'],later:['home','shiftV'],exp:['home','shiftV','form'],cred:['home','shiftV','form'],sw:['home','shiftV','form'],roles:['home','shiftV','form'],swadd:['home','shiftV','form'],credpick:['home','shiftV','form','credpick'],bankpick:['home','shiftV','form'],smsf:['home','shiftV','form'],imm:['home','shiftV','form'],prof:['home','shiftV','form'],other:['home','shiftV','form'],travel:['home','shiftV','form'],filters:['home'],ready:['home','shiftV'],allset:['home'],allsetX:['home'],applied:['home','shiftV','applied']}[id];
-  if(['apply','mobile','sms','bank','bankpick','smsf','imm','prof','other','travel','tax','super','later','exp','cred','credpick','sw','swadd','roles'].includes(id)){S.applyFlow=true;S.ctx='apply';}
+  S.stack={push:['push'],home:['home'],all:['home','all'],shift:['home','shiftV'],apply:['home','shiftV'],mobile:['home','shiftV','mobile'],sms:['home','shiftV','mobile'],bank:['home','shiftV','form'],tax:['home','shiftV','form'],super:['home','shiftV','form'],later:['home','shiftV'],exp:['home','shiftV','form'],cred:['home','shiftV','form'],sw:['home','shiftV','form'],roles:['home','shiftV','form'],swadd:['home','shiftV','form'],credpick:['home','shiftV','form','credpick'],bankpick:['home','shiftV','form'],smsf:['home','shiftV','form'],unsaved:['home','shiftV','form'],imm:['home','shiftV','form'],prof:['home','shiftV','form'],other:['home','shiftV','form'],travel:['home','shiftV','form'],filters:['home'],ready:['home','shiftV'],allset:['home'],allsetX:['home'],applied:['home','shiftV','applied']}[id];
+  if(['apply','mobile','sms','bank','bankpick','unsaved','smsf','imm','prof','other','travel','tax','super','later','exp','cred','credpick','sw','swadd','roles'].includes(id)){S.applyFlow=true;S.ctx='apply';}
   if(id==='apply'||id==='later')S.sheet={name:'apply'};
   if(id==='filters'){ITEMS.forEach(i=>S.items[i.id]=true);S.sheet={name:'filters'};}
   if(id==='sw'||id==='swadd'){ITEMS.forEach(i=>S.items[i.id]=true);S.formId='exp';S.f.exp_y='5–10 years';S.f.exp_r=['Pharmacist','Locum pharmacist'];S.f.exp_s=['FRED','Z Software'];S.swq=id==='swadd'?'Corum':'';S.sheet={name:'sw'};}
@@ -560,6 +560,7 @@ function jump(k){
   if(id==='mobile'||id==='sms'){S.formId='mobile';if(id==='sms'){S.f.mob='412 345 678';S.otp='';S.sheet={name:'sms'};startTimer();}}
   if(id==='bank'||id==='bankpick'){S.formId='bank';S.items.mobile=true;if(id==='bankpick'){S.pq='';S.sheet={name:'pick',key:'bank_bank',title:'Choose your bank',list:'BANKS'};}}
   if(id==='smsf'){S.formId='super';['mobile','bank','tax'].forEach(x=>S.items[x]=true);Object.assign(S.f,{sup_type:SMSFT,sup_fund:'Petrenko Family Super Fund',sup_title:'Mr',sup_fn:'Andrii',sup_ln:'Petrenko',sup_form:1,sup_tfn:'123 456 782'});}
+  if(id==='unsaved'){S.formId='bank';S.items.mobile=true;Object.assign(S.f,{bank_bank:'Commonwealth Bank',bank_name:'Andrii Petrenko'});S.alert='unsaved';}
   if(id==='imm'){S.formId='imm';['mobile','bank','tax','super'].forEach(x=>S.items[x]=true);}
   if(id==='prof'||id==='other'){S.formId=id;['mobile','bank','tax','super','imm'].forEach(x=>S.items[x]=true);if(id==='other')S.items.prof=true;}
   if(id==='travel'){ITEMS.forEach(i=>S.items[i.id]=true);S.items.exp=true;S.items.cred=true;S.formId='travel';}
@@ -824,10 +825,11 @@ function advance(id,catchUp){const n=nextAfter(id,catchUp);S.alert=null;S.sheet=
 function answer(v){S.f[FORMS[S.formId].ck]=v;saveForm();}
 function skipItem(){S.skip[S.formId]=true;advance(S.formId);}
 function laterItem(){S.later[S.formId]=true;advance(S.formId);}
-function closeForm(){const d=S.formId!=='mobile'&&dirty(S.formId)&&!S.items[S.formId];exitForm();if(d)toast('Saved. You can finish it later.');}
+/* a step is sent only when it's complete; a half-filled step stays as a draft on this phone */
+function closeForm(){const id=S.formId;const d=id!=='mobile'&&dirty(id)&&!S.items[id];if(d&&valid(id)){const t=itemName();S.items[id]=true;delete S.later[id];exitForm();return toast(`${t} saved`);}if(d){S.alert='unsaved';return render();}exitForm();}
 function itemName(){return ([...ITEMS,...OPT].find(i=>i.id===S.formId)||{t:''}).t;}
 function saveForm(){const id=S.formId;const wasLater=!!S.later[id];S.items[id]=true;delete S.later[id];if(S.applyFlow)return advance(id,wasLater);const t=itemName();exitForm();toast(left()?`${t} saved`:'Your profile is complete');}
-function alertSave(){if(valid(S.formId))return saveForm();exitForm();toast('Saved. You can finish it later.');}
+function alertSave(){exitForm();toast('Draft saved on this phone');}
 function alertDiscard(){FKEYS(S.formId).forEach(k=>delete S.f[k]);exitForm();}
 function alertKeep(){S.alert=null;render();}
 function setImm(v){S.f.imm_ans=v;render();}
@@ -907,12 +909,13 @@ SH.fix=()=>{const d=S.sheet.doc,add=S.sheet.mode==='add',isId=d==='id';return `<
   <div class="note">${add?"We'll check it within 24–48 hours.":"We'll check it again. This usually takes 24–48 hours."}</div></div></div>`;};
 const AL={
   perm:()=>`<div class="alert"><div class="ab"><b>“Locumate” Would Like to Send You Notifications</b><span>Notifications may include alerts, sounds and icon badges. These can be configured in Settings.</span></div><div class="row2"><button onclick="toHome()">Don't Allow</button><button class="b" onclick="toHome();toast('Notifications on')">Allow</button></div></div>`,
-  unsaved:()=>`<div class="alert"><div class="ab"><b>Save your changes?</b><span>You can come back and finish your ${itemName().toLowerCase()} later.</span></div><button class="b" onclick="alertSave()">Save and exit</button><button class="red" onclick="alertDiscard()">Exit without saving</button><button onclick="alertKeep()">Keep editing</button></div>`
+  unsaved:()=>`<div class="alert"><div class="ab"><b>Finish ${itemName().toLowerCase()} later?</b><span>We'll keep what you've entered on this phone and send it once all required fields are filled in.</span></div><button class="b" onclick="alertSave()">Save draft</button><button class="red" onclick="alertDiscard()">Discard</button><button onclick="alertKeep()">Keep editing</button></div>`
 };
 function curKey(){const c=cur(),sh=S.sheet&&S.sheet.name;
   if(S.scen==='signup'){if(S.alert==='perm')return 'perm';if(sh)return ({docsInfo:'roleSheet',otp:'otp',upload:'upload',hidden:'hidden',photo:S.sheet.side==='back'?'photoBack':'photoFront'})[sh]||sh;if(c==='general'&&S.dobNav)return 'dob';if(c==='general'&&S.addrOpen&&S.f.addr)return 'addr';if(c==='role'&&S.acct)return 'role1';return c==='docs'&&Object.keys(S.docs).length?'docsDone':c;}
   if(S.scen==='later'){if(sh==='fix')return 'L:fix';return 'L:'+c;}
   if(S.scen==='att'){if(sh==='fix')return 'A:fix';return 'A:'+c;}
+  if(S.alert==='unsaved')return 'V:unsaved';
   if(sh==='filters')return 'V:filters';if(sh==='apply')return Object.keys(S.later).length?'V:later':'V:apply';if(sh==='sms')return 'V:sms';
   if(c==='credpick')return 'V:credpick';if(sh==='sw')return (S.swq||'').trim()?'V:swadd':'V:sw';if(sh==='roles')return 'V:roles';if(sh==='pick'&&S.formId==='bank')return 'V:bankpick';if(c==='form'&&S.formId==='super'&&S.f.sup_type===SMSFT)return 'V:smsf';if(c==='form')return 'V:'+S.formId;if(c==='home'&&!left())return S.hideAllSet?'V:allsetX':'V:allset';if(c==='shiftV')return left()?'V:shift':'V:ready';return 'V:'+c;}
 
@@ -926,6 +929,7 @@ function render(){
   const an=S.anim?' anim':'';S.anim=false;
   const keep=S._last===id?{sc:p.querySelector('.screen .scroll')?.scrollTop||0,sh:p.querySelector('.sheet .inner')?.scrollTop||0,sheet:!!S.sheet}:null;S._last=id;
   p.innerHTML=`<section class="screen">${V[id]()}</section>${S.sheet?`<div class="overlay${an}" onclick="${['otp','sms'].includes(S.sheet.name)?'':'closeSheet()'}"></div><div class="sheet${an}" role="dialog"><div class="grab"></div>${SH[S.sheet.name]()}</div>`:''}${S.alert?`<div class="alert-wrap" role="alertdialog">${AL[S.alert]()}</div>`:''}<div class="homebar"></div>`;
+  if(S.sheet&&S.sheet.name==='insExp'&&!S.sheet.af){S.sheet.af=1;setTimeout(()=>{const el=document.getElementById('ins_e0');if(el)el.focus({preventScroll:true});},60);}
   if(S.dk){const el=document.getElementById(S.dk.k);if(el){kbAttach();el.focus({preventScroll:true});}else S.dk=null;}
   if(keep){const sc=p.querySelector('.screen .scroll');if(sc)sc.scrollTop=keep.sc;const si=p.querySelector('.sheet .inner');if(si&&keep.sheet)si.scrollTop=keep.sh;}
   $('#scen').innerHTML=Object.entries(SC).map(([k,v])=>`<button class="${k===S.scen?'on':''}" onclick="setScen('${k}')">${v.t}</button>`).join('');
