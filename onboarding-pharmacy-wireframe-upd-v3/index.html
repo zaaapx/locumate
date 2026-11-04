@@ -309,8 +309,8 @@ const FORMS={
   bank:{t:'Bank details',d:'We pay you here after each shift.',f:[['bank_name','Account name *','Andrii Petrenko','','Name on your account'],['bank_bsb','BSB *','062 000','','000 000'],['bank_acc','Account number *','12345678','','12345678']]},
   super:{t:'Super fund',d:'We pay your super with every shift.',f:[['sup_fund','Fund name *','AustralianSuper','','e.g. AustralianSuper'],['sup_name','Name registered with the fund *','Andrii Petrenko','','As on your super statement'],['sup_mem','Member number *','123456789','','e.g. 123456789']],extra:"Have a super choice form? You can upload it instead, and we'll fill this in."},
   tax:{t:'Tax and business details',d:'You work as a contractor, so we need these to pay you.',f:[['tax_tfn','Tax file number (TFN) *','123 456 782','','000 000 000'],['tax_abn','ABN *','51 824 753 556',"Don't have one? Apply for free at abr.gov.au",'00 000 000 000'],['tax_bn','Business name','A. Petrenko Pharmacy Services','','Filled in from your ABN'],['tax_et','Entity type','Sole trader','','Filled in from your ABN']]},
-  imm:{t:'Immunisation',d:'Some pharmacies need a pharmacist who can vaccinate.',chips:['Yes','No'],ck:'imm_ans',q:'Are you able to vaccinate? *'},
-  prof:{t:'Professional certificates',d:"Add the ones you hold. We'll remind you before they expire.",file:true},
+  imm:{t:'Can you vaccinate?',d:'Some pharmacies need a pharmacist who can give vaccines.',yesno:true,ck:'imm_ans'},
+  prof:{t:'Professional certificates',d:"Add the ones you hold. We'll remind you before they expire.",file:true,immNote:true},
   other:{t:'Other insurance',d:'Add any other policies you hold, like public liability.',file:true},
   exp:{t:'Experience and software',d:"We filled this in from your resume. Check it's right.",opt:true,multi:[['YEARS OF PHARMACY EXPERIENCE','exp_y',['0–3 years','3–5 years','5–10 years','10+ years'],false],["ROLES YOU'VE WORKED IN",'exp_r',['Community pharmacist','Pharmacist in charge','Hospital pharmacist','Locum','Compounding'],true],['PHARMACY SOFTWARE','exp_s',['Fred','FredNXT','Fred Dispense','Fred Dispense Plus','Minfos','Z Software','LOTS','Mountain Top','Simple','Clear Dispense','RxOne','Amfac','ScriptPro','MyScript','POS Works','Other'],true]]},
   cred:{t:'Advanced credentials',d:'Only if you hold any. Pick them, then upload a certificate for each.',opt:true,certs:true,multi:[['YOUR CREDENTIALS','cred_l',['S2/S3 Pharmacy Assistant','Compounding','Diabetes educator','Vaccination','Opioid substitution'],true]]}
@@ -609,17 +609,18 @@ function mkey(k){let d=(S.f.mob||'').replace(/\D/g,'');if(k==='del')d=d.slice(0,
   const i=document.getElementById('mob');if(i){i.value=S.f.mob;i.focus({preventScroll:true});}const b=document.getElementById('sendBtn');if(b)b.disabled=!mobOk();const q=document.getElementById('qt');if(q)q.style.display=S.f.mob?'none':'';}
 function fillMob(){S.f.mob='412 345 678';render();}
 
-const FKEYS=id=>{const F=FORMS[id];if(F.multi)return F.multi.map(x=>x[1]);if(F.f)return F.f.map(x=>x[0]);if(F.chips)return [F.ck];return [id+'_file'];};
+const FKEYS=id=>{const F=FORMS[id];if(F.multi)return F.multi.map(x=>x[1]);if(F.f)return F.f.map(x=>x[0]);if(F.chips||F.yesno)return [F.ck];return [id+'_file'];};
 const dirty=id=>FKEYS(id).some(k=>S.f[k]);
 const valid=id=>{const F=FORMS[id];if(F.opt)return true;if(F.f)return F.f.filter(x=>x[1].includes('*')).every(x=>S.f[x[0]]);return FKEYS(id).every(k=>S.f[k]);};
 V.form=()=>{const id=S.formId,F=FORMS[id];let body='';
   if(F.f)body=F.f.map(([k,l,v,h,ph])=>{SUG[k]=v;return sinput(l,k,v,h,'text','Suggested',ph);}).join('');
   if(F.chips)body=`<div class="field"><label>${F.q}</label>${chips(F.chips,S.f[F.ck],'setImm')}</div>`;
   if(F.multi)body=F.multi.map(([l,k,it,m])=>`<div><div class="overline" style="margin-top:0">${l}</div>${mchips('f',k,it,m)}</div>`).join('')+(F.certs&&(S.f.cred_l||[]).length?`<div><div class="overline" style="margin-top:0">CERTIFICATES</div><div class="stack tight">${S.f.cred_l.map(c=>{const u=S.f['cert_'+c];return row({t:c,s:u?'certificate.pdf':'JPG, PNG or PDF, up to 10 MB',tagL:u?'Uploaded':'Upload',tagK:u?'done':'required',on:`S.f['cert_${c}']=1;render()`});}).join('')}</div></div>`:'');
-  if(F.file)body=S.f[id+'_file']?row({t:'certificate.pdf',s:'Uploaded',tagL:'Remove',tagK:'neutral',on:`delete S.f['${id}_file'];render()`}):row({t:'Choose a file',s:'JPG, PNG or PDF, up to 10 MB',on:`pickFile('${id}_file')`});
+  if(F.immNote&&S.f.imm_ans==='Yes')body+=`<div class="note">You said you can vaccinate, so add your immunisation training certificate too.</div>`;
+  if(F.file)body+=S.f[id+'_file']?row({t:'certificate.pdf',s:'Uploaded',tagL:'Remove',tagK:'neutral',on:`delete S.f['${id}_file'];render()`}):row({t:'Choose a file',s:'JPG, PNG or PDF, up to 10 MB',on:`pickFile('${id}_file')`});
   const nx=S.applyFlow?nextAfter(id,!!S.later[id]):null;
   return `${status()}${header({close:true})}<div class="scroll stack"><div>${S.applyFlow?`<div class="eyebrow">${F.opt?'Optional':pos(id)+' of 7'} · ${S.ctx==='setup'?'Account setup':'Before you apply'}</div>`:''}${titleBlock(F.t,F.d)}</div>${body}${F.extra?`<div class="note">${F.extra}</div>`:''}</div>
-  <div class="foot">${S.applyFlow?btn(nx?`Next: ${nx.t}`:'Finish','primary','saveForm()',!valid(id))+(F.opt?btn('Skip','text','skipItem()'):DOCITEMS.includes(id)?btn('Do this later','text','laterItem()'):''):btn('Save','primary','saveForm()',!valid(id))}</div>`;};
+  <div class="foot">${F.yesno?btn('Yes','primary',"answer('Yes')")+btn('No','secondary',"answer('No')"):S.applyFlow?btn(nx?`Next: ${nx.t}`:'Finish','primary','saveForm()',!valid(id))+(F.opt?btn('Skip','text','skipItem()'):DOCITEMS.includes(id)?btn('Do this later','text','laterItem()'):''):btn('Save','primary','saveForm()',!valid(id))}</div>`;};
 
 V.applied=()=>`${status()}<div class="hdr"></div><div class="scroll stack">
   <div>${titleBlock('Application sent',"Priceline Pharmacy will review it. We'll let you know when they reply.")}</div>
@@ -645,6 +646,7 @@ function advance(id,catchUp){const n=nextAfter(id,catchUp);S.alert=null;S.sheet=
   if(!left()){render();toast('Your profile is complete');return;}
   if(S.ctx==='setup'){render();toast('Saved. Add the rest when you have the files.');return;}
   S.sheet={name:'apply'};render();}
+function answer(v){S.f[FORMS[S.formId].ck]=v;saveForm();}
 function skipItem(){S.skip[S.formId]=true;advance(S.formId);}
 function laterItem(){S.later[S.formId]=true;advance(S.formId);}
 function closeForm(){const d=S.formId!=='mobile'&&dirty(S.formId)&&!S.items[S.formId];exitForm();if(d)toast('Saved. You can finish it later.');}
