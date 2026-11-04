@@ -53,6 +53,8 @@
   .prog{flex:1;display:flex;gap:6px}
   .prog span{flex:1;height:4px;border-radius:2px;background:#E2E2E2}
   .prog span.on{background:var(--ink)}
+  .iconbtn{width:40px;height:40px;margin-right:-8px;display:grid;place-items:center;border-radius:12px}
+  .iconbtn:hover{background:var(--bg)}
   .skip{font-weight:500;font-size:14px;color:var(--sub)}
 
   /* type */
@@ -466,7 +468,7 @@ function tg(st,k,x,m){const o=S[st];if(m){const a=o[k]||[];o[k]=a.includes(x)?a.
 const $=s=>document.querySelector(s);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const status=()=>`<div class="status"><span>9:41</span><span><i></i></span></div>`;
-const header=({back=true,title='',step=0,skip=false,close=false}={})=>`<div class="hdr">${close?`<button class="close" aria-label="Close" onclick="closeForm()">${I.x}</button>`:back?`<button class="back" aria-label="Back" onclick="goBack()">${I.back}</button>`:''}${step?`<div class="prog" aria-label="Step ${step} of 5">${[1,2,3,4,5].map(i=>`<span class="${i<=step?'on':''}"></span>`).join('')}</div>`:`<div class="title">${title}</div>`}${skip?'<button class="skip">Skip</button>':''}</div>`;
+const header=({back=true,title='',step=0,skip=false,close=false,right=''}={})=>`<div class="hdr">${close?`<button class="close" aria-label="Close" onclick="closeForm()">${I.x}</button>`:back?`<button class="back" aria-label="Back" onclick="goBack()">${I.back}</button>`:''}${step?`<div class="prog" aria-label="Step ${step} of 5">${[1,2,3,4,5].map(i=>`<span class="${i<=step?'on':''}"></span>`).join('')}</div>`:`<div class="title">${title}</div>`}${skip?'<button class="skip">Skip</button>':''}${right}</div>`;
 const titleBlock=(t,d,step)=>`${step?`<div class="eyebrow">Step ${step} of 5</div>`:''}<h2>${t}</h2>${d?`<p class="desc">${d}</p>`:''}`;
 const tag=(label,kind='')=>label?`<span class="tag ${kind}">${label}</span>`:'';
 const row=({t,s,tagL,tagK,chev=true,on='',cls=''})=>`<button class="row ${on?'':'static'} ${cls}" ${on?`onclick="${on}"`:'tabindex="-1"'}><span class="ic"></span><span class="tx"><div class="t">${t}</div>${s?`<div class="s">${s}</div>`:''}</span>${tag(tagL,tagK)}${chev?`<span class="chev">${I.chev}</span>`:''}</button>`;
@@ -700,8 +702,8 @@ V.home=()=>{const ver=S.ver,L=left(),nx=firstLeft(),v=ver==='verified';let card;
     +(S.hideOpt||!OPT.some(o=>!S.items[o.id])?'':`<div class="card"><div class="card-h"><b>Stand out to pharmacies</b><span style="display:flex;gap:16px;align-items:center"><button class="link" onclick="go('all')">View all</button><button class="close" aria-label="Close" onclick="S.hideOpt=true;render()">${I.xs}</button></span></div><div class="prow"><span>${pl(OPT.filter(o=>!S.items[o.id]).length).replace('item','optional item')} · pharmacies see these on your profile</span></div><div class="next"><span class="row ic" style="border:0;padding:0;width:36px;height:36px;border-radius:8px;background:var(--bg)"></span><span style="flex:1"><div class="t" style="font-weight:500;font-size:15px">${OPT.find(o=>!S.items[o.id]).t}</div><div class="s" style="font-size:13px;color:var(--sub)">${OPT.find(o=>!S.items[o.id]).s}</div></span><button class="btn primary small" onclick="S.applyFlow=true;S.ctx='setup';openItem('${OPT.find(o=>!S.items[o.id]).id}')">${OPT.find(o=>!S.items[o.id]).a}</button></div></div>`)
     +btn('Set your shift filters','secondary',"openSheet('filters')");
   else card=homeCard('Finish your account setup',`${pl(L)} left to apply`,nx.t,'Needed to apply',nx.a,`S.applyFlow=true;S.ctx='setup';openItem('${nx.id}')`);
-  return `${status()}${header({back:false,title:'Shifts'})}<div class="scroll stack">${card}
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-top:4px"><div class="overline" style="margin:0">SHIFTS NEAR YOU</div><button class="link" style="display:flex;gap:6px;align-items:center" onclick="openSheet('filters')">${I.flt}Filters</button></div>
+  return `${status()}${header({back:false,title:'Shifts',right:`<button class="iconbtn" aria-label="Filters" onclick="openSheet('filters')">${I.flt}</button>`})}<div class="scroll stack">${card}
+  <div class="overline" style="margin:4px 0 0">SHIFTS NEAR YOU</div>
   ${v?'':`<button class="hint" onclick="openSheet('hidden')">${LOCK}<span><b>Names and addresses are hidden</b><span>${ver==='missing'?'Add your ID and insurance so we can verify you.':"You'll see them once we've verified your documents."}</span></span></button>`}
   ${SHIFTS.map(x=>shiftCard(x,v)).join('')}
   </div>${tabs()}`;};
