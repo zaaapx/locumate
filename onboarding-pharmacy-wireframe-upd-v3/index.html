@@ -350,10 +350,10 @@ const item=(t,s,tagL,tagK)=>`<div class="li"><span class="tx"><div class="t">${t
 const chips=(items,sel,fn)=>`<div class="chips">${items.map(x=>`<button class="chip ${x===sel?'on':''}" onclick="${fn}('${x}')">${x}</button>`).join('')}</div>`;
 const input=(label,val,help='',type='text',id='')=>`<div class="field"><label>${label}</label><input ${id?`id="${id}"`:''} type="${type}" value="${esc(val)}" placeholder=" ">${help?`<div class="help">${help}</div>`:''}</div>`;
 /* empty input with a tap-to-fill suggestion */
-const sinput=(label,id,sugg,help='',type='text',note='Suggested',ph='')=>{const v=S.f[id]||'';return `<div class="field"><label>${label}</label><input id="${id}" type="${type}" value="${esc(v)}" placeholder="${esc(ph||' ')}" onfocus="focusF('${id}')" oninput="S.f['${id}']=this.value;if(this.value)this.parentNode.querySelector('.sugg')?.remove();liveBtns()" autocomplete="off">${help?`<div class="help">${help}</div>`:''}${S.focus===id&&!v?`<div class="sugg"><button onmousedown="fillF('${id}')">${type==='password'?'••••••••••':esc(sugg)}${note?`<small>${note}</small>`:''}</button></div>`:''}</div>`;};
+const sinput=(label,id,sugg,help='',type='text',note='Suggested',ph='')=>{const v=S.f[id]||'';return `<div class="field"><label>${label}</label><input id="${id}" type="${type}" value="${esc(v)}" placeholder="${esc(ph||' ')}" onfocus="focusF('${id}')" oninput="S.f['${id}']=this.value;if(this.value)this.parentNode.querySelector('.sugg')?.remove();liveBtns()" autocomplete="off">${help?`<div class="help">${help}</div>`:''}${S.focus===id&&!v?`<div class="sugg"><button onmousedown="event.preventDefault()" onclick="fillF('${id}')">${type==='password'?'••••••••••':esc(sugg)}${note?`<small>${note}</small>`:''}</button></div>`:''}</div>`;};
 const SUG={};
 function focusF(id){if(S.focus===id)return;S.focus=id;render();const el=document.getElementById(id);if(el){el.focus();}}
-function fillF(id){S.f[id]=SUG[id];if(id==='pw1')S.f.pw2=SUG.pw2;S.focus=null;render();}
+function fillF(id){S.f[id]=SUG[id];if(id==='pw1')S.f.pw2=SUG.pw2;S.focus=null;render();document.activeElement&&document.activeElement.blur&&document.activeElement.blur();}
 /* close suggestion dropdowns without re-rendering, so the tap on a button still lands */
 document.addEventListener('mousedown',e=>{if((S.focus||S.addrOpen)&&!e.target.closest('.field,.keypad,.qt')){S.focus=null;S.addrOpen=false;document.querySelectorAll('#phone .sugg,#addrDD .dd').forEach(n=>n.remove());}});
 const btn=(label,cls='primary',on='',dis=false)=>`<button class="btn ${cls}" ${dis?'disabled':''} onclick="${on}">${label}</button>`;
@@ -501,12 +501,12 @@ const dateField=(k,dir,auto)=>{dateParts(k);const e=(S.dErr||{})[k];
   return `<fieldset class="field dob3"><legend>${DLBL[k]} *</legend><div class="dob-row">${inp('d','Day','DD',72,2,'day')}${inp('m','Month','MM',72,2,'month')}${inp('y','Year','YYYY',110,4,'year')}</div>${e?`<div class="errtxt" id="${k}_err">${e}</div>`:''}</fieldset>`;};
 const ADDR=['10 George St, Sydney NSW 2000','10 George St, Parramatta NSW 2150','10 George St, Hornsby NSW 2077','10 Georges River Rd, Croydon Park NSW 2133','120 Crown St, Surry Hills NSW 2010','285 King St, Newtown NSW 2042'];
 function addrHTML(){if(!S.addrOpen)return '';const q=(S.f.addr||'').trim();
-  if(!q)return S.prefilled&&S.prefilled!=='passport'?`<div class="dd"><button onmousedown="pickAddr('${esc(SUG.addr)}')">${I.pin}<span>${esc(SUG.addr)}</span></button></div>`:'';
+  if(!q)return S.prefilled&&S.prefilled!=='passport'?`<div class="dd"><button onmousedown="event.preventDefault()" onclick="pickAddr('${esc(SUG.addr)}')">${I.pin}<span>${esc(SUG.addr)}</span></button></div>`:'';
   const ql=q.toLowerCase(),m=ADDR.filter(a=>a.toLowerCase().includes(ql)).slice(0,4);
   const hi=a=>{const i=a.toLowerCase().indexOf(ql);return esc(a.slice(0,i))+'<b>'+esc(a.slice(i,i+q.length))+'</b>'+esc(a.slice(i+q.length));};
-  return `<div class="dd">${m.length?m.map(a=>`<button onmousedown="pickAddr('${esc(a)}')">${I.pin}<span>${hi(a)}</span></button>`).join(''):'<div class="none">No addresses found. Check the spelling.</div>'}<div class="ft"><button class="link" onmousedown="event.preventDefault();soon()">Can't find it? Enter it manually</button><small>powered by Google</small></div></div>`;}
+  return `<div class="dd">${m.length?m.map(a=>`<button onmousedown="event.preventDefault()" onclick="pickAddr('${esc(a)}')">${I.pin}<span>${hi(a)}</span></button>`).join(''):'<div class="none">No addresses found. Check the spelling.</div>'}<div class="ft"><button class="link" onmousedown="event.preventDefault();soon()">Can't find it? Enter it manually</button><small>powered by Google</small></div></div>`;}
 function addrDD(){const el=document.getElementById('addrDD');if(el)el.innerHTML=addrHTML();}
-function pickAddr(a){S.f.addr=a;S.addrOpen=false;S.focus=null;render();}
+function pickAddr(a){S.f.addr=a;S.addrOpen=false;S.focus=null;render();document.activeElement&&document.activeElement.blur&&document.activeElement.blur();}
 function liveBtns(){genBtn();if(cur()==='form'&&S.formId){const f=document.querySelector('.foot .btn.primary');if(f)f.disabled=!valid(S.formId);}}
 function genBtn(){const b=document.getElementById('genBtn');if(b)b.disabled=!(S.f.fn&&S.f.ln&&S.f.dob&&S.gender&&S.f.addr);}
 const addrField=()=>`<div class="field"><label>Home address *</label><div class="addr-in">${I.pin}<input id="addr" type="text" autocomplete="off" placeholder="Start typing your address" value="${esc(S.f.addr||'')}" onfocus="S.focus=null;S.addrOpen=true;addrDD()" oninput="S.f.addr=this.value;S.addrOpen=true;addrDD();genBtn()"></div><div id="addrDD">${addrHTML()}</div></div>`;
