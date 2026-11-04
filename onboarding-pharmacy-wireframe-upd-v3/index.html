@@ -387,7 +387,7 @@ function pickListHTML(){const {key,list}=S.sheet,L=PL[list],q=(S.pq||'').trim().
 const fileRow=(k,name='certificate.pdf')=>S.f[k]?row({t:name,s:'Uploaded',tagL:'Remove',tagK:'neutral',on:`delete S.f['${k}'];render()`}):row({t:'Choose a file',s:'JPG, PNG or PDF, up to 10 MB',on:`pickFile('${k}')`});
 /* repeatable cards "one field + file": certificates (training type), other insurance (expiry date) */
 function multiFiles(p,extra,addL){const n=S.f[p+'_n']||1;let h='';
-  for(let i=0;i<n;i++)h+=`<div class="card-f">${n>1?`<div class="gh"><div class="overline" style="margin:0">${p==='prof'?'CERTIFICATE':'FILE'} ${i+1}</div>${i?`<button class="link" onclick="rmFile('${p}',${i})">Remove</button>`:''}</div>`:''}<div class="stack tight">${extra(i)}${fileRow(p+'_f'+i)}</div></div>`;
+  for(let i=0;i<n;i++)h+=`<div class="card-f">${n>1?`<div class="gh"><div class="overline" style="margin:0">${p==='prof'?'CERTIFICATE':'FILE'} ${i+1}</div>${i?`<button class="link" onclick="rmFile('${p}',${i})">Remove</button>`:''}</div>`:''}<div class="stack tight">${extra(i)}${p==='prof'&&!S.f['prof_t'+i]?'':fileRow(p+'_f'+i)}</div></div>`;
   return h+(S.f[p+'_f'+(n-1)]?`<button class="link addmore" onclick="S.f['${p}_n']=${n+1};render()">+ ${addL}</button>`:'');}
 function rmFile(p,i){const n=S.f[p+'_n']||1,K=['f','t','e'];
   for(let j=i;j<n-1;j++)K.forEach(x=>{S.f[p+'_'+x+j]=S.f[p+'_'+x+(j+1)];S.f[p+'_'+x+j+'_raw']=S.f[p+'_'+x+(j+1)+'_raw'];});
