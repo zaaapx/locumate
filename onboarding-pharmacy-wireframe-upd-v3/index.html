@@ -399,7 +399,9 @@ const fileRow=(k,name='certificate.pdf')=>S.f[k]?row({t:name,s:'Uploaded',tagL:'
 /* repeatable cards "one field + file": certificates (training type), other insurance (expiry date) */
 function multiFiles(p,extra,addL){const n=S.f[p+'_n']||1;let h='';
   for(let i=0;i<n;i++)h+=`<div class="card-f">${n>1?`<div class="gh"><div class="overline" style="margin:0">${p==='prof'?'CERTIFICATE':'FILE'} ${i+1}</div>${i?`<button class="link" onclick="rmFile('${p}',${i})">Remove</button>`:''}</div>`:''}<div class="stack tight">${extra(i)}${p==='prof'&&!S.f['prof_t'+i]?'':fileRow(p+'_f'+i)}</div></div>`;
-  return h+(S.f[p+'_f'+(n-1)]?`<button class="link addmore" onclick="S.f['${p}_n']=${n+1};render()">+ ${addL}</button>`:'');}
+  const max=FMAX[p]||5,full=n>=max;
+  return h+(S.f[p+'_f'+(n-1)]&&!full?`<button class="link addmore" onclick="S.f['${p}_n']=${n+1};render()">+ ${addL}</button>`:'')+`<p class="help" style="margin:${full?'0':'-8px'} 0 0;font-size:13px;color:var(--sub)">${full?`You've added the maximum of ${max} files.`:`Up to ${max} files.`}</p>`;}
+const FMAX={prof:5,other:3};
 function rmFile(p,i){const n=S.f[p+'_n']||1,K=['f','t','e'];
   for(let j=i;j<n-1;j++)K.forEach(x=>{S.f[p+'_'+x+j]=S.f[p+'_'+x+(j+1)];S.f[p+'_'+x+j+'_raw']=S.f[p+'_'+x+(j+1)+'_raw'];});
   K.forEach(x=>{delete S.f[p+'_'+x+(n-1)];delete S.f[p+'_'+x+(n-1)+'_raw'];});S.f[p+'_n']=n-1;render();}
@@ -660,7 +662,7 @@ function liveBtns(){genBtn();const ib=document.getElementById('insBtn');if(ib)ib
 function genBtn(){const b=document.getElementById('genBtn');if(b)b.disabled=!(S.f.fn&&S.f.ln&&S.f.dob&&S.gender&&S.f.addr);}
 const addrField=()=>`<div class="field"><label>Home address *</label><div class="addr-in">${I.pin}<input id="addr" type="text" autocomplete="off" placeholder="Start typing your address" value="${esc(S.f.addr||'')}" onfocus="S.focus=null;S.addrOpen=true;addrDD()" oninput="S.f.addr=this.value;S.addrOpen=true;addrDD();genBtn()"></div><div id="addrDD">${addrHTML()}</div></div>`;
 V.general=()=>`${status()}${header({step:4})}<div class="scroll stack">
-  <div>${titleBlock('Your general info',S.prefilled==='passport'?'We filled this in from your passport. Add your home address.':S.prefilled?'We filled this in from your driver licence. Check it\'s correct.':'',4)}</div>
+  <div>${titleBlock('Your general info','',4)}</div>
   <div class="ava-row"><div class="ava${S.avatar?' on':''}">${S.avatar?'AP':I.cam}</div><div style="flex:1;min-width:0"><div class="t">Profile photo</div><div class="s">Optional</div></div>${btn(S.avatar?'Change':'Add photo','secondary small',"openSheet('avatar')")}</div>
   ${sinput('First name *','fn',SUG.fn='Andrii','','text','')}${sinput('Last name *','ln',SUG.ln='Petrenko','','text','')}${dateField('dob','past',true)}
   <div class="field"><label>Gender *</label>${chips(['Female','Male','Other'],S.gender,'setGender')}<div class="help">Used for super and AHPRA checks</div></div>
