@@ -382,7 +382,7 @@ const SC={
   signup:{t:'1 · Sign up → in review',l:SCREENS},
   later:{t:'2 · Documents added later',l:[['L:docs','05 Documents hub — tap Upload later'],['L:home','10c Home — documents missing'],['L:all','10d All items — documents missing'],['L:fix','Add photo ID — sheet']]},
   att:{t:'3 · Document needs attention',l:[['A:home','10e Home — needs attention'],['A:fix','10f Re-upload photo ID — sheet'],['A:all','10g All items — needs attention']]},
-  verified:{t:'4 · ID verified → apply',l:[['V:push',"11b You're verified — notification"],['V:home','12 Home — verified'],['V:all','12a All items — verified'],['V:shift','13 Shift — verified'],['V:apply','14 Before you apply — sheet'],['V:mobile','15 Mobile number — 1 of 6'],['V:sms','15a SMS code'],['V:bank','16 Bank details — 2 of 6'],['V:bankpick','16a Bank name — sheet'],['V:unsaved','16b Leave unfinished — alert'],['V:tax','17 Tax and business details — 3 of 6'],['V:super','18 Super fund — 4 of 6'],['V:smsf','18a Super fund — self-managed (SMSF)'],['V:prof','19 Professional certificates — 5 of 6'],['V:other','20 Other insurance — 6 of 6'],['V:exp','21a Experience and software — optional'],['V:roles','21a1 Roles — sheet'],['V:sw','21b Pharmacy software — sheet'],['V:swadd','21c Pharmacy software — add your own'],['V:cred','21d Advanced credentials — optional'],['V:credpick','21e Advanced credentials — picker'],['V:travel','21f Travel requirements — optional'],['V:later','22 Before you apply — 2 left'],['V:ready','23 Shift — ready to apply'],['V:applied','24 Applied'],['V:allset',"12b Home — you're all set"],['V:allsetX','12c Home — all set card dismissed'],['V:filters','12d Shift filters — sheet']]}
+  verified:{t:'4 · ID verified → apply',l:[['V:push',"11b You're verified — notification"],['V:home','12 Home — verified'],['V:all','12a All items — verified'],['V:shift','13 Shift — verified'],['V:apply','14 Before you apply — sheet'],['V:mobile','15 Mobile number — 1 of 6'],['V:sms','15a SMS code'],['V:bank','16 Bank details — 2 of 6'],['V:bankpick','16a Bank name — sheet'],['V:unsaved','16b Leave unfinished — alert'],['V:tax','17 Tax and business details — 3 of 6'],['V:super','18 Super fund — 4 of 6'],['V:smsf','18a Super fund — self-managed (SMSF)'],['V:prof','19 Professional certificates — 5 of 6'],['V:other','20 Other insurance — 6 of 6'],['V:exp','21a Experience and software — optional'],['V:roles','21a1 Roles — sheet'],['V:sw','21b Pharmacy software — sheet'],['V:swadd','21c Pharmacy software — add your own'],['V:cred','21d Advanced credentials — optional'],['V:credpick','21e Advanced credentials — picker'],['V:travel','21f Travel requirements — optional'],['V:later','22 Before you apply — 2 left'],['V:ready','23 Shift — ready to apply'],['V:applied','24 Applied'],['V:allset',"12b Home — all set"],['V:allsetX','12c Home — all set card dismissed'],['V:filters','12d Shift filters — sheet']]}
 };
 const ITEMS=[
   {id:'mobile',t:'Mobile number',s:"We'll text you a code",a:'Verify'},
@@ -533,7 +533,7 @@ function jumpOn(id){
   if(i>=seq.indexOf('docsDone')&&!Object.keys(S.docs).length){S.docs={id:'done',cv:'done'};}
   if(id==='docs'){S.docs={};}
   S.sheet=null; S.stack=[...seq.slice(0,i+1)].filter(x=>!['roleSheet','otp','upload','photoFront','photoBack','hidden','avatar','addr','dob'].includes(x)||x===id);
-  if(id==='roleSheet'){S.stack=['welcome','role'];return openSheet('docsInfo');}
+  if(id==='roleSheet'){S.stack=['welcome','role'];S.acct='Pharmacy professional';S.role='Pharmacist';S.work='Shift work';return openSheet('docsInfo');}
   if(id==='otp'){S.stack=['welcome','role','account'];return openSheet('otp');}
   if(id==='upload'){S.stack=['welcome','role','account','docs'];S.docs={};return openSheet('upload',{doc:'id'});}
   if(id==='photoFront'){S.stack=['welcome','role','account','docs'];S.docs={};return openSheet('photo',{doc:'id',side:'front'});}
@@ -566,7 +566,7 @@ function jump(k){
   S.stack={push:['push'],home:['home'],all:['home','all'],shift:['home','shiftV'],apply:['home','shiftV'],mobile:['home','shiftV','mobile'],sms:['home','shiftV','mobile'],bank:['home','shiftV','form'],tax:['home','shiftV','form'],super:['home','shiftV','form'],later:['home','shiftV'],exp:['home','shiftV','form'],cred:['home','shiftV','form'],sw:['home','shiftV','form'],roles:['home','shiftV','form'],swadd:['home','shiftV','form'],credpick:['home','shiftV','form','credpick'],bankpick:['home','shiftV','form'],smsf:['home','shiftV','form'],unsaved:['home','shiftV','form'],imm:['home','shiftV','form'],prof:['home','shiftV','form'],other:['home','shiftV','form'],travel:['home','shiftV','form'],filters:['home'],ready:['home','shiftV'],allset:['home'],allsetX:['home'],applied:['home','shiftV','applied']}[id];
   if(['apply','mobile','sms','bank','bankpick','unsaved','smsf','imm','prof','other','travel','tax','super','later','exp','cred','credpick','sw','swadd','roles'].includes(id)){S.applyFlow=true;S.ctx='apply';}
   if(id==='apply'||id==='later')S.sheet={name:'apply'};
-  if(id==='filters'){ITEMS.forEach(i=>S.items[i.id]=true);S.sheet={name:'filters'};}
+  if(id==='filters'){S.sheet={name:'filters'};}
   if(id==='sw'||id==='swadd'){ITEMS.forEach(i=>S.items[i.id]=true);S.formId='exp';S.f.exp_y='5–10 years';S.f.exp_r=['Pharmacist','Locum pharmacist'];S.f.exp_s=['FRED','Z Software'];S.swq=id==='swadd'?'Corum':'';S.sheet={name:'sw'};}
   if(id==='credpick'){ITEMS.forEach(i=>S.items[i.id]=true);S.formId='cred';S.f.cred_l=['Advanced Compounding Certification (PCCA)','Advanced Practice Pharmacist Credentialing (AdvPP)'];S.cq='';}
   if(id==='roles'){ITEMS.forEach(i=>S.items[i.id]=true);S.formId='exp';S.f.exp_y='5–10 years';S.f.exp_r=['Pharmacist','Locum pharmacist'];S.f.exp_s=['FRED','Z Software'];S.sheet={name:'roles'};}
@@ -754,13 +754,13 @@ V.home=()=>{const ver=S.ver,L=left(),nx=firstLeft(),v=ver==='verified';let card;
   ${SHIFTS.map(x=>shiftCard(x,v)).join('')}
   </div>${tabs()}`;};
 
-V.all=()=>{const ver=S.ver,L=left(),miss=ver==='missing'?vdocs().length:0;
+V.all=()=>{const ver=S.ver,L=left(),miss=ver==='missing'?vdocs().length:ver==='attention'?1:0;
   const vrow=(t,s,d)=>{
     if(ver==='verified')return row({t,s,tagL:'Verified',tagK:'done',chev:false});
-    if(ver==='missing'&&d&&S.docs[d]!=='done')return row({t,s:d==='id'?'Passport or driver licence':'Certificate of currency',tagL:'Upload',tagK:'required',on:`openSheet('fix',{mode:'add',doc:'${d}'})`});
+    if(ver==='missing'&&d&&S.docs[d]!=='done')return row({t,s:d==='id'?'Passport or driver licence':'Certificate of currency and expiry date',tagL:'Upload',tagK:'required',on:`openSheet('fix',{mode:'add',doc:'${d}'})`});
     if(ver==='attention'&&d==='id')return row({t,s:'Photo is blurry. Upload a clearer one',tagL:'Re-upload',tagK:'required',on:`openSheet('fix',{mode:'fix',doc:'id'})`});
     return row({t,s,tagL:'In review',tagK:'neutral',chev:false});};
-  const vgroup=`<div class="overline">${ver==='verified'?'VERIFIED':ver==='review'?'TO GET VERIFIED · USUALLY 24–48 HOURS':'TO GET VERIFIED'}</div><div class="stack tight">${vrow('AHPRA registration','PHA0001234567')}${vrow('Photo ID','Driver licence','id')}${vrow('Indemnity insurance','Expires 30/06/2027','ins')}</div>`;
+  const vgroup=`<div class="overline">${ver==='verified'?'VERIFIED':ver==='review'||ver==='attention'?'TO GET VERIFIED · USUALLY 24–48 HOURS':'TO GET VERIFIED'}</div><div class="stack tight">${vrow('AHPRA registration','PHA0001234567')}${vrow('Photo ID','Driver licence','id')}${vrow('Indemnity insurance','Expires 30/06/2027','ins')}</div>`;
   const todo=ITEMS.filter(i=>!S.items[i.id]),done=ITEMS.filter(i=>S.items[i.id]);
   const desc={review:"We're checking your documents. Finish the rest so you can apply as soon as you're verified.",missing:'Add your photo ID and insurance so we can verify you. Then finish the rest to apply.',attention:'Your photo ID needs a new upload. AHPRA and insurance are still in review.',verified:"You're verified. Finish these to apply for shifts."}[ver];
   return `${status()}${header({title:'Account setup'})}<div class="scroll">
