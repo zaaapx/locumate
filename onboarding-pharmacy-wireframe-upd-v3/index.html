@@ -490,7 +490,10 @@ const item=(t,s,tagL,tagK)=>`<div class="li"><span class="tx"><div class="t">${t
 const chips=(items,sel,fn)=>`<div class="chips">${items.map(x=>`<button class="chip ${x===sel?'on':''}" onclick="${fn}('${x}')">${x}</button>`).join('')}</div>`;
 const input=(label,val,help='',type='text',id='')=>`<div class="field"><label>${label}</label><input ${id?`id="${id}"`:''} type="${type}" value="${esc(val)}" placeholder=" ">${help?`<div class="help">${help}</div>`:''}</div>`;
 /* empty input with a tap-to-fill suggestion */
-const sinput=(label,id,sugg,help='',type='text',note='Suggested',ph='')=>{const v=S.f[id]||'';return `<div class="field"><label>${label}</label><input id="${id}" type="${type}" value="${esc(v)}" placeholder="${esc(ph||' ')}" onfocus="focusF('${id}')" oninput="S.f['${id}']=this.value;if(this.value)this.parentNode.querySelector('.sugg')?.remove();liveBtns()" autocomplete="off">${help?`<div class="help">${help}</div>`:''}${S.focus===id&&!v&&sugg?`<div class="sugg"><button onmousedown="event.preventDefault()" onclick="fillF('${id}')">${type==='password'?'••••••••••':esc(sugg)}${note?`<small>${note}</small>`:''}</button></div>`:''}</div>`;};
+/* number-only fields: numeric keyboard, grouped digits */
+const NUMF={bank_bsb:[3,3],bank_acc:[10],smsf_bsb:[3,3],smsf_acc:[10],tax_abn:[2,3,3,3],sup_abn:[2,3,3,3],sup_tfn:[3,3,3],sup_mem:[12],sup_bpay:[10],sup_crn:[4,4,4,8]};
+const nFmt=(id,v)=>{const g=NUMF[id];let d=v.replace(/\D/g,'').slice(0,g.reduce((a,b)=>a+b,0));const out=[];for(const n of g){if(!d)break;out.push(d.slice(0,n));d=d.slice(n);}return out.join(' ');};
+const sinput=(label,id,sugg,help='',type='text',note='Suggested',ph='')=>{const v=S.f[id]||'';const num=!!NUMF[id];return `<div class="field"><label>${label}</label><input id="${id}" type="${type}" ${num?'inputmode="numeric"':''} value="${esc(v)}" placeholder="${esc(ph||' ')}" onfocus="focusF('${id}')${num?`;nFocus('${id}')`:''}" ${num?`onblur="nBlur('${id}')"`:''} oninput="${num?`this.value=nFmt('${id}',this.value);`:''}S.f['${id}']=this.value;if(this.value)this.parentNode.querySelector('.sugg')?.remove();liveBtns()" autocomplete="off">${help?`<div class="help">${help}</div>`:''}${S.focus===id&&!v&&sugg?`<div class="sugg"><button onmousedown="event.preventDefault()" onclick="fillF('${id}')">${type==='password'?'••••••••••':esc(sugg)}${note?`<small>${note}</small>`:''}</button></div>`:''}</div>`;};
 const SUG={};
 function focusF(id){if(S.focus===id)return;S.focus=id;render();const el=document.getElementById(id);if(el){el.focus();}}
 function fillF(id){S.f[id]=SUG[id];if(id==='pw1')S.f.pw2=SUG.pw2;S.focus=null;render();document.activeElement&&document.activeElement.blur&&document.activeElement.blur();}
@@ -665,12 +668,14 @@ function sCancel(id){const el=document.getElementById(id);if(!el)return;if(el.va
 const DSUG=k=>k==='dob'||k==='sup_dob'?'19/07/1990':k==='exp'?'30/11/2027':/^(ins|other)_e/.test(k)?'30/06/2027':'';
 const KBH=258,TOUCH=!!(window.matchMedia&&matchMedia('(pointer:coarse)').matches);
 function dFocus(k,dir){if(TOUCH)return;S.dk={k,dir};kbAttach();const el=document.getElementById(k);if(el)setTimeout(()=>el.scrollIntoView&&el.scrollIntoView({block:'center',behavior:'smooth'}),30);}
+function nFocus(k){if(TOUCH)return;S.dk={k,num:true};kbAttach();}
+function nBlur(k){if(S.dk&&S.dk.k===k){S.dk=null;kbRemove();}}
 function dBlur(k,dir){if(S.dk&&S.dk.k===k){S.dk=null;kbRemove();}dCheck(k,dir);}
 function kbAttach(){const p=$('#phone');if(!p||p.querySelector('.dkb'))return;p.classList.add('kb');const d=document.createElement('div');d.className='dkb';
   d.innerHTML=`<div class="dkb-bar"><button onmousedown="event.preventDefault()" onclick="kbDone()">Done</button></div><div class="dkb-keys">${['1','2','3','4','5','6','7','8','9','','0','del'].map(x=>x?`<button onmousedown="event.preventDefault()" onclick="dkey('${x}')" aria-label="${x==='del'?'Delete':x}">${x==='del'?I.del:x}</button>`:'<span></span>').join('')}</div>`;p.appendChild(d);}
 function kbRemove(){const p=$('#phone');if(!p)return;p.classList.remove('kb');p.querySelector('.dkb')?.remove();}
 function kbDone(){const el=S.dk&&document.getElementById(S.dk.k);if(el)el.blur();else{S.dk=null;kbRemove();}}
-function dkey(x){if(!S.dk)return;const {k,dir}=S.dk,el=document.getElementById(k);if(!el)return;let d=el.value.replace(/\D/g,'');d=x==='del'?d.slice(0,-1):(d.length<8?d+x:d);el.value=d;dType(k,el,dir);}
+function dkey(x){if(!S.dk)return;const {k,dir}=S.dk,el=document.getElementById(k);if(!el)return;if(S.dk.num){const d=el.value.replace(/\D/g,'');el.value=x==='del'?d.slice(0,-1):d+x;el.dispatchEvent(new Event('input',{bubbles:true}));return;}let d=el.value.replace(/\D/g,'');d=x==='del'?d.slice(0,-1):(d.length<8?d+x:d);el.value=d;dType(k,el,dir);}
 const ADDR=['10 George St, Sydney NSW 2000','10 George St, Parramatta NSW 2150','10 George St, Hornsby NSW 2077','10 Georges River Rd, Croydon Park NSW 2133','120 Crown St, Surry Hills NSW 2010','285 King St, Newtown NSW 2042'];
 function addrHTML(){if(!S.addrOpen)return '';const q=(S.f.addr||'').trim();
   if(!q)return S.prefilled&&S.prefilled!=='passport'?`<div class="dd"><button onmousedown="event.preventDefault()" onclick="pickAddr('${esc(SUG.addr)}')">${I.pin}<span>${esc(SUG.addr)}</span></button></div>`:'';
