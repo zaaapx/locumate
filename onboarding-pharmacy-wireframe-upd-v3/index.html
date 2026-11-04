@@ -336,7 +336,7 @@ const sinput=(label,id,sugg,help='',type='text',note='Suggested',ph='')=>{const 
 const SUG={};
 function focusF(id){if(S.focus===id)return;S.focus=id;render();const el=document.getElementById(id);if(el){el.focus();}}
 function fillF(id){S.f[id]=SUG[id];if(id==='pw1')S.f.pw2=SUG.pw2;S.focus=null;render();}
-document.addEventListener('mousedown',e=>{if((S.focus||S.addrOpen||S.dp)&&!e.target.closest('.field')){S.focus=null;S.addrOpen=false;S.dp=null;render();}});
+document.addEventListener('mousedown',e=>{if((S.focus||S.addrOpen||S.dp)&&!e.target.closest('.field,.keypad,.qt')){S.focus=null;S.addrOpen=false;S.dp=null;render();}});
 const btn=(label,cls='primary',on='',dis=false)=>`<button class="btn ${cls}" ${dis?'disabled':''} onclick="${on}">${label}</button>`;
 let toastT;
 function toast(msg){clearTimeout(toastT);const p=$('#phone');p.querySelector('.toast')?.remove();p.insertAdjacentHTML('beforeend',`<div class="toast">${msg}</div>`);toastT=setTimeout(()=>p.querySelector('.toast')?.remove(),2200);}
@@ -602,8 +602,8 @@ V.mobile=()=>{SUG.mob='412 345 678';return `${status()}${header({close:true})}<d
   <div>${S.applyFlow?`<div class="eyebrow">1 of 7 · ${S.ctx==='setup'?'Account setup':'Before you apply'}</div>`:''}${titleBlock('Mobile number',"Pharmacies use it to contact you about a shift. We'll text you a code to confirm it.")}</div>
   <div class="field"><label>Mobile number *</label><div class="phone-in"><span>+61</span><input id="mob" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="412 345 678" value="${esc(S.f.mob||'')}" inputmode="none" onfocus="S.focus='mob'"></div></div>
   </div><div class="foot">${btn('Send code','primary','sendSms()',!mobOk()).replace('<button','<button id="sendBtn"')}
-  <button class="qt" id="qt" style="${S.f.mob?'display:none':''}" onclick="fillMob()"><small>From this device</small><b>+61 412 345 678</b></button>
-  <div class="keypad">${['1','2','3','4','5','6','7','8','9','','0','del'].map(k=>k?`<button onclick="mkey('${k}')" aria-label="${k==='del'?'Delete':k}">${k==='del'?I.del:k}</button>`:'<span></span>').join('')}</div></div>`;};
+  <button class="qt" id="qt" style="${S.f.mob?'display:none':''}" onmousedown="event.preventDefault();fillMob()"><small>From this device</small><b>+61 412 345 678</b></button>
+  <div class="keypad">${['1','2','3','4','5','6','7','8','9','','0','del'].map(k=>k?`<button onmousedown="event.preventDefault();mkey('${k}')" aria-label="${k==='del'?'Delete':k}">${k==='del'?I.del:k}</button>`:'<span></span>').join('')}</div></div>`;};
 const mobOk=()=>(S.f.mob||'').replace(/\D/g,'').length===9;
 function mkey(k){let d=(S.f.mob||'').replace(/\D/g,'');if(k==='del')d=d.slice(0,-1);else if(d.length<9)d+=k;S.f.mob=[d.slice(0,3),d.slice(3,6),d.slice(6,9)].filter(Boolean).join(' ');
   const i=document.getElementById('mob');if(i){i.value=S.f.mob;i.focus({preventScroll:true});}const b=document.getElementById('sendBtn');if(b)b.disabled=!mobOk();const q=document.getElementById('qt');if(q)q.style.display=S.f.mob?'none':'';}
