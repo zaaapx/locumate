@@ -299,6 +299,16 @@
   .dkb-keys button{height:45px;font-size:22px;display:grid;place-items:center}
   #phone.kb .sheet{bottom:258px;max-height:calc(100% - 48px - 258px)}
   #phone.kb .screen .scroll{padding-bottom:270px}
+  .sfield{display:flex;align-items:center;gap:12px}
+  .sfield .field{flex:1;min-width:0}
+  .field.srch input{padding-left:44px;padding-right:44px}
+  .field.srch:has(> input)>label{left:45px}
+  .sic{position:absolute;left:14px;top:50%;transform:translateY(-50%);display:flex;color:#9E9E9E;pointer-events:none;z-index:1}
+  .sclr{position:absolute;right:10px;top:50%;transform:translateY(-50%);display:none;width:32px;height:32px;place-items:center;border-radius:50%;color:var(--sub)}
+  .sfield.has .sclr{display:grid}
+  .scancel{display:none;font-weight:500;font-size:15px;color:var(--ink);padding:8px 0}
+  .sfield:focus-within .scancel,.sfield.has .scancel{display:block}
+  input[type=search]::-webkit-search-cancel-button{-webkit-appearance:none;display:none}
   .sh-foot{flex:none;padding:12px 16px 0;border-top:1px solid #EEE;background:#fff}
   .sh-head{padding:4px 16px 12px;border-bottom:1px solid #EEE;flex:none}
   .sheet #swList{padding-top:12px;flex:1}
@@ -327,6 +337,7 @@ const I={
   camw:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 8h3l2-3h6l2 3h3v11H4z" stroke="#fff" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="13" r="3.5" stroke="#fff" stroke-width="2"/></svg>',
   flt:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 7h10M18 7h2M4 17h4M12 17h8" stroke="#212121" stroke-width="2" stroke-linecap="round"/><circle cx="16" cy="7" r="2" stroke="#212121" stroke-width="2"/><circle cx="10" cy="17" r="2" stroke="#212121" stroke-width="2"/></svg>',
   cam:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 8h3l2-3h6l2 3h3v11H4z" stroke="#757575" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="13" r="3.5" stroke="#757575" stroke-width="1.8"/></svg>',
+  search:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="2"/><path d="m16 16 4.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
   xs:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="#757575" stroke-width="2" stroke-linecap="round"/></svg>',
   x:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="#212121" stroke-width="2" stroke-linecap="round"/></svg>',
   back:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="#212121" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
@@ -456,7 +467,7 @@ function credListHTML(){const sel=S.f.cred_l||[],q=(S.cq||'').trim().toLowerCase
   ${CREDS.map(([g,it])=>`<div class="overline">${g}</div><div class="cklist">${it.map(x=>ck(sel.includes(x),x,`crTg('${esc(x)}')`)).join('')}</div>`).join('')}<div style="height:24px"></div>`;}
 function credList(){const el=document.getElementById('credList');if(el)el.innerHTML=credListHTML();}
 const credPickView=()=>{const sel=S.f.cred_l||[];return `${status()}<div class="hdr"><div class="title">Advanced credentials</div><button class="close" aria-label="Close" onclick="goBack()">${I.x}</button></div>
-  <div class="pick-search"><div class="field"><label for="cq">Search credentials</label><input id="cq" type="search" placeholder="Credential name" value="${esc(S.cq||'')}" oninput="S.cq=this.value;credList()"></div>
+  <div class="pick-search">${sfield('cq','Search credentials','Credential name',S.cq,"S.cq=this.value;credList()")}
   ${sel.length?`<div class="toks">${sel.map(x=>`<span class="tk">${x}<button aria-label="Remove ${esc(x)}" onclick="crTg('${esc(x)}')">${I.xs}</button></span>`).join('')}<button class="link" onclick="S.f.cred_l=[];render()">Clear all</button></div>`:''}</div>
   <div class="scroll" id="credList">${credListHTML()}</div><div class="foot" style="border-top:1px solid #EEE">${btn('Done','primary','goBack()')}</div>`;};
 const OPT=[{id:'exp',t:'Experience and software',s:'Prefilled from your resume',a:'Check'},{id:'cred',t:'Advanced credentials',s:'Only if you hold any',a:'Add'},{id:'travel',t:'Travel requirements',s:'4 quick questions',a:'Add'}];
@@ -644,6 +655,10 @@ function dCheck(k,dir){setTimeout(()=>{const r=dVal(k,dir);S.dErr=S.dErr||{};if(
 const dateField=(k,dir,auto,lbl)=>{if(lbl)DLBL[k]=lbl;const e=(S.dErr||{})[k];
   return `<div class="field"><label for="${k}">${DLBL[k]} *</label><input id="${k}" type="text" inputmode="numeric" maxlength="10" placeholder="DD/MM/YYYY" data-sugg="${DSUG(k)}" ${auto?'name="birthday" autocomplete="bday"':'autocomplete="off"'} value="${esc(S.f[k+'_raw']??S.f[k]??'')}" class="${e?'err':''}" ${e?`aria-describedby="${k}_err"`:''} onfocus="dFocus('${k}','${dir}')" oninput="dType('${k}',this,'${dir}')" onblur="dBlur('${k}','${dir}')">${e?`<div class="errtxt" id="${k}_err">${e}</div>`:''}</div>`;};
 /* numeric keypad for every date field (on desktop; phones show their own) */
+/* search field: icon on the left, quick clear inside, Cancel on the right while searching */
+const sfield=(id,label,ph,val,onin,extra='',style='')=>`<div class="sfield ${val?'has':''}" style="${style}"><div class="field srch"><label for="${id}">${label}</label><span class="sic">${I.search}</span><input id="${id}" type="search" placeholder="${ph}" value="${esc(val||'')}" oninput="this.closest('.sfield').classList.toggle('has',!!this.value);${onin}" ${extra}><button class="sclr" aria-label="Clear search" onmousedown="event.preventDefault()" onclick="sClear('${id}')">${I.xs}</button></div><button class="scancel" onmousedown="event.preventDefault()" onclick="sCancel('${id}')">Cancel</button></div>`;
+function sClear(id){const el=document.getElementById(id);if(!el)return;el.value='';el.dispatchEvent(new Event('input',{bubbles:true}));el.focus();}
+function sCancel(id){const el=document.getElementById(id);if(!el)return;if(el.value){el.value='';el.dispatchEvent(new Event('input',{bubbles:true}));}const e2=document.getElementById(id);if(e2)e2.blur();}
 const DSUG=k=>k==='dob'||k==='sup_dob'?'19/07/1990':k==='exp'?'30/11/2027':/^(ins|other)_e/.test(k)?'30/06/2027':'';
 const KBH=258,TOUCH=!!(window.matchMedia&&matchMedia('(pointer:coarse)').matches);
 function dFocus(k,dir){if(TOUCH)return;S.dk={k,dir};kbAttach();const el=document.getElementById(k);if(el)setTimeout(()=>el.scrollIntoView&&el.scrollIntoView({block:'center',behavior:'smooth'}),30);}
@@ -858,14 +873,14 @@ SH.photo=()=>{const {doc,side}=S.sheet;const d=DOCS.find(x=>x.id===doc);const li
   <div class="stack tight">${btn(lic&&!back?'Next':'Confirm','primary','photoNext()')}${btn('Retake photo','secondary','retake()')}</div></div>`;};
 
 SH.filters=()=>`<div class="sh-head" style="padding-top:8px"><div style="display:flex;align-items:center;gap:16px"><h2 style="flex:1">Filters</h2><button class="link" style="color:var(--sub)" onclick="S.flt={};render()">Reset</button><button class="close" aria-label="Close" onclick="closeSheet()">${I.x}</button></div></div><div class="inner">
-  ${FLT.map(([l,k,it,m])=>`${m?`<div class="gh"><div class="overline" style="margin:0">${l}</div><button class="link" onclick="fltAll('${k}')">${(S.flt[k]||[]).length===it.length?'Clear':'Select all'}</button></div>`:`<div class="overline">${l}</div>`}${mchips('flt',k,it,m)}${k==='fl'?`<p class="help" style="margin:8px 0 0;font-size:13px;color:var(--sub)">Assignments of 1–13 weeks where accommodation and travel costs are covered.</p>`:''}${k==='fk'?`<div class="overline">RATE</div><div class="stack tight">${audIn('rate','Minimum rate per hour','0.00','flt',false,'60.00')}${audIn('wrate','Minimum weekend rate per hour','0.00','flt',!!S.flt.same,'75.00')}${ck(!!S.flt.same,'Same as weekday rate','S.flt.same=!S.flt.same;if(S.flt.same)S.flt.wrate=S.flt.rate;render()')}</div>`:''}`).join('')}
+  ${FLT.map(([l,k,it,m])=>`${m?`<div class="gh"><div class="overline" style="margin:0">${l}</div><button class="link" onclick="fltAll('${k}')">${(S.flt[k]||[]).length===it.length?'Clear all':'Select all'}</button></div>`:`<div class="overline">${l}</div>`}${mchips('flt',k,it,m)}${k==='fl'?`<p class="help" style="margin:8px 0 0;font-size:13px;color:var(--sub)">Assignments of 1–13 weeks where accommodation and travel costs are covered.</p>`:''}${k==='fk'?`<div class="overline">RATE</div><div class="stack tight">${audIn('rate','Minimum rate per hour','0.00','flt',false,'60.00')}${audIn('wrate','Minimum weekend rate per hour','0.00','flt',!!S.flt.same,'75.00')}${ck(!!S.flt.same,'Same as weekday rate','S.flt.same=!S.flt.same;if(S.flt.same)S.flt.wrate=S.flt.rate;render()')}</div>`:''}`).join('')}
   <div style="height:16px"></div></div><div class="sh-foot">${btn('Show 18 shifts','primary',"closeSheet();toast('Filters saved')")}</div>`;
 SH.sw=()=>`<div class="sh-head"><div style="display:flex;align-items:center;gap:16px"><h2 style="flex:1;font-size:20px">Pharmacy software</h2><button class="close" aria-label="Close" onclick="closeSheet()">${I.x}</button></div>
-  <div class="field" style="margin-top:12px"><label for="swq">Search or add software</label><input id="swq" type="search" placeholder="e.g. Minfos" value="${esc(S.swq||'')}" oninput="S.swq=this.value;swUpd()" onkeydown="if(event.key==='Enter'){event.preventDefault();swAdd()}"></div>
+  ${sfield('swq','Search or add software','e.g. Minfos',S.swq,"S.swq=this.value;swUpd()",`onkeydown="if(event.key==='Enter'){event.preventDefault();swAdd()}"`,'margin-top:12px')}
   <div class="toks" id="swToks">${swToksHTML()}</div></div><div class="inner" id="swList">${swListHTML()}</div><div class="sh-foot">${btn('Done','primary','closeSheet()')}</div>`;
 SH.roles=()=>`<div class="sh-head"><div style="display:flex;align-items:center;gap:16px"><h2 style="flex:1;font-size:20px">What role(s) are you seeking?</h2><button class="close" aria-label="Close" onclick="closeSheet()">${I.x}</button></div></div><div class="inner" id="rlList" style="padding-top:12px">${rlListHTML()}</div><div class="sh-foot">${btn('Done','primary','closeSheet()')}</div>`;
 SH.pick=()=>`<div class="sh-head"><div style="display:flex;align-items:center;gap:16px"><h2 style="flex:1;font-size:20px">${S.sheet.title}</h2><button class="close" aria-label="Close" onclick="closeSheet()">${I.x}</button></div>
-  ${S.sheet.list==='BANKS'?`<div class="field" style="margin-top:12px"><label for="pq">Search banks</label><input id="pq" type="search" placeholder="e.g. Westpac" value="${esc(S.pq||'')}" oninput="S.pq=this.value;const l=document.getElementById('pkList');if(l)l.innerHTML=pickListHTML()"></div>`:''}</div><div class="inner" id="pkList">${pickListHTML()}</div>`;
+  ${S.sheet.list==='BANKS'?`${sfield('pq','Search banks','e.g. Westpac',S.pq,"S.pq=this.value;const l=document.getElementById('pkList');if(l)l.innerHTML=pickListHTML()",'','margin-top:12px')}`:''}</div><div class="inner" id="pkList">${pickListHTML()}</div>`;
 SH.insExp=()=>`<div class="inner" style="padding-top:16px">${titleBlock('When does this policy expire?',"certificate.pdf is uploaded. Add the expiry date and we'll remind you before it runs out.")}<div style="height:16px"></div>
   ${dateField('ins_e0','future',false,'Policy expiry date')}<div style="height:20px"></div>${btn('Save','primary','insSave()',!S.f.ins_e0).replace('<button ','<button id="insBtn" ')}</div>`;
 function insSave(){const from=S.sheet.from;S.sheet=null;if(from==='fix'){S.docs.ins='done';if(S.ver==='attention'||!vdocs().length)S.ver='review';render();toast("Indemnity insurance uploaded. We'll check it within 24–48 hours");return;}readDoc('ins');}
