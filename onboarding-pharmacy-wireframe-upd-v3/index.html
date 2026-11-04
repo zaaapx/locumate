@@ -287,6 +287,9 @@
   .link.addmore{align-self:flex-start;font-weight:600}
   .field.sfx input{padding-right:56px}
   .field.sfx .cur{position:absolute;right:16px;bottom:20px;font-size:13px;font-weight:600;color:var(--sub);pointer-events:none}
+  .seg{display:flex;background:#F0F0F0;border-radius:12px;padding:4px;gap:4px}
+  .seg button{flex:1;height:40px;border-radius:9px;font-size:14px;font-weight:500;color:var(--sub)}
+  .seg button.on{background:#fff;color:var(--ink);font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.12)}
   .sh-foot{flex:none;padding:12px 16px 0;border-top:1px solid #EEE;background:#fff}
   .sh-head{padding:4px 16px 12px;border-bottom:1px solid #EEE;flex:none}
   .sheet #swList{padding-top:12px;flex:1}
@@ -347,7 +350,7 @@ const SC={
   signup:{t:'1 · Sign up → in review',l:SCREENS},
   later:{t:'2 · Documents added later',l:[['L:docs','05 Documents hub — tap Upload later'],['L:home','10c Home — documents missing'],['L:all','10d All items — documents missing'],['L:fix','Add photo ID — sheet']]},
   att:{t:'3 · Document needs attention',l:[['A:home','10e Home — needs attention'],['A:fix','10f Re-upload photo ID — sheet'],['A:all','10g All items — needs attention']]},
-  verified:{t:'4 · ID verified → apply',l:[['V:push',"11b You're verified — notification"],['V:home','12 Home — verified'],['V:all','12a All items — verified'],['V:shift','13 Shift — verified'],['V:apply','14 Before you apply — sheet'],['V:mobile','15 Mobile number — 1 of 7'],['V:sms','15a SMS code'],['V:bank','16 Bank details — 2 of 7'],['V:bankpick','16a Bank name — sheet'],['V:tax','17 Tax and business details — 3 of 7'],['V:super','18 Super fund — 4 of 7'],['V:smsf','18a Super fund — SMSF details'],['V:imm','19 Immunisation — 5 of 7'],['V:prof','20 Professional certificates — 6 of 7'],['V:other','21 Other insurance — 7 of 7'],['V:exp','21a Experience and software — optional'],['V:roles','21a1 Roles — sheet'],['V:sw','21b Pharmacy software — sheet'],['V:swadd','21c Pharmacy software — add your own'],['V:cred','21d Advanced credentials — optional'],['V:credpick','21e Advanced credentials — picker'],['V:travel','21f Travel requirements — optional'],['V:later','22 Before you apply — 2 left'],['V:ready','23 Shift — ready to apply'],['V:applied','24 Applied'],['V:allset',"12b Home — you're all set"],['V:allsetX','12c Home — all set card dismissed'],['V:filters','12d Shift filters — sheet']]}
+  verified:{t:'4 · ID verified → apply',l:[['V:push',"11b You're verified — notification"],['V:home','12 Home — verified'],['V:all','12a All items — verified'],['V:shift','13 Shift — verified'],['V:apply','14 Before you apply — sheet'],['V:mobile','15 Mobile number — 1 of 7'],['V:sms','15a SMS code'],['V:bank','16 Bank details — 2 of 7'],['V:bankpick','16a Bank name — sheet'],['V:tax','17 Tax and business details — 3 of 7'],['V:super','18 Super fund — 4 of 7'],['V:smsf','18a Super fund — self-managed (SMSF)'],['V:imm','19 Immunisation — 5 of 7'],['V:prof','20 Professional certificates — 6 of 7'],['V:other','21 Other insurance — 7 of 7'],['V:exp','21a Experience and software — optional'],['V:roles','21a1 Roles — sheet'],['V:sw','21b Pharmacy software — sheet'],['V:swadd','21c Pharmacy software — add your own'],['V:cred','21d Advanced credentials — optional'],['V:credpick','21e Advanced credentials — picker'],['V:travel','21f Travel requirements — optional'],['V:later','22 Before you apply — 2 left'],['V:ready','23 Shift — ready to apply'],['V:applied','24 Applied'],['V:allset',"12b Home — you're all set"],['V:allsetX','12c Home — all set card dismissed'],['V:filters','12d Shift filters — sheet']]}
 };
 const ITEMS=[
   {id:'mobile',t:'Mobile number',s:"We'll text you a code",a:'Verify'},
@@ -359,7 +362,7 @@ const ITEMS=[
   {id:'other',t:'Other insurance',s:'Policy and expiry date',a:'Upload'}];
 const FORMS={
   bank:{t:'Bank details',d:'We pay you here after each shift.',pre:()=>selF('Bank name *','bank_bank','Choose your bank','BANKS'),f:[['bank_name','Account name *','Andrii Petrenko','','Name on your account'],['bank_bsb','BSB *','062 000','','000 000'],['bank_acc','Account number *','12345678','','12345678']],ok:()=>!!S.f.bank_bank,keys:['bank_bank','bank_name','bank_bsb','bank_acc']},
-  super:{t:'Super fund',d:'We pay your super with every shift.',body:()=>superHTML(),ok:()=>supOk(),keys:['sup_type','sup_fund','sup_title','sup_fn','sup_ln','sup_form','sup_tfn']},
+  super:{t:'Super fund',d:'We pay your super with every shift.',body:()=>superHTML(),ok:()=>supOk(),keys:['sup_fund','sup_abn','sup_title','sup_fn','sup_ln','sup_form','sup_tfn']},
   tax:{t:'Tax and business details',d:'You work as a contractor, so we need these to pay you.',f:[['tax_abn','ABN *','51 824 753 556',"Don't have one? Apply for free at abr.gov.au",'00 000 000 000'],['tax_bn','Business name','A. Petrenko Pharmacy Services','','Filled in from your ABN'],['tax_et','Entity type','Sole trader','','Filled in from your ABN']],
     post:()=>`<div><div class="overline" style="margin-top:0">ARE YOU REGISTERED FOR GST? *</div>${mchips('f','tax_gst',['Yes','No'],false)}</div>`,ok:()=>!!S.f.tax_gst,keys:['tax_abn','tax_bn','tax_et','tax_gst']},
   imm:{t:'Can you vaccinate?',d:'Some pharmacies need a pharmacist who can give vaccines.',yesno:true,ck:'imm_ans'},
@@ -378,7 +381,8 @@ const TRAIN=['Immunisation','First Aid and CPR','COVID'];
 const TITLES=['Mr','Mrs','Ms','Miss','Dr'];
 const PL={BANKS,TRAIN,TITLES};
 const TRAVELQ=['Are you willing to work outside metro areas?','Are you willing to stay in regional areas for a short stint (1–4 weeks) where accommodation, meal allowance and travel cost are covered?','Would you consider anything longer than 4 weeks?','Are you fluent in a language other than English?'];
-const SMSF=[['smsf_abn','ABN of your super fund *','00 000 000 000'],['smsf_esa','Electronic service address (ESA) *','e.g. smsfdataflow',"Not sure? Ask your accountant."],['smsf_bsb','BSB of the SMSF *','000 000'],['smsf_acc','SMSF account number *','12345678'],['smsf_name','SMSF account name *','Name on the fund account']];
+const SMSF=[['smsf_esa','Electronic service address (ESA) *','e.g. smsfdataflow',"Not sure? Ask your accountant."],['smsf_bsb','BSB of the SMSF *','000 000'],['smsf_acc','SMSF account number *','12345678'],['smsf_name','SMSF account name *','Name on the fund account']];
+const INDF=[['sup_usi','Unique Superannuation Identifier (USI) *','e.g. STA0100AU',"Find it on your fund's website or statement."],['sup_mem','Member number *','e.g. 123456789']];
 const selF=(label,key,title,list)=>{const v=S.f[key];return `<button class="pick" onclick="openPick('${key}','${esc(title)}','${list}')" aria-label="${esc(label)}${v?', '+esc(v):''}"><span class="in">${v?`<span class="pl">${label}</span><span class="val">${esc(v)}</span>`:`<span class="pl big">${label}</span>`}</span>${I.chev}</button>`;};
 function openPick(key,title,list){S.pq='';openSheet('pick',{key,title,list});}
 function pickSet(x){S.f[S.sheet.key]=x;S.sheet=null;render();}
@@ -400,18 +404,20 @@ const rolesField=k=>{const sel=S.f[k]||[];return `<button class="pick" onclick="
 function rlTg(x){const a=S.f.exp_r||[];S.f.exp_r=a.includes(x)?a.filter(y=>y!==x):[...a,x];const el=document.getElementById('rlList');if(el){el.innerHTML=rlListHTML();return;}render();}
 const rlListHTML=()=>{const sel=S.f.exp_r||[];return `<div class="cklist">${ROLESL().map(x=>ck(sel.includes(x),esc(x),`rlTg('${esc(x)}')`)).join('')}</div><div style="height:16px"></div>`;};
 /* super: as in the client's app */
-const SMSFT='Self-managed super fund (SMSF)';
+const SMSFT='Self-managed super fund (SMSF)',INDT='Industry super fund';
 const si=(l,k,v,ph)=>{SUG[k]=v;return sinput(l,k,v,'','text',v?'Suggested':'',ph);};
-function superHTML(){if(!S.f.sup_dob_raw&&S.f.dob){S.f.sup_dob_raw=S.f.dob;S.f.sup_dob=S.f.dob;}const sm=S.f.sup_type===SMSFT;
-  return `<div><div class="overline" style="margin-top:0">FUND TYPE *</div>${mchips('f','sup_type',['Industry super fund',SMSFT],false)}</div>
-  ${si('Fund name *','sup_fund',sm?'':'AustralianSuper','e.g. AustralianSuper')}
-  <div><div class="overline" style="margin-top:0">LEGAL NAME REGISTERED WITH THE FUND</div><div class="stack tight">${selF('Title *','sup_title','Title','TITLES')}${si('First name *','sup_fn','Andrii','')}${si('Last name *','sup_ln','Petrenko','')}</div></div>
+const fields=L=>L.map(([k,l,ph,h])=>{SUG[k]='';return sinput(l,k,'',h||'','text','',ph);}).join('');
+const seg=(key,opts)=>`<div class="seg" role="radiogroup">${opts.map(([v,l])=>`<button role="radio" aria-checked="${S.f[key]===v}" class="${S.f[key]===v?'on':''}" onclick="S.f['${key}']='${esc(v)}';render()">${l}</button>`).join('')}</div>`;
+/* super: one field set per fund type (client: Industry / SMSF dropdown) */
+function superHTML(){if(!S.f.sup_dob_raw&&S.f.dob){S.f.sup_dob_raw=S.f.dob;S.f.sup_dob=S.f.dob;}if(!S.f.sup_type)S.f.sup_type=INDT;const sm=S.f.sup_type===SMSFT;
+  return `<div><div class="overline" style="margin-top:0">FUND TYPE</div>${seg('sup_type',[[INDT,'Industry fund'],[SMSFT,'Self-managed (SMSF)']])}</div>
+  <div><div class="overline" style="margin-top:0">${sm?'YOUR SMSF':'YOUR FUND'}</div><div class="stack tight">${si('Fund name *','sup_fund',sm?'':'AustralianSuper',sm?'e.g. Petrenko Family Super Fund':'e.g. AustralianSuper')}${si(sm?'ABN of your SMSF *':'ABN of your super fund *','sup_abn','','00 000 000 000')}${fields(sm?SMSF:INDF)}</div></div>
+  <div><div class="overline" style="margin-top:0">YOUR NAME AS REGISTERED WITH THE FUND</div><div class="stack tight">${selF('Title *','sup_title','Title','TITLES')}${si('First name *','sup_fn','Andrii','')}${si('Last name *','sup_ln','Petrenko','')}</div></div>
   ${dateField('sup_dob','past',false,'Date of birth')}
-  <div><div class="overline" style="margin-top:0">STANDARD CHOICE FORM *</div>${fileRow('sup_form','choice-form.pdf')}</div>
   ${si('Tax file number (TFN) *','sup_tfn','','000 000 000')}
-  ${sm?`<div><div class="overline" style="margin-top:0">SMSF DETAILS</div><div class="stack tight">${SMSF.map(([k,l,ph,h])=>{SUG[k]='';return sinput(l,k,'',h||'','text','',ph);}).join('')}</div></div>`:''}
+  <div><div class="overline" style="margin-top:0">STANDARD CHOICE FORM *</div>${fileRow('sup_form','choice-form.pdf')}</div>
   <div><div class="overline" style="margin-top:0">BPAY</div><p class="help" style="margin:-2px 0 10px;font-size:13px;color:var(--sub)">Some pharmacies pay super by BPAY.</p><div class="stack tight">${si('BPAY number','sup_bpay','','e.g. 12345')}${si('Customer reference number','sup_crn','','e.g. 1234 5678 9012')}</div></div>`;}
-const supOk=()=>['sup_type','sup_fund','sup_title','sup_fn','sup_ln','sup_dob','sup_form','sup_tfn'].every(k=>S.f[k])&&(S.f.sup_type!==SMSFT||SMSF.every(x=>S.f[x[0]]));
+const supOk=()=>['sup_type','sup_fund','sup_abn','sup_title','sup_fn','sup_ln','sup_dob','sup_form','sup_tfn'].every(k=>S.f[k])&&(S.f.sup_type===SMSFT?SMSF:INDF).every(x=>S.f[x[0]]);
 const ck=(on,lab,click)=>`<button class="ck ${on?'on':''}" role="checkbox" aria-checked="${on}" onclick="${click}"><span class="box">${on?I.tick:''}</span><span>${lab}</span></button>`;
 const SWL=()=>FORMS.exp.multi[2][2];
 const swField=k=>{const sel=(S.f[k]||[]);const none=sel.includes('NONE');return `<button class="pick" onclick="S.swq='';openSheet('sw')" aria-label="Pharmacy software, ${none?'none':sel.length+' selected'}"><span class="in">${none?`<span class="pl">Pharmacy software</span><span class="tok"><span class="tk">I haven't used any of these</span></span>`:sel.length?`<span class="pl">Pharmacy software · ${sel.length} selected</span><span class="tok">${sel.slice(0,3).map(x=>`<span class="tk">${esc(x)}</span>`).join('')}${sel.length>3?`<span class="tk more">+${sel.length-3} more</span>`:''}</span>`:'<span class="pl big">Choose software</span>'}</span>${I.chev}</button>`;};
