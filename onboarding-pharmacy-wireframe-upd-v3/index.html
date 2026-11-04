@@ -301,7 +301,8 @@
   #phone.kb .screen .scroll{padding-bottom:270px}
   .sfield{display:flex;align-items:center;gap:12px}
   .sfield .field{flex:1;min-width:0}
-  .field.srch input{padding-left:44px;padding-right:44px}
+  .field.srch input{padding:0 44px}
+  .field.srch input::placeholder{color:#9E9E9E}
   .field.srch:has(> input)>label{left:45px}
   .sic{position:absolute;left:14px;top:50%;transform:translateY(-50%);display:flex;color:#9E9E9E;pointer-events:none;z-index:1}
   .sclr{position:absolute;right:10px;top:50%;transform:translateY(-50%);display:none;width:32px;height:32px;place-items:center;border-radius:50%;color:var(--sub)}
@@ -656,7 +657,7 @@ const dateField=(k,dir,auto,lbl)=>{if(lbl)DLBL[k]=lbl;const e=(S.dErr||{})[k];
   return `<div class="field"><label for="${k}">${DLBL[k]} *</label><input id="${k}" type="text" inputmode="numeric" maxlength="10" placeholder="DD/MM/YYYY" data-sugg="${DSUG(k)}" ${auto?'name="birthday" autocomplete="bday"':'autocomplete="off"'} value="${esc(S.f[k+'_raw']??S.f[k]??'')}" class="${e?'err':''}" ${e?`aria-describedby="${k}_err"`:''} onfocus="dFocus('${k}','${dir}')" oninput="dType('${k}',this,'${dir}')" onblur="dBlur('${k}','${dir}')">${e?`<div class="errtxt" id="${k}_err">${e}</div>`:''}</div>`;};
 /* numeric keypad for every date field (on desktop; phones show their own) */
 /* search field: icon on the left, quick clear inside, Cancel on the right while searching */
-const sfield=(id,label,ph,val,onin,extra='',style='')=>`<div class="sfield ${val?'has':''}" style="${style}"><div class="field srch"><label for="${id}">${label}</label><span class="sic">${I.search}</span><input id="${id}" type="search" placeholder="${ph}" value="${esc(val||'')}" oninput="this.closest('.sfield').classList.toggle('has',!!this.value);${onin}" ${extra}><button class="sclr" aria-label="Clear search" onmousedown="event.preventDefault()" onclick="sClear('${id}')">${I.xs}</button></div><button class="scancel" onmousedown="event.preventDefault()" onclick="sCancel('${id}')">Cancel</button></div>`;
+const sfield=(id,label,ph,val,onin,extra='',style='')=>`<div class="sfield ${val?'has':''}" style="${style}"><div class="field srch"><span class="sic">${I.search}</span><input id="${id}" type="search" placeholder="${label}" aria-label="${label}" value="${esc(val||'')}" oninput="this.closest('.sfield').classList.toggle('has',!!this.value);${onin}" ${extra}><button class="sclr" aria-label="Clear search" onmousedown="event.preventDefault()" onclick="sClear('${id}')">${I.xs}</button></div><button class="scancel" onmousedown="event.preventDefault()" onclick="sCancel('${id}')">Cancel</button></div>`;
 function sClear(id){const el=document.getElementById(id);if(!el)return;el.value='';el.dispatchEvent(new Event('input',{bubbles:true}));el.focus();}
 function sCancel(id){const el=document.getElementById(id);if(!el)return;if(el.value){el.value='';el.dispatchEvent(new Event('input',{bubbles:true}));}const e2=document.getElementById(id);if(e2)e2.blur();}
 const DSUG=k=>k==='dob'||k==='sup_dob'?'19/07/1990':k==='exp'?'30/11/2027':/^(ins|other)_e/.test(k)?'30/06/2027':'';
