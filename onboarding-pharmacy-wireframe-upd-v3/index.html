@@ -387,7 +387,7 @@ function setScen(k){S=fresh();S.scen=k;jump(SC[k].l[0][0]);}
 function base(ver,docs){S=Object.assign(fresh(),{scen:S.scen,ver,docs:docs||{id:'done',cv:'done',ins:'done'},idType:'Driver licence'});prefill();}
 function jump(k){
   if(!k.includes(':')){
-    if(k==='dob'){S.scen='signup';jumpOn('general');S.f.dob='';S.f.dob_d='19';S.f.dob_m='07';S.f.dob_y='';S.dobNav=true;render();const y=document.getElementById('dob_y');if(y)y.focus();return;}
+    if(k==='dob'){S.scen='signup';jumpOn('general');S.f.dob='';S.f.dob_raw='19/07/';S.dobNav=true;render();const y=document.getElementById('dob');if(y){y.focus();y.setSelectionRange(6,6);}return;}
     if(k==='avatar'||k==='addr'){S.scen='signup';jumpOn('general');if(k==='avatar')return openSheet('avatar');S.f.addr='10 George';S.addrOpen=true;return render();}
     if(['checking','perm','home','hidden','all','shift'].includes(k)){base('review');S.scen='signup';
       if(k==='checking'||k==='perm'){S.stack=['checking'];if(k==='perm')S.alert='perm';}
@@ -487,18 +487,17 @@ V.docsDone=V.docs;
 /* dates are typed: Day / Month / Year fields, numeric keypad, checked on blur */
 const pad=n=>String(n).padStart(2,'0');
 const DLBL={dob:'Date of birth',exp:'AHPRA expiry date'};
-function dateParts(k){if(S.f[k+'_d']===undefined&&S.f[k]){const [d,m,y]=S.f[k].split('/');S.f[k+'_d']=d;S.f[k+'_m']=m;S.f[k+'_y']=y;}}
-function dVal(k,dir){const d=S.f[k+'_d'],m=S.f[k+'_m'],y=S.f[k+'_y'],n=DLBL[k];
-  if(!d&&!m&&!y)return {v:'',e:''};
-  if(!d)return {e:`${n} must include a day`};if(!m)return {e:`${n} must include a month`};if(!y||y.length<4)return {e:`${n} must include a 4-digit year`};
-  const dt=new Date(+y,+m-1,+d);if(+m<1||+m>12||dt.getMonth()!==+m-1||dt.getDate()!==+d)return {e:`${n} must be a real date`};
+function dVal(k,dir){const raw=S.f[k+'_raw']??S.f[k]??'',n=DLBL[k];
+  if(!raw)return {v:'',e:''};
+  const m=raw.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);if(!m)return {e:`${n} must be in the format DD/MM/YYYY`};
+  const d=+m[1],mo=+m[2],y=+m[3],dt=new Date(y,mo-1,d);
+  if(mo<1||mo>12||dt.getMonth()!==mo-1||dt.getDate()!==d)return {e:`${n} must be a real date`};
   const now=new Date();if(dir==='past'&&dt>now)return {e:`${n} must be in the past`};if(dir==='future'&&dt<now)return {e:`${n} must be in the future`};
-  return {v:`${pad(+d)}/${pad(+m)}/${y}`,e:''};}
-function dIn(k,p,el,dir){el.value=el.value.replace(/\D/g,'');S.f[k+'_'+p]=el.value;S.dobNav=false;const r=dVal(k,dir);S.f[k]=r.e?'':r.v;genBtn();}
-function dCheck(k,dir){setTimeout(()=>{const a=document.activeElement;if(a&&a.id&&a.id.startsWith(k+'_'))return;const r=dVal(k,dir);S.dErr=S.dErr||{};if((S.dErr[k]||'')!==r.e){S.dErr[k]=r.e;render();}},0);}
-const dateField=(k,dir,auto)=>{dateParts(k);const e=(S.dErr||{})[k];
-  const inp=(p,l,ph,w,ml,ac)=>`<div class="field" style="width:${w}px"><label for="${k}_${p}">${l}</label><input id="${k}_${p}" ${auto?`name="birthday-${ac}" autocomplete="bday-${ac}"`:'autocomplete="off"'} type="text" inputmode="numeric" maxlength="${ml}" placeholder="${ph}" value="${esc(S.f[k+'_'+p]||'')}" class="${e?'err':''}" ${e?`aria-describedby="${k}_err"`:''} oninput="dIn('${k}','${p}',this,'${dir}')" onblur="dCheck('${k}','${dir}')"></div>`;
-  return `<fieldset class="field dob3"><legend>${DLBL[k]} *</legend><div class="dob-row">${inp('d','Day','DD',72,2,'day')}${inp('m','Month','MM',72,2,'month')}${inp('y','Year','YYYY',110,4,'year')}</div>${e?`<div class="errtxt" id="${k}_err">${e}</div>`:''}</fieldset>`;};
+  return {v:raw,e:''};}
+function dType(k,el,dir){const d=el.value.replace(/\D/g,'').slice(0,8);el.value=[d.slice(0,2),d.slice(2,4),d.slice(4,8)].filter(Boolean).join('/');S.f[k+'_raw']=el.value;S.dobNav=false;const r=dVal(k,dir);S.f[k]=r.e?'':r.v;liveBtns();}
+function dCheck(k,dir){setTimeout(()=>{const r=dVal(k,dir);S.dErr=S.dErr||{};if((S.dErr[k]||'')!==r.e){S.dErr[k]=r.e;render();}},0);}
+const dateField=(k,dir,auto)=>{const e=(S.dErr||{})[k];
+  return `<div class="field"><label for="${k}">${DLBL[k]} *</label><input id="${k}" type="text" inputmode="numeric" maxlength="10" placeholder="DD/MM/YYYY" ${auto?'name="birthday" autocomplete="bday"':'autocomplete="off"'} value="${esc(S.f[k+'_raw']??S.f[k]??'')}" class="${e?'err':''}" ${e?`aria-describedby="${k}_err"`:''} oninput="dType('${k}',this,'${dir}')" onblur="dCheck('${k}','${dir}')">${e?`<div class="errtxt" id="${k}_err">${e}</div>`:''}</div>`;};
 const ADDR=['10 George St, Sydney NSW 2000','10 George St, Parramatta NSW 2150','10 George St, Hornsby NSW 2077','10 Georges River Rd, Croydon Park NSW 2133','120 Crown St, Surry Hills NSW 2010','285 King St, Newtown NSW 2042'];
 function addrHTML(){if(!S.addrOpen)return '';const q=(S.f.addr||'').trim();
   if(!q)return S.prefilled&&S.prefilled!=='passport'?`<div class="dd"><button onmousedown="event.preventDefault()" onclick="pickAddr('${esc(SUG.addr)}')">${I.pin}<span>${esc(SUG.addr)}</span></button></div>`:'';
@@ -512,7 +511,7 @@ function genBtn(){const b=document.getElementById('genBtn');if(b)b.disabled=!(S.
 const addrField=()=>`<div class="field"><label>Home address *</label><div class="addr-in">${I.pin}<input id="addr" type="text" autocomplete="off" placeholder="Start typing your address" value="${esc(S.f.addr||'')}" onfocus="S.focus=null;S.addrOpen=true;addrDD()" oninput="S.f.addr=this.value;S.addrOpen=true;addrDD();genBtn()"></div><div id="addrDD">${addrHTML()}</div></div>`;
 V.general=()=>`${status()}${header({step:4})}<div class="scroll stack">
   <div>${titleBlock('Your general info',S.prefilled==='passport'?'We filled this in from your passport. Add your home address.':S.prefilled?'We filled this in from your driver licence. Check it\'s correct.':'',4)}</div>
-  <div class="ava-wrap"><button class="ava2${S.avatar?' on':''}" aria-label="${S.avatar?'Change profile photo':'Add profile photo'}" onclick="openSheet('avatar')">${S.avatar?'AP':I.person}<span class="badge">${I.camw}</span></button><small>Profile photo · optional</small></div>
+  <div class="ava-row"><div class="ava${S.avatar?' on':''}">${S.avatar?'AP':I.cam}</div><div style="flex:1;min-width:0"><div class="t">Profile photo</div><div class="s">Optional</div></div>${btn(S.avatar?'Change':'Add photo','secondary small',"openSheet('avatar')")}</div>
   ${sinput('First name *','fn',SUG.fn='Andrii','','text','')}${sinput('Last name *','ln',SUG.ln='Petrenko','','text','')}${dateField('dob','past',true)}
   <div class="field"><label>Gender *</label>${chips(['Female','Male','Other'],S.gender,'setGender')}<div class="help">Used for super and AHPRA checks</div></div>
   ${(SUG.addr='10 George St, Sydney NSW 2000',addrField())}${sinput('Apartment / unit','unit',SUG.unit='Unit 5','','text','')}
