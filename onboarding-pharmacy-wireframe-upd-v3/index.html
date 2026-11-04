@@ -290,6 +290,13 @@
   .seg{display:flex;background:#F0F0F0;border-radius:12px;padding:4px;gap:4px}
   .seg button{flex:1;height:40px;border-radius:9px;font-size:14px;font-weight:500;color:var(--sub)}
   .seg button.on{background:#fff;color:var(--ink);font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.12)}
+  .dkb{position:absolute;left:0;right:0;bottom:0;height:258px;z-index:60;background:#F2F2F2;border-top:1px solid #E0E0E0;padding-bottom:34px}
+  .dkb-bar{height:44px;display:flex;justify-content:flex-end;align-items:center;padding:0 16px;border-bottom:1px solid #E6E6E6}
+  .dkb-bar button{font-weight:600;font-size:16px;color:var(--ink)}
+  .dkb-keys{display:grid;grid-template-columns:repeat(3,1fr)}
+  .dkb-keys button{height:45px;font-size:22px;display:grid;place-items:center}
+  #phone.kb .sheet{bottom:258px;max-height:calc(100% - 48px - 258px)}
+  #phone.kb .screen .scroll{padding-bottom:270px}
   .sh-foot{flex:none;padding:12px 16px 0;border-top:1px solid #EEE;background:#fff}
   .sh-head{padding:4px 16px 12px;border-bottom:1px solid #EEE;flex:none}
   .sheet #swList{padding-top:12px;flex:1}
@@ -366,7 +373,7 @@ const FORMS={
   tax:{t:'Tax and business details',d:'You work as a contractor, so we need these to pay you.',f:[['tax_abn','ABN *','51 824 753 556',"Don't have one? Apply for free at abr.gov.au",'00 000 000 000'],['tax_bn','Business name','A. Petrenko Pharmacy Services','','Filled in from your ABN'],['tax_et','Entity type','Sole trader','','Filled in from your ABN']],
     post:()=>`<div><div class="overline" style="margin-top:0">ARE YOU REGISTERED FOR GST? *</div>${mchips('f','tax_gst',['Yes','No'],false)}</div>`,ok:()=>!!S.f.tax_gst,keys:['tax_abn','tax_bn','tax_et','tax_gst']},
   imm:{t:'Can you vaccinate?',d:'Some pharmacies need a pharmacist who can give vaccines.',yesno:true,ck:'imm_ans'},
-  prof:{t:'Professional certificates',d:'Add a certificate for each training you hold.',immNote:true,body:()=>multiFiles('prof',i=>selF('Training type *','prof_t'+i,'Training type','TRAIN'),'Add another certificate'),ok:()=>!!(S.f.prof_t0&&S.f.prof_f0),keys:['prof_t0','prof_f0']},
+  prof:{t:'Professional certificates',d:'Add a certificate for each training you hold.',immNote:true,body:()=>multiFiles('prof',i=>`<div class="field"><label>Training type *</label>${mchips('f','prof_t'+i,TRAIN,false)}</div>`,'Add another certificate'),ok:()=>!!(S.f.prof_t0&&S.f.prof_f0),keys:['prof_t0','prof_f0']},
   other:{t:'Other insurance',d:'Add any other policies you hold, like public liability.',body:()=>multiFiles('other',i=>dateField('other_e'+i,'future',false,'Policy expiry date'),'Add another file'),ok:()=>!!(S.f.other_f0&&S.f.other_e0),keys:['other_f0','other_e0']},
   exp:{t:'Experience and software',d:"We filled this in from your resume. Check it's right.",opt:true,multi:[['YEARS OF PHARMACY EXPERIENCE','exp_y',['0–3 years','3–5 years','5–10 years','10+ years'],false],['WHAT ROLE(S) ARE YOU SEEKING?','exp_r',['Pharmacist','Pharmacy manager','Clinical pharmacist','Compounding pharmacist','Consultant pharmacist','Hospital pharmacist','Locum pharmacist','Aged care pharmacist','Specialist pharmacist (e.g. oncology, pediatrics, cardiology)','Pharmacy technician / assistant','Research or regulatory pharmacist','Pharmacy educator or sales representative'],true,'roles'],['PHARMACY SOFTWARE','exp_s',['FRED','FredNXT','Minfos','Z Software','LOTS','Mountain Top','Simple','Clear Dispense','RxOne','Amfac','ScriptPro','MyScript','Fred Dispense Plus','Pos Works','Fred Dispense','Others'],true,'sheet']],post:()=>salaryHTML()},
   travel:{t:'Travel requirements',d:'Pharmacies use this to match you with shifts away from home.',opt:true,body:()=>TRAVELQ.map((q,i)=>`<div><div class="overline" style="margin-top:0">${q}</div>${mchips('f','trv_'+i,['Yes','No'],false)}</div>`).join(''),keys:['trv_0','trv_1','trv_2','trv_3']},
@@ -381,8 +388,8 @@ const TRAIN=['Immunisation','First Aid and CPR','COVID'];
 const TITLES=['Mr','Mrs','Ms','Miss','Dr'];
 const PL={BANKS,TRAIN,TITLES};
 const TRAVELQ=['Are you willing to work outside metro areas?','Are you willing to stay in regional areas for a short stint (1–4 weeks) where accommodation, meal allowance and travel cost are covered?','Would you consider anything longer than 4 weeks?','Are you fluent in a language other than English?'];
-const SMSF=[['smsf_esa','Electronic service address (ESA) *','e.g. smsfdataflow',"Not sure? Ask your accountant."],['smsf_bsb','BSB of the SMSF *','000 000'],['smsf_acc','SMSF account number *','12345678'],['smsf_name','SMSF account name *','Name on the fund account']];
-const INDF=[['sup_usi','Unique Superannuation Identifier (USI) *','e.g. STA0100AU',"Find it on your fund's website or statement."],['sup_mem','Member number *','e.g. 123456789']];
+const SMSF=[['smsf_esa','Electronic service address (ESA) *','e.g. smsfdataflow',"Not sure? Ask your accountant.",'smsfdataflow'],['smsf_bsb','BSB of the SMSF *','000 000','','062 000'],['smsf_acc','SMSF account number *','12345678','','10293847'],['smsf_name','SMSF account name *','Name on the fund account','','Petrenko Family Super Fund']];
+const INDF=[['sup_usi','Unique Superannuation Identifier (USI) *','e.g. STA0100AU',"Find it on your fund's website or statement.",'STA0100AU'],['sup_mem','Member number *','e.g. 123456789','','123456789']];
 const selF=(label,key,title,list)=>{const v=S.f[key];return `<button class="pick" onclick="openPick('${key}','${esc(title)}','${list}')" aria-label="${esc(label)}${v?', '+esc(v):''}"><span class="in">${v?`<span class="pl">${label}</span><span class="val">${esc(v)}</span>`:`<span class="pl big">${label}</span>`}</span>${I.chev}</button>`;};
 function openPick(key,title,list){S.pq='';openSheet('pick',{key,title,list});}
 function pickSet(x){S.f[S.sheet.key]=x;S.sheet=null;render();}
@@ -396,8 +403,8 @@ function multiFiles(p,extra,addL){const n=S.f[p+'_n']||1;let h='';
 function rmFile(p,i){const n=S.f[p+'_n']||1,K=['f','t','e'];
   for(let j=i;j<n-1;j++)K.forEach(x=>{S.f[p+'_'+x+j]=S.f[p+'_'+x+(j+1)];S.f[p+'_'+x+j+'_raw']=S.f[p+'_'+x+(j+1)+'_raw'];});
   K.forEach(x=>{delete S.f[p+'_'+x+(n-1)];delete S.f[p+'_'+x+(n-1)+'_raw'];});S.f[p+'_n']=n-1;render();}
-const audIn=(id,label,ph,store='f',dis=false)=>`<div class="field sfx"><label for="${id}">${label}</label><input id="${id}" type="text" inputmode="decimal" placeholder="${ph}" value="${esc(S[store][id]||'')}" ${dis?'disabled':''} oninput="S.${store}['${id}']=this.value"><span class="cur">AUD</span></div>`;
-const salaryHTML=()=>`<div><div class="overline" style="margin-top:0">SALARY EXPECTATIONS</div><div class="stack tight">${audIn('exp_hr','Hourly rate','0.00')}${audIn('exp_yr','Annual salary','0.00')}</div></div>`;
+const audIn=(id,label,ph,store='f',dis=false,sg='')=>`<div class="field sfx"><label for="${id}">${label}</label><input id="${id}" type="text" inputmode="decimal" placeholder="${ph}" data-sugg="${sg}" value="${esc(S[store][id]||'')}" ${dis?'disabled':''} oninput="S.${store}['${id}']=this.value"><span class="cur">AUD</span></div>`;
+const salaryHTML=()=>`<div><div class="overline" style="margin-top:0">SALARY EXPECTATIONS</div><div class="stack tight">${audIn('exp_hr','Hourly rate','0.00','f',false,'65.00')}${audIn('exp_yr','Annual salary','0.00','f',false,'120,000')}</div></div>`;
 /* roles: field + modal list with sticky Done */
 const ROLESL=()=>FORMS.exp.multi[1][2];
 const rolesField=k=>{const sel=S.f[k]||[];return `<button class="pick" onclick="openSheet('roles')" aria-label="Roles, ${sel.length} selected"><span class="in">${sel.length?`<span class="pl">Roles · ${sel.length} selected</span><span class="tok">${sel.slice(0,3).map(x=>`<span class="tk">${esc(x)}</span>`).join('')}${sel.length>3?`<span class="tk more">+${sel.length-3} more</span>`:''}</span>`:'<span class="pl big">Choose roles</span>'}</span>${I.chev}</button>`;};
@@ -406,17 +413,17 @@ const rlListHTML=()=>{const sel=S.f.exp_r||[];return `<div class="cklist">${ROLE
 /* super: as in the client's app */
 const SMSFT='Self-managed super fund (SMSF)',INDT='Industry super fund';
 const si=(l,k,v,ph)=>{SUG[k]=v;return sinput(l,k,v,'','text',v?'Suggested':'',ph);};
-const fields=L=>L.map(([k,l,ph,h])=>{SUG[k]='';return sinput(l,k,'',h||'','text','',ph);}).join('');
+const fields=L=>L.map(([k,l,ph,h,v])=>{SUG[k]=v||'';return sinput(l,k,v||'',h||'','text',v?'Suggested':'',ph);}).join('');
 const seg=(key,opts)=>`<div class="seg" role="radiogroup">${opts.map(([v,l])=>`<button role="radio" aria-checked="${S.f[key]===v}" class="${S.f[key]===v?'on':''}" onclick="S.f['${key}']='${esc(v)}';render()">${l}</button>`).join('')}</div>`;
 /* super: one field set per fund type (client: Industry / SMSF dropdown) */
 function superHTML(){if(!S.f.sup_dob_raw&&S.f.dob){S.f.sup_dob_raw=S.f.dob;S.f.sup_dob=S.f.dob;}if(!S.f.sup_type)S.f.sup_type=INDT;const sm=S.f.sup_type===SMSFT;
   return `<div><div class="overline" style="margin-top:0">FUND TYPE</div>${seg('sup_type',[[INDT,'Industry fund'],[SMSFT,'Self-managed (SMSF)']])}</div>
-  <div><div class="overline" style="margin-top:0">${sm?'YOUR SMSF':'YOUR FUND'}</div><div class="stack tight">${si('Fund name *','sup_fund',sm?'':'AustralianSuper',sm?'e.g. Petrenko Family Super Fund':'e.g. AustralianSuper')}${si(sm?'ABN of your SMSF *':'ABN of your super fund *','sup_abn','','00 000 000 000')}${fields(sm?SMSF:INDF)}</div></div>
-  <div><div class="overline" style="margin-top:0">YOUR NAME AS REGISTERED WITH THE FUND</div><div class="stack tight">${selF('Title *','sup_title','Title','TITLES')}${si('First name *','sup_fn','Andrii','')}${si('Last name *','sup_ln','Petrenko','')}</div></div>
+  <div><div class="overline" style="margin-top:0">${sm?'YOUR SMSF':'YOUR FUND'}</div><div class="stack tight">${si('Fund name *','sup_fund',sm?'Petrenko Family Super Fund':'AustralianSuper',sm?'e.g. Petrenko Family Super Fund':'e.g. AustralianSuper')}${si(sm?'ABN of your SMSF *':'ABN of your super fund *','sup_abn',sm?'53 004 085 616':'65 714 394 898','00 000 000 000')}${fields(sm?SMSF:INDF)}</div></div>
+  <div><div class="overline" style="margin-top:0">YOUR NAME AS REGISTERED WITH THE FUND</div><div class="stack tight"><div class="field"><label>Title *</label>${mchips('f','sup_title',TITLES,false)}</div>${si('First name *','sup_fn','Andrii','')}${si('Last name *','sup_ln','Petrenko','')}</div></div>
   ${dateField('sup_dob','past',false,'Date of birth')}
-  ${si('Tax file number (TFN) *','sup_tfn','','000 000 000')}
+  ${si('Tax file number (TFN) *','sup_tfn','123 456 782','000 000 000')}
   <div><div class="overline" style="margin-top:0">STANDARD CHOICE FORM *</div>${fileRow('sup_form','choice-form.pdf')}</div>
-  <div><div class="overline" style="margin-top:0">BPAY</div><p class="help" style="margin:-2px 0 10px;font-size:13px;color:var(--sub)">Some pharmacies pay super by BPAY.</p><div class="stack tight">${si('BPAY number','sup_bpay','','e.g. 12345')}${si('Customer reference number','sup_crn','','e.g. 1234 5678 9012')}</div></div>`;}
+  <div><div class="overline" style="margin-top:0">BPAY</div><p class="help" style="margin:-2px 0 10px;font-size:13px;color:var(--sub)">Some pharmacies pay super by BPAY.</p><div class="stack tight">${si('BPAY number','sup_bpay','12345','e.g. 12345')}${si('Customer reference number','sup_crn','1234 5678 9012','e.g. 1234 5678 9012')}</div></div>`;}
 const supOk=()=>['sup_type','sup_fund','sup_abn','sup_title','sup_fn','sup_ln','sup_dob','sup_form','sup_tfn'].every(k=>S.f[k])&&(S.f.sup_type===SMSFT?SMSF:INDF).every(x=>S.f[x[0]]);
 const ck=(on,lab,click)=>`<button class="ck ${on?'on':''}" role="checkbox" aria-checked="${on}" onclick="${click}"><span class="box">${on?I.tick:''}</span><span>${lab}</span></button>`;
 const SWL=()=>FORMS.exp.multi[2][2];
@@ -469,6 +476,12 @@ const sinput=(label,id,sugg,help='',type='text',note='Suggested',ph='')=>{const 
 const SUG={};
 function focusF(id){if(S.focus===id)return;S.focus=id;render();const el=document.getElementById(id);if(el){el.focus();}}
 function fillF(id){S.f[id]=SUG[id];if(id==='pw1')S.f.pw2=SUG.pw2;S.focus=null;render();document.activeElement&&document.activeElement.blur&&document.activeElement.blur();}
+/* tap-to-fill suggestion for plain inputs (dates, amounts): data-sugg */
+document.addEventListener('focusin',e=>{const el=e.target;if(!(el instanceof HTMLInputElement)||!el.dataset.sugg||el.value||el.disabled)return;const f=el.closest('.field');if(!f||f.querySelector('.sugg'))return;
+  const d=document.createElement('div');d.className='sugg';d.innerHTML=`<button onmousedown="event.preventDefault()">${esc(el.dataset.sugg)}<small>Suggested</small></button>`;
+  d.querySelector('button').onclick=()=>{el.value=el.dataset.sugg;d.remove();el.dispatchEvent(new Event('input',{bubbles:true}));if(S.dk)kbDone();else el.blur();};f.appendChild(d);});
+document.addEventListener('focusout',e=>{const f=e.target.closest&&e.target.closest('.field');if(f&&e.target.dataset&&e.target.dataset.sugg!==undefined)setTimeout(()=>f.querySelector('.sugg')?.remove(),0);});
+document.addEventListener('input',e=>{if(e.target.dataset&&e.target.dataset.sugg&&e.target.value)e.target.closest('.field')?.querySelector('.sugg')?.remove();});
 /* close suggestion dropdowns without re-rendering, so the tap on a button still lands */
 document.addEventListener('mousedown',e=>{if((S.focus||S.addrOpen)&&!e.target.closest('.field,.keypad,.qt')){S.focus=null;S.addrOpen=false;document.querySelectorAll('#phone .sugg,#addrDD .dd').forEach(n=>n.remove());}});
 const btn=(label,cls='primary',on='',dis=false)=>`<button class="btn ${cls}" ${dis?'disabled':''} onclick="${on}">${label}</button>`;
@@ -624,7 +637,17 @@ function dVal(k,dir){const raw=S.f[k+'_raw']??S.f[k]??'',n=DLBL[k];
 function dType(k,el,dir){const d=el.value.replace(/\D/g,'').slice(0,8);el.value=[d.slice(0,2),d.slice(2,4),d.slice(4,8)].filter(Boolean).join('/');S.f[k+'_raw']=el.value;S.dobNav=false;const r=dVal(k,dir);S.f[k]=r.e?'':r.v;liveBtns();}
 function dCheck(k,dir){setTimeout(()=>{const r=dVal(k,dir);S.dErr=S.dErr||{};if((S.dErr[k]||'')!==r.e){S.dErr[k]=r.e;render();}},0);}
 const dateField=(k,dir,auto,lbl)=>{if(lbl)DLBL[k]=lbl;const e=(S.dErr||{})[k];
-  return `<div class="field"><label for="${k}">${DLBL[k]} *</label><input id="${k}" type="text" inputmode="numeric" maxlength="10" placeholder="DD/MM/YYYY" ${auto?'name="birthday" autocomplete="bday"':'autocomplete="off"'} value="${esc(S.f[k+'_raw']??S.f[k]??'')}" class="${e?'err':''}" ${e?`aria-describedby="${k}_err"`:''} oninput="dType('${k}',this,'${dir}')" onblur="dCheck('${k}','${dir}')">${e?`<div class="errtxt" id="${k}_err">${e}</div>`:''}</div>`;};
+  return `<div class="field"><label for="${k}">${DLBL[k]} *</label><input id="${k}" type="text" inputmode="numeric" maxlength="10" placeholder="DD/MM/YYYY" data-sugg="${DSUG(k)}" ${auto?'name="birthday" autocomplete="bday"':'autocomplete="off"'} value="${esc(S.f[k+'_raw']??S.f[k]??'')}" class="${e?'err':''}" ${e?`aria-describedby="${k}_err"`:''} onfocus="dFocus('${k}','${dir}')" oninput="dType('${k}',this,'${dir}')" onblur="dBlur('${k}','${dir}')">${e?`<div class="errtxt" id="${k}_err">${e}</div>`:''}</div>`;};
+/* numeric keypad for every date field (on desktop; phones show their own) */
+const DSUG=k=>k==='dob'||k==='sup_dob'?'19/07/1990':k==='exp'?'30/11/2027':/^(ins|other)_e/.test(k)?'30/06/2027':'';
+const KBH=258,TOUCH=matchMedia('(pointer:coarse)').matches;
+function dFocus(k,dir){if(TOUCH)return;S.dk={k,dir};kbAttach();const el=document.getElementById(k);if(el)setTimeout(()=>el.scrollIntoView({block:'center',behavior:'smooth'}),30);}
+function dBlur(k,dir){if(S.dk&&S.dk.k===k){S.dk=null;kbRemove();}dCheck(k,dir);}
+function kbAttach(){const p=$('#phone');if(!p||p.querySelector('.dkb'))return;p.classList.add('kb');const d=document.createElement('div');d.className='dkb';
+  d.innerHTML=`<div class="dkb-bar"><button onmousedown="event.preventDefault()" onclick="kbDone()">Done</button></div><div class="dkb-keys">${['1','2','3','4','5','6','7','8','9','','0','del'].map(x=>x?`<button onmousedown="event.preventDefault()" onclick="dkey('${x}')" aria-label="${x==='del'?'Delete':x}">${x==='del'?I.del:x}</button>`:'<span></span>').join('')}</div>`;p.appendChild(d);}
+function kbRemove(){const p=$('#phone');if(!p)return;p.classList.remove('kb');p.querySelector('.dkb')?.remove();}
+function kbDone(){const el=S.dk&&document.getElementById(S.dk.k);if(el)el.blur();else{S.dk=null;kbRemove();}}
+function dkey(x){if(!S.dk)return;const {k,dir}=S.dk,el=document.getElementById(k);if(!el)return;let d=el.value.replace(/\D/g,'');d=x==='del'?d.slice(0,-1):(d.length<8?d+x:d);el.value=d;dType(k,el,dir);}
 const ADDR=['10 George St, Sydney NSW 2000','10 George St, Parramatta NSW 2150','10 George St, Hornsby NSW 2077','10 Georges River Rd, Croydon Park NSW 2133','120 Crown St, Surry Hills NSW 2010','285 King St, Newtown NSW 2042'];
 function addrHTML(){if(!S.addrOpen)return '';const q=(S.f.addr||'').trim();
   if(!q)return S.prefilled&&S.prefilled!=='passport'?`<div class="dd"><button onmousedown="event.preventDefault()" onclick="pickAddr('${esc(SUG.addr)}')">${I.pin}<span>${esc(SUG.addr)}</span></button></div>`:'';
@@ -831,7 +854,7 @@ SH.photo=()=>{const {doc,side}=S.sheet;const d=DOCS.find(x=>x.id===doc);const li
   <div class="stack tight">${btn(lic&&!back?'Next':'Confirm','primary','photoNext()')}${btn('Retake photo','secondary','retake()')}</div></div>`;};
 
 SH.filters=()=>`<div class="inner" style="padding-top:8px"><div style="display:flex;align-items:center;gap:16px"><h2 style="flex:1">Filters</h2><button class="link" style="color:var(--sub)" onclick="S.flt={};render()">Reset</button><button class="close" aria-label="Close" onclick="closeSheet()">${I.x}</button></div>
-  ${FLT.map(([l,k,it,m])=>`<div class="overline">${l}</div>${mchips('flt',k,it,m)}${k==='fl'?`<p class="help" style="margin:8px 0 0;font-size:13px;color:var(--sub)">Assignments of 1–13 weeks where accommodation and travel costs are covered.</p>`:''}${k==='fk'?`<div class="overline">RATE</div><div class="stack tight">${audIn('rate','Minimum rate per hour','0.00','flt')}${audIn('wrate','Minimum weekend rate per hour','0.00','flt',!!S.flt.same)}${ck(!!S.flt.same,'Same as weekday rate','S.flt.same=!S.flt.same;if(S.flt.same)S.flt.wrate=S.flt.rate;render()')}</div>`:''}`).join('')}
+  ${FLT.map(([l,k,it,m])=>`<div class="overline">${l}</div>${mchips('flt',k,it,m)}${k==='fl'?`<p class="help" style="margin:8px 0 0;font-size:13px;color:var(--sub)">Assignments of 1–13 weeks where accommodation and travel costs are covered.</p>`:''}${k==='fk'?`<div class="overline">RATE</div><div class="stack tight">${audIn('rate','Minimum rate per hour','0.00','flt',false,'60.00')}${audIn('wrate','Minimum weekend rate per hour','0.00','flt',!!S.flt.same,'75.00')}${ck(!!S.flt.same,'Same as weekday rate','S.flt.same=!S.flt.same;if(S.flt.same)S.flt.wrate=S.flt.rate;render()')}</div>`:''}`).join('')}
   <div style="height:20px"></div>${btn('Show 18 shifts','primary',"closeSheet();toast('Filters saved')")}</div>`;
 SH.sw=()=>`<div class="sh-head"><div style="display:flex;align-items:center;gap:16px"><h2 style="flex:1;font-size:20px">Pharmacy software</h2><button class="close" aria-label="Close" onclick="closeSheet()">${I.x}</button></div>
   <div class="field" style="margin-top:12px"><label for="swq">Search or add software</label><input id="swq" type="search" placeholder="e.g. Minfos" value="${esc(S.swq||'')}" oninput="S.swq=this.value;swUpd()" onkeydown="if(event.key==='Enter'){event.preventDefault();swAdd()}"></div>
@@ -883,6 +906,7 @@ function render(){
   const an=S.anim?' anim':'';S.anim=false;
   const keep=S._last===id?{sc:p.querySelector('.screen .scroll')?.scrollTop||0,sh:p.querySelector('.sheet .inner')?.scrollTop||0,sheet:!!S.sheet}:null;S._last=id;
   p.innerHTML=`<section class="screen">${V[id]()}</section>${S.sheet?`<div class="overlay${an}" onclick="${['otp','sms'].includes(S.sheet.name)?'':'closeSheet()'}"></div><div class="sheet${an}" role="dialog"><div class="grab"></div>${SH[S.sheet.name]()}</div>`:''}${S.alert?`<div class="alert-wrap" role="alertdialog">${AL[S.alert]()}</div>`:''}<div class="homebar"></div>`;
+  if(S.dk){const el=document.getElementById(S.dk.k);if(el){kbAttach();el.focus({preventScroll:true});}else S.dk=null;}
   if(keep){const sc=p.querySelector('.screen .scroll');if(sc)sc.scrollTop=keep.sc;const si=p.querySelector('.sheet .inner');if(si&&keep.sheet)si.scrollTop=keep.sh;}
   $('#scen').innerHTML=Object.entries(SC).map(([k,v])=>`<button class="${k===S.scen?'on':''}" onclick="setScen('${k}')">${v.t}</button>`).join('');
   if(cur()==='mobile'&&!S.sheet){const m=document.getElementById('mob');if(m)m.focus({preventScroll:true});}
