@@ -386,15 +386,16 @@ const SC={
   signup:{t:'1 · Sign up → in review',l:SCREENS},
   later:{t:'2 · Documents added later',l:[['L:docs','05 Documents hub — tap Upload later'],['L:home','10c Home — documents missing'],['L:all','10d All items — documents missing'],['L:fix','Add photo ID — sheet']]},
   att:{t:'3 · Document needs attention',l:[['A:home','10e Home — needs attention'],['A:fix','10f Re-upload photo ID — sheet'],['A:all','10g All items — needs attention']]},
-  verified:{t:'4 · ID verified → apply',l:[['V:push',"11b You're verified — notification"],['V:home','12 Home — verified'],['V:all','12a All items — verified'],['V:shift','13 Shift — verified'],['V:apply','14 Before you apply — sheet'],['V:mobile','15 Mobile number — 1 of 6'],['V:sms','15a SMS code'],['V:bank','16 Bank details — 2 of 6'],['V:bankpick','16a Bank name — sheet'],['V:unsaved','16b Leave unfinished — alert'],['V:tax','17 Tax and business details — 3 of 6'],['V:super','18 Super fund — 4 of 6'],['V:smsf','18a Super fund — self-managed (SMSF)'],['V:prof','19 Professional certificates — 5 of 6'],['V:other','20 Other insurance — 6 of 6'],['V:exp','21a Experience and software — optional'],['V:roles','21a1 Roles — sheet'],['V:sw','21b Pharmacy software — sheet'],['V:swadd','21c Pharmacy software — add your own'],['V:cred','21d Advanced credentials — optional'],['V:credpick','21e Advanced credentials — picker'],['V:travel','21f Travel requirements — optional'],['V:later','22 Before you apply — 2 left'],['V:ready','23 Shift — ready to apply'],['V:applied','24 Applied'],['V:allset',"12b Home — all set"],['V:allsetX','12c Home — all set card dismissed'],['V:filters','12d Shift filters — sheet']]}
+  verified:{t:'4 · ID verified → apply',l:[['V:push',"11b You're verified — notification"],['V:home','12 Home — verified'],['V:all','12a All items — verified'],['V:shift','13 Shift — verified'],['V:apply','14 Before you apply — sheet'],['V:mobile','15 Mobile number — 1 of 2'],['V:sms','15a SMS code'],['V:prof','16 Professional certificates — 2 of 2'],['V:exp','17a Experience and software — optional'],['V:roles','17a1 Roles — sheet'],['V:sw','17b Pharmacy software — sheet'],['V:swadd','17c Pharmacy software — add your own'],['V:cred','17d Advanced credentials — optional'],['V:credpick','17e Advanced credentials — picker'],['V:travel','17f Travel requirements — optional'],['V:other','17g Other insurance — optional'],['V:later','18 Before you apply — 1 left'],['V:ready','19 Shift — ready to apply'],['V:applied','20 Applied — add payment details'],['V:homepay','20a Home — payment details left'],['V:bank','21 Bank details — 1 of 3'],['V:bankpick','21a Bank name — sheet'],['V:unsaved','21b Leave unfinished — alert'],['V:tax','22 Tax and business details — 2 of 3'],['V:super','23 Super fund — 3 of 3'],['V:smsf','23a Super fund — self-managed (SMSF)'],['V:allset',"12b Home — all set"],['V:allsetX','12c Home — all set card dismissed'],['V:filters','12d Shift filters — sheet']]}
 };
 const ITEMS=[
   {id:'mobile',t:'Mobile number',s:"We'll text you a code",a:'Verify'},
+  {id:'prof',t:'Professional certificates',s:'Vaccination, First Aid and CPR, COVID',a:'Upload'}];
+/* needed before the first payment, not to apply: Locumate invoices the pharmacy on the pharmacist's behalf */
+const PAY=[
   {id:'bank',t:'Bank details',s:'Bank, account name, BSB, account number',a:'Add'},
   {id:'tax',t:'Tax and business details',s:'ABN, business name, entity type, GST',a:'Add'},
-  {id:'super',t:'Super fund',s:'Fund details, TFN and choice form',a:'Add'},
-  {id:'prof',t:'Professional certificates',s:'Vaccination, First Aid and CPR, COVID',a:'Upload'},
-  {id:'other',t:'Other insurance',s:'Policy and expiry date',a:'Upload'}];
+  {id:'super',t:'Super fund',s:'Fund details, TFN and choice form',a:'Add'}];
 const FORMS={
   bank:{t:'Bank details',d:'We pay you here after each shift.',pre:()=>selF('Bank name *','bank_bank','Choose your bank','BANKS'),f:[['bank_name','Account name *','Andrii Petrenko','','Name on your account'],['bank_bsb','BSB *','062 000','','000 000'],['bank_acc','Account number *','12345678','','12345678']],ok:()=>!!S.f.bank_bank,keys:['bank_bank','bank_name','bank_bsb','bank_acc']},
   super:{t:'Super fund',d:'We pay your super with every shift.',body:()=>superHTML(),ok:()=>supOk(),keys:['sup_fund','sup_abn','sup_title','sup_fn','sup_ln','sup_form','sup_tfn']},
@@ -402,7 +403,7 @@ const FORMS={
     post:()=>`<div class="field"><label>Entity type *</label>${mchips('f','tax_et',['Sole trader','Company / trust / partnership'],false)}</div><div><div class="overline" style="margin-top:0">ARE YOU REGISTERED FOR GST? *</div>${mchips('f','tax_gst',['Yes','No'],false)}</div>`,ok:()=>!!(S.f.tax_gst&&S.f.tax_et),keys:['tax_abn','tax_bn','tax_et','tax_gst']},
   imm:{t:'Can you vaccinate?',d:'Some pharmacies need a pharmacist who can give vaccines.',yesno:true,ck:'imm_ans'},
   prof:{t:'Professional certificates',d:'Add a certificate for each training you hold.',body:()=>`<div class="field"><label>Can you vaccinate? *</label>${chips(['Yes','No'],S.f.imm_ans,'setImm')}</div>${S.f.imm_ans==='Yes'?'<div class="note">Add your immunisation training certificate first.</div>':''}`+multiFiles('prof',i=>`<div class="field"><label>Training type *</label>${mchips('f','prof_t'+i,TRAIN,false)}</div>`,'Add another certificate'),ok:()=>!!(S.f.imm_ans&&S.f.prof_t0&&S.f.prof_f0),keys:['imm_ans','prof_t0','prof_f0']},
-  other:{t:'Other insurance',d:'Add any other policies you hold, like public liability.',body:()=>multiFiles('other',i=>dateField('other_e'+i,'future',false,'Policy expiry date'),'Add another file'),ok:()=>!!(S.f.other_f0&&S.f.other_e0),keys:['other_f0','other_e0']},
+  other:{opt:true,t:'Other insurance',d:'Add any other policies you hold, like public liability.',body:()=>multiFiles('other',i=>dateField('other_e'+i,'future',false,'Policy expiry date'),'Add another file'),ok:()=>!!(S.f.other_f0&&S.f.other_e0),keys:['other_f0','other_e0']},
   exp:{t:'Experience and software',d:"We filled this in from your resume. Check it's right.",opt:true,multi:[['YEARS OF PHARMACY EXPERIENCE','exp_y',['0–3 years','3–5 years','5–10 years','10+ years'],false],['WHAT ROLE(S) ARE YOU SEEKING?','exp_r',['Pharmacist','Pharmacy manager','Clinical pharmacist','Compounding pharmacist','Consultant pharmacist','Hospital pharmacist','Locum pharmacist','Aged care pharmacist','Specialist pharmacist (e.g. oncology, pediatrics, cardiology)','Pharmacy technician / assistant','Research or regulatory pharmacist','Pharmacy educator or sales representative'],true,'roles'],['PHARMACY SOFTWARE','exp_s',['FRED','FredNXT','Minfos','Z Software','LOTS','Mountain Top','Simple','Clear Dispense','RxOne','Amfac','ScriptPro','MyScript','Fred Dispense Plus','Pos Works','Fred Dispense','Others'],true,'sheet']],post:()=>salaryHTML()},
   travel:{t:'Travel requirements',d:'Pharmacies use this to match you with shifts away from home.',opt:true,body:()=>TRAVELQ.map((q,i)=>`<div><div class="overline" style="margin-top:0">${q}</div>${mchips('f','trv_'+i,['Yes','No'],false)}</div>`).join(''),keys:['trv_0','trv_1','trv_2','trv_3']},
   cred:{t:'Advanced credentials',d:'Only if you hold any. Pick them, then upload a certificate for each.',opt:true,certs:true,picker:true,multi:[]}
@@ -488,7 +489,7 @@ const credPickView=()=>{const sel=S.f.cred_l||[];return `${status()}<div class="
   <div class="pick-search">${sfield('cq','Search credentials','Credential name',S.cq,"S.cq=this.value;credList()")}
   ${sel.length?`<div class="toks">${sel.map(x=>`<span class="tk">${x}<button aria-label="Remove ${esc(x)}" onclick="crTg('${esc(x)}')">${I.xs}</button></span>`).join('')}<button class="link" onclick="S.f.cred_l=[];render()">Clear all</button></div>`:''}</div>
   <div class="scroll" id="credList">${credListHTML()}</div><div class="foot" style="border-top:1px solid #EEE">${btn('Done','primary','goBack()')}</div>`;};
-const OPT=[{id:'exp',t:'Experience and software',s:'Prefilled from your resume',a:'Check'},{id:'cred',t:'Advanced credentials',s:'Only if you hold any',a:'Add'},{id:'travel',t:'Travel requirements',s:'4 quick questions',a:'Add'}];
+const OPT=[{id:'exp',t:'Experience and software',s:'Prefilled from your resume',a:'Check'},{id:'cred',t:'Advanced credentials',s:'Only if you hold any',a:'Add'},{id:'travel',t:'Travel requirements',s:'4 quick questions',a:'Add'},{id:'other',t:'Other insurance',s:'Public liability and other policies',a:'Add'}];
 const FLT=[['DAYS','fd',['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],true],['SHIFT TYPE','ft',['Early morning','Mid day','Graveyard','Rural','City'],true],['STATES','fs',['NSW','VIC','QLD','WA','SA','TAS'],true],['DISTANCE','fk',['10 km','25 km','50 km','100 km+'],false],['LONGER ASSIGNMENTS','fl',['Yes','No'],false]];
 const mchips=(store,key,items,multi)=>`<div class="chips">${items.map(x=>{const v=S[store][key];const on=multi?(v||[]).includes(x):v===x;return `<button class="chip ${on?'on':''}" onclick="tg('${store}','${key}','${esc(x)}',${multi})">${x}</button>`;}).join('')}</div>`;
 function fltAll(k){const it=FLT.find(f=>f[1]===k)[2];S.flt[k]=(S.flt[k]||[]).length===it.length?[]:[...it];render();}
@@ -568,24 +569,27 @@ function jump(k){
     base('missing',{cv:'done'});S.scen='later';S.stack=['home'];if(id==='all')S.stack.push('all');if(id==='fix')S.sheet={name:'fix',mode:'add',doc:'id'};return render();}
   if(p==='A'){base('attention');S.scen='att';S.stack=['home'];if(id==='all')S.stack.push('all');if(id==='fix')S.sheet={name:'fix',mode:'fix',doc:'id'};return render();}
   base(id==='push'?'review':'verified');S.scen='verified';
-  S.stack={push:['push'],home:['home'],all:['home','all'],shift:['home','shiftV'],apply:['home','shiftV'],mobile:['home','shiftV','mobile'],sms:['home','shiftV','mobile'],bank:['home','shiftV','form'],tax:['home','shiftV','form'],super:['home','shiftV','form'],later:['home','shiftV'],exp:['home','shiftV','form'],cred:['home','shiftV','form'],sw:['home','shiftV','form'],roles:['home','shiftV','form'],swadd:['home','shiftV','form'],credpick:['home','shiftV','form','credpick'],bankpick:['home','shiftV','form'],smsf:['home','shiftV','form'],unsaved:['home','shiftV','form'],imm:['home','shiftV','form'],prof:['home','shiftV','form'],other:['home','shiftV','form'],travel:['home','shiftV','form'],filters:['home'],ready:['home','shiftV'],allset:['home'],allsetX:['home'],applied:['home','shiftV','applied']}[id];
-  if(['apply','mobile','sms','bank','bankpick','unsaved','smsf','imm','prof','other','travel','tax','super','later','exp','cred','credpick','sw','swadd','roles'].includes(id)){S.applyFlow=true;S.ctx='apply';}
+  S.stack={push:['push'],home:['home'],all:['home','all'],shift:['home','shiftV'],apply:['home','shiftV'],mobile:['home','shiftV','mobile'],sms:['home','shiftV','mobile'],bank:['home','form'],tax:['home','form'],super:['home','form'],later:['home','shiftV'],exp:['home','shiftV','form'],cred:['home','shiftV','form'],sw:['home','shiftV','form'],roles:['home','shiftV','form'],swadd:['home','shiftV','form'],credpick:['home','shiftV','form','credpick'],bankpick:['home','form'],smsf:['home','form'],unsaved:['home','form'],imm:['home','shiftV','form'],prof:['home','shiftV','form'],other:['home','shiftV','form'],travel:['home','shiftV','form'],filters:['home'],ready:['home','shiftV'],allset:['home'],allsetX:['home'],applied:['home','shiftV','applied'],homepay:['home']}[id];
+  if(['apply','mobile','sms','imm','prof','other','travel','later','exp','cred','credpick','sw','swadd','roles'].includes(id)){S.applyFlow=true;S.ctx='apply';}
+  if(['bank','bankpick','unsaved','smsf','tax','super'].includes(id)){S.applyFlow=true;S.ctx='pay';ITEMS.forEach(i=>S.items[i.id]=true);}
   if(id==='apply'||id==='later')S.sheet={name:'apply'};
   if(id==='filters'){S.sheet={name:'filters'};}
   if(id==='sw'||id==='swadd'){ITEMS.forEach(i=>S.items[i.id]=true);S.formId='exp';S.f.exp_y='5–10 years';S.f.exp_r=['Pharmacist','Locum pharmacist'];S.f.exp_s=['FRED','Z Software'];S.swq=id==='swadd'?'Corum':'';S.sheet={name:'sw'};}
   if(id==='credpick'){ITEMS.forEach(i=>S.items[i.id]=true);S.formId='cred';S.f.cred_l=['Advanced Compounding Certification (PCCA)','Advanced Practice Pharmacist Credentialing (AdvPP)'];S.cq='';}
   if(id==='roles'){ITEMS.forEach(i=>S.items[i.id]=true);S.formId='exp';S.f.exp_y='5–10 years';S.f.exp_r=['Pharmacist','Locum pharmacist'];S.f.exp_s=['FRED','Z Software'];S.sheet={name:'roles'};}
   if(id==='exp'||id==='cred'){ITEMS.forEach(i=>S.items[i.id]=true);S.formId=id;if(id==='exp'){S.f.exp_y='5–10 years';S.f.exp_r=['Pharmacist','Locum pharmacist'];S.f.exp_s=['FRED','Z Software'];}else{S.f.cred_l=['Advanced Compounding Certification (PCCA)','Advanced Practice Pharmacist Credentialing (AdvPP)'];}}
-  if(id==='super'){S.formId='super';['mobile','bank','tax'].forEach(x=>S.items[x]=true);}
-  if(id==='later'){ITEMS.forEach(i=>S.items[i.id]=true);delete S.items.super;delete S.items.prof;S.later={super:true,prof:true};}
+  if(id==='super'){S.formId='super';['bank','tax'].forEach(x=>S.items[x]=true);}
+  if(id==='later'){S.items.mobile=true;S.later={prof:true};}
   if(id==='mobile'||id==='sms'){S.formId='mobile';if(id==='sms'){S.f.mob='412 345 678';S.otp='';S.sheet={name:'sms'};startTimer();}}
-  if(id==='bank'||id==='bankpick'){S.formId='bank';S.items.mobile=true;if(id==='bankpick'){S.pq='';S.sheet={name:'pick',key:'bank_bank',title:'Choose your bank',list:'BANKS'};}}
-  if(id==='smsf'){S.formId='super';['mobile','bank','tax'].forEach(x=>S.items[x]=true);Object.assign(S.f,{sup_type:SMSFT,sup_fund:'Petrenko Family Super Fund',sup_title:'Mr',sup_fn:'Andrii',sup_ln:'Petrenko',sup_form:1,sup_tfn:'123 456 782'});}
-  if(id==='unsaved'){S.formId='bank';S.items.mobile=true;Object.assign(S.f,{bank_bank:'Commonwealth Bank',bank_name:'Andrii Petrenko'});S.alert='unsaved';}
-  if(id==='prof'||id==='other'){S.formId=id;['mobile','bank','tax','super'].forEach(x=>S.items[x]=true);if(id==='other')S.items.prof=true;}
+  if(id==='bank'||id==='bankpick'){S.formId='bank';if(id==='bankpick'){S.pq='';S.sheet={name:'pick',key:'bank_bank',title:'Choose your bank',list:'BANKS'};}}
+  if(id==='smsf'){S.formId='super';['bank','tax'].forEach(x=>S.items[x]=true);Object.assign(S.f,{sup_type:SMSFT,sup_fund:'Petrenko Family Super Fund',sup_title:'Mr',sup_fn:'Andrii',sup_ln:'Petrenko',sup_form:1,sup_tfn:'123 456 782'});}
+  if(id==='unsaved'){S.formId='bank';Object.assign(S.f,{bank_bank:'Commonwealth Bank',bank_name:'Andrii Petrenko'});S.alert='unsaved';}
+  if(id==='prof'){S.formId=id;S.items.mobile=true;}
+  if(id==='other'){S.formId=id;ITEMS.forEach(i=>S.items[i.id]=true);['exp','cred','travel'].forEach(x=>S.items[x]=true);}
   if(id==='travel'){ITEMS.forEach(i=>S.items[i.id]=true);S.items.exp=true;S.items.cred=true;S.formId='travel';}
-  if(id==='tax'){S.formId='tax';S.items.mobile=true;S.items.bank=true;}
-  if(['ready','applied','allset','allsetX'].includes(id))ITEMS.forEach(i=>S.items[i.id]=true);
+  if(id==='tax'){S.formId='tax';S.items.bank=true;}
+  if(['ready','applied','homepay','allset','allsetX'].includes(id))ITEMS.forEach(i=>S.items[i.id]=true);
+  if(['allset','allsetX'].includes(id))PAY.forEach(i=>S.items[i.id]=true);
   if(id==='allsetX')S.hideAllSet=true;
   render();}
 
@@ -719,7 +723,7 @@ V.general=()=>`${status()}${header({step:4})}<div class="scroll stack">
   <div>${titleBlock('Your general info','',4)}</div>
   <div class="ava-row"><div class="ava${S.avatar?' on':''}">${S.avatar?'AP':I.cam}</div><div style="flex:1;min-width:0"><div class="t">Profile photo</div><div class="s">Optional</div></div>${btn(S.avatar?'Change':'Add photo','secondary small',"openSheet('avatar')")}</div>
   ${sinput('First name *','fn',SUG.fn='Andrii','','text','')}${sinput('Last name *','ln',SUG.ln='Petrenko','','text','')}${dateField('dob','past',true)}
-  <div class="field"><label>Gender *</label>${chips(['Female','Male','Other'],S.gender,'setGender')}<div class="help">Used for super and AHPRA checks</div></div>
+  <div class="field"><label>Gender *</label>${chips(['Female','Male','Other'],S.gender,'setGender')}<div class="help">Used for ID and insurance checks</div></div>
   ${(SUG.addr='10 George St, Sydney NSW 2000',addrField())}${sinput('Apartment / unit','unit',SUG.unit='Unit 5','','text','')}
   </div><div class="foot">${btn('Continue','primary','go(\'ahpra\')',!(S.f.fn&&S.f.ln&&S.f.dob&&S.gender&&S.f.addr)).replace('<button','<button id="genBtn"')}</div>`;
 
@@ -743,6 +747,9 @@ const shiftCard=(x,verified)=>{const nm=verified?x.n:'Pharmacy Name Here', ad=ve
 const tabs=()=>`<div class="tabs">${['Shifts','Jobs','Calendar','Chat','Profile'].map((t,i)=>`<div class="${i?'':'on'}"><i></i>${t}</div>`).join('')}</div>`;
 const left=()=>ITEMS.filter(i=>!S.items[i.id]).length;
 const firstLeft=()=>ITEMS.find(i=>!S.items[i.id]);
+const payLeft=()=>PAY.filter(i=>!S.items[i.id]).length;
+const firstPay=()=>PAY.find(i=>!S.items[i.id]);
+const isPay=id=>PAY.some(i=>i.id===id);
 const vdocs=()=>['id','ins'].filter(d=>S.docs[d]!=='done');
 const DN={id:'Photo ID',ins:'Indemnity insurance'};
 const pl=n=>`${n} item${n===1?'':'s'}`;
@@ -750,6 +757,7 @@ const homeCard=(h,sub,t,s,a,on,cls='')=>`<div class="card ${cls}"><div class="ca
 V.home=()=>{const ver=S.ver,L=left(),nx=firstLeft(),v=ver==='verified';let card;
   if(ver==='missing'){const d=vdocs()[0];card=d?homeCard('Add your documents to get verified',`We need your ${vdocs().map(x=>x==='id'?'photo ID':'insurance').join(' and ')}`,DN[d],'Needed to see shift details','Upload',`openSheet('fix',{mode:'add',doc:'${d}'})`):'';}
   else if(ver==='attention')card=homeCard('Your photo ID needs attention',"We couldn't read it. Upload a clearer photo.",'Photo ID','Photo is blurry','Re-upload',`openSheet('fix',{mode:'fix',doc:'id'})`,'warn');
+  else if(!L&&payLeft()){const p=firstPay();card=homeCard('Add your payment details',`${pl(payLeft())} left before your first payment`,p.t,'Needed to get paid',p.a,`startPay('setup')`);}
   else if(!L)card=(S.hideAllSet?'':`<div class="card"><div class="card-h"><b>You're all set</b><button class="close" aria-label="Close" onclick="S.hideAllSet=true;render()">${I.xs}</button></div><div class="prow"><span>${v?'You can apply for shifts':"We'll let you know when you're verified"}</span></div></div>`)
     +(!OPT.some(o=>!S.items[o.id])?'':`<div class="card"><div class="card-h"><b>Stand out to pharmacies</b><span style="display:flex;gap:16px;align-items:center"><button class="link" onclick="go('all')">View all</button></span></div><div class="prow"><span>${pl(OPT.filter(o=>!S.items[o.id]).length).replace('item','optional item')} · pharmacies see these on your profile</span></div><div class="next"><span class="row ic" style="border:0;padding:0;width:36px;height:36px;border-radius:8px;background:var(--bg)"></span><span style="flex:1"><div class="t" style="font-weight:500;font-size:15px">${OPT.find(o=>!S.items[o.id]).t}</div><div class="s" style="font-size:13px;color:var(--sub)">${OPT.find(o=>!S.items[o.id]).s}</div></span><button class="btn primary small" onclick="S.applyFlow=true;S.ctx='setup';openItem('${OPT.find(o=>!S.items[o.id]).id}')">${OPT.find(o=>!S.items[o.id]).a}</button></div></div>`);
   else card=homeCard('Finish your account setup',`${pl(L)} left to apply`,nx.t,'Needed to apply',nx.a,`S.applyFlow=true;S.ctx='setup';openItem('${nx.id}')`);
@@ -766,12 +774,13 @@ V.all=()=>{const ver=S.ver,L=left(),miss=ver==='missing'?vdocs().length:ver==='a
     if(ver==='attention'&&d==='id')return row({t,s:'Photo is blurry. Upload a clearer one',tagL:'Re-upload',tagK:'required',on:`openSheet('fix',{mode:'fix',doc:'id'})`});
     return row({t,s,tagL:'In review',tagK:'neutral',chev:false});};
   const vgroup=`<div class="overline">${ver==='verified'?'VERIFIED':ver==='review'||ver==='attention'?'TO GET VERIFIED · USUALLY 24–48 HOURS':'TO GET VERIFIED'}</div><div class="stack tight">${vrow('AHPRA registration','PHA0001234567')}${vrow('Photo ID','Driver licence','id')}${vrow('Indemnity insurance','Expires 30/06/2027','ins')}</div>`;
-  const todo=ITEMS.filter(i=>!S.items[i.id]),done=ITEMS.filter(i=>S.items[i.id]);
-  const desc={review:"We're checking your documents. Finish the rest so you can apply as soon as you're verified.",missing:'Add your photo ID and insurance so we can verify you. Then finish the rest to apply.',attention:'Your photo ID needs a new upload. AHPRA and insurance are still in review.',verified:"You're verified. Finish these to apply for shifts."}[ver];
+  const todo=ITEMS.filter(i=>!S.items[i.id]),ptodo=PAY.filter(i=>!S.items[i.id]),done=[...ITEMS,...PAY].filter(i=>S.items[i.id]);
+  const desc={review:"We're checking your documents. Finish the rest so you can apply as soon as you're verified.",missing:'Add your photo ID and insurance so we can verify you. Then finish the rest to apply.',attention:'Your photo ID needs a new upload. AHPRA and insurance are still in review.',verified:"You're verified. Finish these to apply for shifts and get paid."}[ver];
   return `${status()}${header({title:'Account setup'})}<div class="scroll">
-  ${titleBlock(`${pl(L+miss)} left`,desc)}
+  ${titleBlock(`${pl(L+miss+payLeft())} left`,desc)}
   ${ver!=='verified'?vgroup:''}
   ${todo.length?`<div class="overline">TO APPLY</div><div class="stack tight">${todo.map(i=>row({t:i.t,s:i.s,tagL:i.a,tagK:'required',on:`S.applyFlow=true;S.ctx='setup';openItem('${i.id}')`})).join('')}</div>`:''}
+  ${ptodo.length?`<div class="overline">TO GET PAID</div><div class="stack tight">${ptodo.map(i=>row({t:i.t,s:i.s,tagL:i.a,tagK:'required',on:`S.applyFlow=true;S.ctx='setup';openItem('${i.id}')`})).join('')}</div>`:''}
   ${OPT.some(o=>!S.items[o.id])?`<div class="overline">YOUR PROFILE · OPTIONAL</div><div class="stack tight">${OPT.filter(o=>!S.items[o.id]).map(o=>row({t:o.t,s:o.s,tagL:o.a,tagK:o.id==='exp'?'ai':'neutral',on:`S.applyFlow=true;S.ctx='setup';openItem('${o.id}')`})).join('')}</div>`:''}
   <div class="overline">DONE</div><div class="stack tight">
   ${row({t:'Resume',s:'CV_Andrii.pdf',tagL:'Done',tagK:'done',on:'soon()'})}${[...done,...OPT.filter(o=>S.items[o.id])].map(i=>row({t:i.t,s:'Saved',tagL:'Done',tagK:'done',on:`S.applyFlow=true;S.ctx='setup';openItem('${i.id}')`})).join('')}${ver==='verified'?vrow('AHPRA registration','PHA0001234567')+vrow('Photo ID','Driver licence','id')+vrow('Indemnity insurance','Expires 30/06/2027','ins'):''}</div>
@@ -787,7 +796,7 @@ V.shift=()=>`${status()}${header({title:'Shift'})}<div class="scroll stack">
   ${row({t:'<span class="hide">00 Street Name, Suburb NSW 0000</span>',s:'Inner Sydney · ~3 km',chev:false})}
   </div><div class="foot">${btn('View verification status','primary','openSheet(\'hidden\')')}${btn('Apply','primary','',true)}</div>`;
 V.shiftV=()=>{const L=left();return `${status()}${header({title:'Shift'})}<div class="scroll stack">
-  ${L?`<div class="notice"><b>${pl(L)} left before you can apply</b><span>Tap Apply. We'll ask only for what's missing, then bring you back here.</span></div>`:`<div class="notice ok"><b>Your profile is complete</b><span>You can apply for this shift now.</span></div>`}
+  ${L?`<div class="notice"><b>${pl(L)} left before you can apply</b><span>Tap Apply. We'll ask only for what's missing, then bring you back here.</span></div>`:`<div class="notice ok"><b>You're ready to apply</b><span>You can apply for this shift now.</span></div>`}
   <div class="img"></div>
   <div>${titleBlock('Locum pharmacist','Priceline Pharmacy · Surry Hills NSW')}</div>
   ${row({t:'Sat 14 Nov · 8:00–17:00',s:'9 hours',chev:false})}
@@ -828,14 +837,15 @@ V.form=()=>{const id=S.formId,F=FORMS[id];let body='';
   if(F.pre)body=F.pre()+body;if(F.post)body+=F.post();
   if(F.file)body+=S.f[id+'_file']?upRow(id+'_file','certificate.pdf'):row({t:'Choose a file',s:'JPG, PNG or PDF, up to 10 MB',on:`pickFile('${id}_file')`});
   const nx=S.applyFlow?nextAfter(id,!!S.later[id]):null;
-  return `${status()}${header({close:true})}<div class="scroll stack"><div>${S.applyFlow?`<div class="eyebrow">${F.opt?'Optional':pos(id)+' of '+ITEMS.length} · ${S.ctx==='setup'?'Account setup':'Before you apply'}</div>`:''}${titleBlock(F.t,F.d)}</div>${body}${F.extra?`<div class="note">${F.extra}</div>`:''}</div>
+  return `${status()}${header({close:true})}<div class="scroll stack"><div>${S.applyFlow?`<div class="eyebrow">${F.opt?'Optional · '+(S.ctx==='setup'?'Account setup':'Before you apply'):isPay(id)?ppos(id)+' of '+PAY.length+' · Before you get paid':pos(id)+' of '+ITEMS.length+' · '+(S.ctx==='setup'?'Account setup':'Before you apply')}</div>`:''}${titleBlock(F.t,F.d)}</div>${body}${F.extra?`<div class="note">${F.extra}</div>`:''}</div>
   <div class="foot">${F.yesno?btn('Yes','primary',"answer('Yes')")+btn('No','secondary',"answer('No')"):S.applyFlow?btn(nx?`Next: ${nx.t}`:'Finish','primary','saveForm()',!valid(id))+(F.opt?btn('Skip','text','skipItem()'):DOCITEMS.includes(id)?btn('Do this later','text','laterItem()'):''):btn('Save','primary','saveForm()',!valid(id))}</div>`;};
 
 V.applied=()=>`${status()}<div class="hdr"></div><div class="scroll stack">
   <div>${titleBlock('Application sent',"Priceline Pharmacy will review it. We'll let you know when they reply.")}</div>
   <div class="overline" style="margin:0">YOUR SHIFT</div>${row({t:'Sat 14 Nov · 8:00–17:00',s:'Priceline Pharmacy · Surry Hills',tagL:'Applied',tagK:'neutral',on:'soon()'})}
   <div class="overline" style="margin:0">WHAT HAPPENS NEXT</div><div class="note">Most pharmacies reply within a day. You can find this shift in Calendar.</div>
-  </div><div class="foot">${btn('View my shifts','primary','soon()')}${btn('Back to shifts','text','goHome()')}</div>`;
+  ${payLeft()?`<div class="notice"><b>Add your payment details</b><span>We invoice the pharmacy for you after the shift. Add your bank, tax and super details before your first shift ends.</span></div>`:''}
+  </div><div class="foot">${payLeft()?btn('Add payment details','primary',"startPay('pay')")+btn('Do this later','text','goHome()'):btn('View my shifts','primary','soon()')+btn('Back to shifts','text','goHome()')}</div>`;
 
 /* ---------- flow actions (verification + apply) ---------- */
 function afterAhpra(){if(S.ver==='missing'){S.stack=['home'];render();}else go('checking');}
@@ -843,16 +853,20 @@ function toHome(){S.alert=null;S.sheet=null;S.stack=['home'];render();}
 function goHome(){S.applyFlow=false;toHome();}
 function openPush(){S.ver='verified';S.scen='verified';S.stack=['home'];render();}
 function openItem(id){if(id==='exp'&&!S.f.exp_y){S.f.exp_y='5–10 years';S.f.exp_r=['Pharmacist','Locum pharmacist'];S.f.exp_s=['FRED','Z Software'];}if(id==='mobile')S.focus='mob';S.sheet=null;S.focus=null;S.formId=id;S.stack.push(id==='mobile'?'mobile':'form');render();}
+function startPay(ctx){S.applyFlow=true;S.ctx=ctx||'pay';S.stack=['home'];openItem(firstPay().id);}
 function startApply(){if(!left())return go('applied');S.applyFlow=true;S.ctx='apply';openSheet('apply');}
 function exitForm(){S.alert=null;S.sheet=null;S.focus=null;S.stack.pop();if(S.applyFlow&&S.ctx==='apply'&&left())S.sheet={name:'apply'};render();}
 const DOCITEMS=['super','prof','other'];
 const pos=id=>ITEMS.findIndex(i=>i.id===id)+1;
+const ppos=id=>PAY.findIndex(i=>i.id===id)+1;
 function nextAfter(id,catchUp){const oi=OPT.findIndex(o=>o.id===id);const nOpt=from=>OPT.slice(from).find(o=>o.id!==id&&!S.items[o.id]&&!S.skip[o.id]);
   if(oi>=0)return nOpt(oi+1);
+  if(isPay(id)){const k=ppos(id);let o=PAY.filter(i=>!S.items[i.id]&&!S.later[i.id]&&i.id!==id);if(!o.length&&catchUp)o=PAY.filter(i=>!S.items[i.id]&&i.id!==id);return o.find(i=>ppos(i.id)>k)||o[0];}
   let open=ITEMS.filter(i=>!S.items[i.id]&&!S.later[i.id]&&i.id!==id);if(!open.length&&catchUp)open=ITEMS.filter(i=>!S.items[i.id]&&i.id!==id);const k=pos(id);return open.find(i=>pos(i.id)>k)||open[0]||nOpt(0);}
 function advance(id,catchUp){const n=nextAfter(id,catchUp);S.alert=null;S.sheet=null;S.focus=null;S.stack.pop();
   if(n){openItem(n.id);return;}
-  if(!left()){render();toast('Your profile is complete');return;}
+  if(isPay(id)){render();toast(payLeft()?'Saved. Add the rest before your first shift ends.':"Payment details saved. You're ready to get paid");return;}
+  if(!left()){render();toast(payLeft()?"You're ready to apply":'Your profile is complete');return;}
   if(S.ctx==='setup'){render();toast('Saved. Add the rest when you have the files.');return;}
   S.sheet={name:'apply'};render();}
 function answer(v){S.f[FORMS[S.formId].ck]=v;saveForm();}
@@ -860,8 +874,8 @@ function skipItem(){S.skip[S.formId]=true;advance(S.formId);}
 function laterItem(){S.later[S.formId]=true;advance(S.formId);}
 /* a step is sent only when it's complete; a half-filled step stays as a draft on this phone */
 function closeForm(){const id=S.formId;const d=id!=='mobile'&&dirty(id)&&!S.items[id];if(d&&valid(id)){const t=itemName();S.items[id]=true;delete S.later[id];exitForm();return toast(`${t} saved`);}if(d){S.alert='unsaved';return render();}exitForm();}
-function itemName(){return ([...ITEMS,...OPT].find(i=>i.id===S.formId)||{t:''}).t;}
-function saveForm(){const id=S.formId;const wasLater=!!S.later[id];S.items[id]=true;delete S.later[id];if(S.applyFlow)return advance(id,wasLater);const t=itemName();exitForm();toast(left()?`${t} saved`:'Your profile is complete');}
+function itemName(){return ([...ITEMS,...PAY,...OPT].find(i=>i.id===S.formId)||{t:''}).t;}
+function saveForm(){const id=S.formId;const wasLater=!!S.later[id];S.items[id]=true;delete S.later[id];if(S.applyFlow)return advance(id,wasLater);const t=itemName();exitForm();toast(left()||payLeft()?`${t} saved`:'Your profile is complete');}
 function alertSave(){exitForm();toast('Draft saved on this phone');}
 function alertDiscard(){FKEYS(S.formId).forEach(k=>delete S.f[k]);exitForm();}
 function alertKeep(){S.alert=null;render();}
@@ -924,7 +938,7 @@ SH.avatar=()=>`<div class="inner" style="padding-top:16px">${titleBlock('Profile
 function setAvatar(){S.avatar=true;closeSheet();toast('Photo added');}
 SH.apply=()=>{const L=ITEMS.filter(i=>!S.items[i.id]);const later=L.filter(i=>S.later[i.id]),todo=L.filter(i=>!S.later[i.id]),done=ITEMS.filter(i=>S.items[i.id]);
   const first=todo[0]||later[0];const anyDone=done.length>0;
-  const desc=!anyDone?"About 6 minutes, plus 3 optional steps. Have your bank details, TFN, ABN and certificates ready. We'll bring you back to this shift.":(todo.length?"Everything you've added is saved. Pick up where you left off.":'Add these when you have the files. Everything else is saved.');
+  const desc=!anyDone?"About 2 minutes, plus 4 optional steps. Have your certificates ready. We'll bring you back to this shift.":(todo.length?"Everything you've added is saved. Pick up where you left off.":'Add these when you have the files. Everything else is saved.');
   const r=(i,tag,k,on)=>row({t:i.t,tagL:tag,tagK:k,chev:!!on,on});
   return `<div class="inner" style="padding-top:16px"><div style="display:flex;gap:12px;align-items:flex-start"><div style="flex:1">${titleBlock(`${pl(L.length)} left before you can apply`,desc)}</div><button class="close" aria-label="Close" style="margin-top:4px" onclick="closeSheet()">${I.x}</button></div>
   <div class="stack tight" style="margin-top:16px">${later.map(i=>r(i,'Later','required',`openItem('${i.id}')`)).join('')}${todo.map(i=>r(i,'To do','neutral',`openItem('${i.id}')`)).join('')}${done.map(i=>r(i,'Done','done','')).join('')}</div>
@@ -950,7 +964,7 @@ function curKey(){const c=cur(),sh=S.sheet&&S.sheet.name;
   if(S.scen==='att'){if(sh==='fix')return 'A:fix';return 'A:'+c;}
   if(S.alert==='unsaved')return 'V:unsaved';
   if(sh==='filters')return 'V:filters';if(sh==='apply')return Object.keys(S.later).length?'V:later':'V:apply';if(sh==='sms')return 'V:sms';
-  if(c==='credpick')return 'V:credpick';if(sh==='sw')return (S.swq||'').trim()?'V:swadd':'V:sw';if(sh==='roles')return 'V:roles';if(sh==='pick'&&S.formId==='bank')return 'V:bankpick';if(c==='form'&&S.formId==='super'&&S.f.sup_type===SMSFT)return 'V:smsf';if(c==='form')return 'V:'+S.formId;if(c==='home'&&!left())return S.hideAllSet?'V:allsetX':'V:allset';if(c==='shiftV')return left()?'V:shift':'V:ready';return 'V:'+c;}
+  if(c==='credpick')return 'V:credpick';if(sh==='sw')return (S.swq||'').trim()?'V:swadd':'V:sw';if(sh==='roles')return 'V:roles';if(sh==='pick'&&S.formId==='bank')return 'V:bankpick';if(c==='form'&&S.formId==='super'&&S.f.sup_type===SMSFT)return 'V:smsf';if(c==='form')return 'V:'+S.formId;if(c==='home'&&!left()&&payLeft()&&S.ver==='verified')return 'V:homepay';if(c==='home'&&!left())return S.hideAllSet?'V:allsetX':'V:allset';if(c==='shiftV')return left()?'V:shift':'V:ready';return 'V:'+c;}
 
 /* sheets with search or long lists keep one height while results change */
 const tallSheet=()=>{const n=S.sheet&&S.sheet.name;return ['sw','roles','filters'].includes(n)||(n==='pick'&&S.sheet.list==='BANKS');};
