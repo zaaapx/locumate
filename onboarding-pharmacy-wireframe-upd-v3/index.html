@@ -379,14 +379,14 @@ const fresh=()=>({stack:['welcome'],social:false,role:'',work:'',email:'andrii@e
 let S=fresh();
 const SCREENS=[
   ['welcome','00 Welcome'],['role','01 Role'],['role1','01a Role — Pharmacy professional'],['roleSheet','02 Required documents — sheet'],['account','03 Create account'],['otp','04 Email code — sheet'],
-  ['docs','05 Documents hub — empty'],['upload','06 Upload options — sheet'],['photoFront','06b Check your photo — front'],['photoBack','06c Check your photo — back'],['insExp','06d Insurance expiry date — sheet'],['docsDone','07 Documents hub — uploaded'],
-  ['general','08 Your general info'],['avatar','08a Profile photo — sheet'],['addr','08b Home address — suggestions'],['dob','08c Date of birth — keypad'],['ahpra','09 AHPRA registration'],['checking','09b Checking your documents'],['perm','09c Notifications — system prompt'],['home','10 Home — in review'],['hidden','10a Hidden details — sheet'],['all','10b All items — in review'],['shift','11 Shift — not verified']
+  ['docs','05 Documents hub — empty'],['upload','06 Upload options — sheet'],['photoFront','06b Check your photo — front'],['photoBack','06c Check your photo — back'],['uploadP','06e Upload options — Passport'],['photoP','06f Check your photo — passport'],['insExp','06d Insurance expiry date — sheet'],['docsDone','07 Documents hub — uploaded'],
+  ['general','08 Your general info'],['avatar','08a Profile photo — sheet'],['addr','08b Home address — suggestions'],['dob','08c Date of birth — keypad'],['ahpra','09 AHPRA registration'],['checking','09b Checking your documents'],['perm','09c Notifications — system prompt'],['home','10 Home — in review'],['hidden','10a Hidden details — sheet'],['all','10b All items — in review'],['shift','11 Shift — not verified'],['applyNV','11a Apply — not verified yet — sheet']
 ];
 const SC={
   signup:{t:'1 · Sign up → in review',l:SCREENS},
-  later:{t:'2 · Documents added later',l:[['L:docs','05 Documents hub — tap Upload later'],['L:home','10c Home — documents missing'],['L:all','10d All items — documents missing'],['L:fix','Add photo ID — sheet']]},
+  later:{t:'2 · Documents added later',l:[['L:docs','05 Documents hub — tap Upload later'],['L:checking','09d Checking your documents — documents missing'],['L:home','10c Home — documents missing'],['L:hidden','10h Hidden details — sheet, documents missing'],['L:all','10d All items — documents missing'],['L:fix','Add photo ID — sheet'],['L:shift','11b Shift — documents missing'],['L:applyNV','11c Apply — documents missing — sheet']]},
   att:{t:'3 · Document needs attention',l:[['A:home','10e Home — needs attention'],['A:fix','10f Re-upload photo ID — sheet'],['A:all','10g All items — needs attention']]},
-  verified:{t:'4 · ID verified → apply',l:[['V:push',"11b You're verified — notification"],['V:home','12 Home — verified'],['V:all','12a All items — verified'],['V:shift','13 Shift — verified'],['V:apply','14 Before you apply — sheet'],['V:mobile','15 Mobile number — 1 of 2'],['V:sms','15a SMS code'],['V:prof','16 Professional certificates — 2 of 2'],['V:exp','17a Experience and software — optional'],['V:roles','17a1 Roles — sheet'],['V:sw','17b Pharmacy software — sheet'],['V:swadd','17c Pharmacy software — add your own'],['V:cred','17d Advanced credentials — optional'],['V:credpick','17e Advanced credentials — picker'],['V:travel','17f Travel requirements — optional'],['V:other','17g Other insurance — optional'],['V:later','18 Before you apply — 1 left'],['V:ready','19 Shift — ready to apply'],['V:applied','20 Applied — add payment details'],['V:homepay','20a Home — payment details left'],['V:bank','21 Bank details — 1 of 3'],['V:bankpick','21a Bank name — sheet'],['V:unsaved','21b Leave unfinished — alert'],['V:tax','22 Tax and business details — 2 of 3'],['V:super','23 Super fund — 3 of 3'],['V:smsf','23a Super fund — self-managed (SMSF)'],['V:allset',"12b Home — all set"],['V:allsetX','12c Home — all set card dismissed'],['V:filters','12d Shift filters — sheet']]}
+  verified:{t:'4 · ID verified → apply',l:[['V:push',"11b You're verified — notification"],['V:home','12 Home — verified'],['V:all','12a All items — verified'],['V:shift','13 Shift — verified'],['V:apply','14 Before you apply — sheet'],['V:mobile','15 Mobile number — 1 of 2'],['V:sms','15a SMS code'],['V:prof','16 Professional certificates — 2 of 2'],['V:exp','17a Experience and software — optional'],['V:roles','17a1 Roles — sheet'],['V:sw','17b Pharmacy software — sheet'],['V:swadd','17c Pharmacy software — add your own'],['V:cred','17d Advanced credentials — optional'],['V:credpick','17e Advanced credentials — picker'],['V:travel','17f Travel requirements — optional'],['V:other','17g Other insurance — optional'],['V:later','18 Before you apply — 1 left'],['V:ready','19 Shift — ready to apply'],['V:applied','20 Applied — add payment details'],['V:homepay','20a Home — payment details left'],['V:bank','21 Bank details — 1 of 3'],['V:bankpick','21a Bank name — sheet'],['V:unsaved','21b Leave unfinished — alert'],['V:tax','22 Tax and business details — 2 of 3'],['V:super','23 Super fund — 3 of 3'],['V:smsf','23a Super fund — self-managed (SMSF)'],['V:allset',"12b Home — all set"],['V:allsetX','12c Home — all set card dismissed'],['V:filters','12d Shift filters — sheet'],['V:pexp','30 Experience and software (from Profile)'],['V:pcred','31 Advanced credentials (from Profile)']]}
 };
 const ITEMS=[
   {id:'mobile',t:'Mobile number',s:"We'll text you a code",a:'Verify'},
@@ -529,6 +529,7 @@ function toast(msg){clearTimeout(toastT);const p=$('#phone');p.querySelector('.t
 function soon(){toast('Not part of this prototype yet');}
 
 /* ---------- navigation ---------- */
+function changeEmail(){clearInterval(timerT);S.sheet=null;S.otp='';render();const e=document.getElementById('email');if(e){e.focus();e.select();}}
 function go(id){S.sheet=null;S.stack.push(id);render();}
 function goBack(){if(S.sheet){if(S.sheet.name==='photo'&&S.sheet.side==='back'){S.sheet.side='front';return render();} if(S.sheet.name==='photo'){S.sheet={name:'upload',doc:S.sheet.doc};return render();} S.sheet=null;return render();} if(S.stack.length>1){S.stack.pop();} render();}
 function openSheet(name,data){const was=S.sheet;S.sheet={name,...(data||{})};S.anim=!was;render();}
@@ -558,18 +559,21 @@ function jump(k){
     if(k==='insExp'){S.scen='signup';jumpOn('docs');S.docs={id:'done',cv:'done'};S.sheet={name:'insExp',doc:'ins'};return render();}
     if(k==='dob'){S.scen='signup';jumpOn('general');S.f.dob='';S.f.dob_raw='19/07/';S.dobNav=true;render();const y=document.getElementById('dob');if(y){y.focus();y.setSelectionRange(6,6);}return;}
     if(k==='avatar'||k==='addr'){S.scen='signup';jumpOn('general');if(k==='avatar')return openSheet('avatar');S.f.addr='10 George';S.addrOpen=true;return render();}
-    if(['checking','perm','home','hidden','all','shift'].includes(k)){base('review');S.scen='signup';
+    if(k==='uploadP'||k==='photoP'){S.scen='signup';jumpOn('docs');S.idType='Passport';S.sheet=k==='uploadP'?{name:'upload',doc:'id'}:{name:'photo',doc:'id',side:'front'};return render();}
+    if(['checking','perm','home','hidden','all','shift','applyNV'].includes(k)){base('review');S.scen='signup';
       if(k==='checking'||k==='perm'){S.stack=['checking'];if(k==='perm')S.alert='perm';}
       else if(k==='home'||k==='hidden'){S.stack=['home'];if(k==='hidden')S.sheet={name:'hidden'};}
+      else if(k==='applyNV'){S.stack=['home','shift'];S.sheet={name:'applyNV'};}
       else S.stack=['home',k];
       return render();}
     S.scen='signup';return jumpOn(k);}
   const [p,id]=k.split(':');
   if(p==='L'){if(id==='docs'){S=fresh();S.scen='later';return jumpOn('docs');}
-    base('missing',{cv:'done'});S.scen='later';S.stack=['home'];if(id==='all')S.stack.push('all');if(id==='fix')S.sheet={name:'fix',mode:'add',doc:'id'};return render();}
+    base('missing',{cv:'done'});S.scen='later';S.stack=['home'];if(id==='all')S.stack.push('all');if(id==='fix')S.sheet={name:'fix',mode:'add',doc:'id'};
+    if(id==='checking')S.stack=['checking'];if(id==='hidden')S.sheet={name:'hidden'};if(id==='shift'||id==='applyNV')S.stack.push('shift');if(id==='applyNV')S.sheet={name:'applyNV'};return render();}
   if(p==='A'){base('attention');S.scen='att';S.stack=['home'];if(id==='all')S.stack.push('all');if(id==='fix')S.sheet={name:'fix',mode:'fix',doc:'id'};return render();}
   base(id==='push'?'review':'verified');S.scen='verified';
-  S.stack={push:['push'],home:['home'],all:['home','all'],shift:['home','shiftV'],apply:['home','shiftV'],mobile:['home','shiftV','mobile'],sms:['home','shiftV','mobile'],bank:['home','form'],tax:['home','form'],super:['home','form'],later:['home','shiftV'],exp:['home','shiftV','form'],cred:['home','shiftV','form'],sw:['home','shiftV','form'],roles:['home','shiftV','form'],swadd:['home','shiftV','form'],credpick:['home','shiftV','form','credpick'],bankpick:['home','form'],smsf:['home','form'],unsaved:['home','form'],imm:['home','shiftV','form'],prof:['home','shiftV','form'],other:['home','shiftV','form'],travel:['home','shiftV','form'],filters:['home'],ready:['home','shiftV'],allset:['home'],allsetX:['home'],applied:['home','shiftV','applied'],homepay:['home']}[id];
+  S.stack={push:['push'],home:['home'],all:['home','all'],shift:['home','shiftV'],apply:['home','shiftV'],mobile:['home','shiftV','mobile'],sms:['home','shiftV','mobile'],bank:['home','form'],tax:['home','form'],super:['home','form'],later:['home','shiftV'],exp:['home','shiftV','form'],cred:['home','shiftV','form'],sw:['home','shiftV','form'],roles:['home','shiftV','form'],swadd:['home','shiftV','form'],credpick:['home','shiftV','form','credpick'],bankpick:['home','form'],smsf:['home','form'],unsaved:['home','form'],imm:['home','shiftV','form'],prof:['home','shiftV','form'],other:['home','shiftV','form'],travel:['home','shiftV','form'],filters:['home'],pexp:['home','form'],pcred:['home','form'],ready:['home','shiftV'],allset:['home'],allsetX:['home'],applied:['home','shiftV','applied'],homepay:['home']}[id];
   if(['apply','mobile','sms','imm','prof','other','travel','later','exp','cred','credpick','sw','swadd','roles'].includes(id)){S.applyFlow=true;S.ctx='apply';}
   if(['bank','bankpick','unsaved','smsf','tax','super'].includes(id)){S.applyFlow=true;S.ctx='pay';ITEMS.forEach(i=>S.items[i.id]=true);}
   if(id==='apply'||id==='later')S.sheet={name:'apply'};
@@ -591,6 +595,7 @@ function jump(k){
   if(['ready','applied','homepay','allset','allsetX'].includes(id))ITEMS.forEach(i=>S.items[i.id]=true);
   if(['allset','allsetX'].includes(id))PAY.forEach(i=>S.items[i.id]=true);
   if(id==='allsetX')S.hideAllSet=true;
+  if(id==='pexp'||id==='pcred'){ITEMS.forEach(i=>S.items[i.id]=true);PAY.forEach(i=>S.items[i.id]=true);S.applyFlow=false;S.formId=id==='pexp'?'exp':'cred';if(id==='pexp'){S.f.exp_y='5–10 years';S.f.exp_r=['Pharmacist','Locum pharmacist'];S.f.exp_s=['FRED','Z Software'];}else S.f.cred_l=['Advanced Compounding Certification (PCCA)','Advanced Practice Pharmacist Credentialing (AdvPP)'];}
   render();}
 
 /* ---------- actions ---------- */
@@ -655,7 +660,7 @@ V.account=()=>`${status()}${header({step:2})}<div class="scroll stack">
 
 const docState=()=>{const req=DOCS.filter(d=>d.req);const up=req.filter(d=>S.docs[d.id]).length;const reading=Object.values(S.docs).includes('reading');return {req,up,reading,any:Object.keys(S.docs).length>0};};
 const docRow=d=>{const st=S.docs[d.id];
-  if(st==='done') return row({t:d.t,s:d.done,tagL:'In review',tagK:'neutral',on:`openDoc('${d.id}')`});
+  if(st==='done') return row({t:d.t,s:d.done,tagL:'Done',tagK:'done',on:`openDoc('${d.id}')`});
   if(st==='reading') return row({t:d.t,s:d.id==='cv'?'CV_Andrii.pdf':'Uploaded',tagL:'<span class="spin"></span>Reading…',tagK:'neutral',on:`openDoc('${d.id}')`});
   return row({t:d.t,s:d.hint,tagL:d.req?'Required':'Optional',tagK:d.req?'required':'neutral',on:`openDoc('${d.id}')`});};
 V.docs=()=>{const {up,reading,any}=docState();return `${status()}${header({step:3})}<div class="scroll">
@@ -788,13 +793,13 @@ V.all=()=>{const ver=S.ver,L=left(),miss=ver==='missing'?vdocs().length:ver==='a
   </div>`;};
 
 V.shift=()=>`${status()}${header({title:'Shift'})}<div class="scroll stack">
-  <div class="notice info"><b>Shift details unlock after verification</b><span>${S.ver==='missing'?'Add your ID and insurance so we can verify you.':'We\'re checking your AHPRA, ID and insurance. This usually takes 24–48 hours.'}</span></div>
+  <div class="notice info"><b>Shift details unlock after verification</b><span>${S.ver==='missing'&&vdocs().length?needDocs()+' Checks usually take 24–48 hours.':'We\'re checking your AHPRA, ID and insurance. This usually takes 24–48 hours.'}</span></div>
   <div class="img hide"></div>
   <div><h2>Locum pharmacist</h2><p class="desc hide">Pharmacy Name Here · Suburb NSW</p></div>
   ${row({t:'Sat 14 Nov · 8:00–17:00',s:'9 hours',chev:false})}
   ${row({t:'$62.00 per hour',s:'Excl. super',chev:false})}
   ${row({t:'<span class="hide">00 Street Name, Suburb NSW 0000</span>',s:'Inner Sydney · ~3 km',chev:false})}
-  </div><div class="foot">${btn('View verification status','primary','openSheet(\'hidden\')')}${btn('Apply','primary','',true)}</div>`;
+  </div><div class="foot">${btn('Apply','primary',"openSheet('applyNV')")}${S.ver==='missing'&&vdocs().length?btn('Add documents','secondary','addDocs()'):btn('View verification status','secondary',"openSheet('hidden')")}</div>`;
 V.shiftV=()=>{const L=left();return `${status()}${header({title:'Shift'})}<div class="scroll stack">
   ${L?`<div class="notice"><b>${pl(L)} left before you can apply</b><span>Tap Apply. We'll ask only for what's missing, then bring you back here.</span></div>`:`<div class="notice ok"><b>You're ready to apply</b><span>You can apply for this shift now.</span></div>`}
   <div class="img"></div>
@@ -804,13 +809,17 @@ V.shiftV=()=>{const L=left();return `${status()}${header({title:'Shift'})}<div c
   ${row({t:'120 Crown St, Surry Hills NSW 2010',s:'3 km away',chev:false})}
   </div><div class="foot">${btn('Apply','primary','startApply()')}${btn('Save for later','text',"toast('Saved to your shifts')")}</div>`;};
 
-V.checking=()=>`${status()}<div class="hdr"></div><div class="scroll stack">
-  <div>${titleBlock("We're checking your documents",'Our team checks your AHPRA registration, ID and insurance. This usually takes 24–48 hours.')}</div>
-  <div class="overline" style="margin:0">WHAT WE CHECK</div><div class="stack tight">
-  ${row({t:'AHPRA registration',s:'PHA0001234567',tagL:'In review',tagK:'neutral',chev:false})}${row({t:'Photo ID',s:'Driver licence',tagL:'In review',tagK:'neutral',chev:false})}${row({t:'Indemnity insurance',s:'Expires 30/06/2027',tagL:'In review',tagK:'neutral',chev:false})}</div>
+/* AHPRA, ID and insurance: In review, or Upload when the document was skipped */
+const VDOCS=[['ahpra','AHPRA registration','PHA0001234567','PHA0001234567'],['id','Photo ID','Driver licence','Passport or driver licence'],['ins','Indemnity insurance','Expires 30/06/2027','Certificate of currency and expiry date']];
+const vMiss=d=>d!=='ahpra'&&S.docs[d]!=='done';
+const vRows=()=>VDOCS.map(([d,t,s,ms])=>vMiss(d)?row({t,s:ms,tagL:'Upload',tagK:'required',on:`openSheet('fix',{mode:'add',doc:'${d}'})`}):row({t,s:d==='id'&&S.idType==='Passport'?'Passport':s,tagL:'In review',tagK:'neutral',chev:false})).join('');
+const vItems=()=>VDOCS.map(([d,t,s,ms])=>vMiss(d)?`<button class="li" style="width:100%;text-align:left" onclick="openSheet('fix',{mode:'add',doc:'${d}'})"><span class="tx"><div class="t">${t}</div><div class="s">${ms}</div></span>${tag('Upload','required')}${I.chev}</button>`:item(t,d==='id'&&S.idType==='Passport'?'Passport':s,'In review','neutral')).join('');
+V.checking=()=>{const m=S.ver==='missing'&&vdocs().length;return `${status()}<div class="hdr"></div><div class="scroll stack">
+  <div>${m?titleBlock("We're checking your AHPRA",`To get verified, we also need your ${vdocs().map(x=>x==='id'?'photo ID':'insurance').join(' and ')}. Checks usually take 24–48 hours once everything is in.`):titleBlock("We're checking your documents",'Our team checks your AHPRA registration, ID and insurance. This usually takes 24–48 hours.')}</div>
+  <div class="overline" style="margin:0">${m?'TO GET VERIFIED':'WHAT WE CHECK'}</div><div class="stack tight">${vRows()}</div>
   <div class="overline" style="margin:0">WHAT HAPPENS NEXT</div>
-  <div class="note">We'll let you know when you're verified. Meanwhile you can see shift dates and rates, and finish the rest of your profile.</div>
-  </div><div class="foot">${btn('Turn on notifications','primary',"S.alert='perm';render()")}${btn('Not now','text','toHome()')}</div>`;
+  <div class="note">${m?"Add your documents now or later from Home. We'll let you know when you're verified. Meanwhile you can see shift dates and rates.":"We'll let you know when you're verified. Meanwhile you can see shift dates and rates, and finish the rest of your profile."}</div>
+  </div><div class="foot">${btn('Turn on notifications','primary',"S.alert='perm';render()")}${btn('Not now','text','toHome()')}</div>`;};
 
 V.push=()=>`<div class="lock"><div class="status" style="align-self:stretch;color:#fff"><span>9:41</span><span></span></div><div class="d">Wednesday 5 November</div><div class="c">9:41</div>
   <button class="notif" onclick="openPush()"><i></i><span style="flex:1"><div class="h">You're verified<small>now</small></div><p>You can now see pharmacy names and addresses. Finish your account setup to apply.</p></span></button></div>`;
@@ -848,7 +857,9 @@ V.applied=()=>`${status()}<div class="hdr"></div><div class="scroll stack">
   </div><div class="foot">${payLeft()?btn('Add payment details','primary',"startPay('pay')")+btn('Do this later','text','goHome()'):btn('View my shifts','primary','soon()')+btn('Back to shifts','text','goHome()')}</div>`;
 
 /* ---------- flow actions (verification + apply) ---------- */
-function afterAhpra(){if(S.ver==='missing'){S.stack=['home'];render();}else go('checking');}
+function afterAhpra(){S.stack=['checking'];render();}
+/* first missing document → its upload sheet */
+function addDocs(){const d=vdocs()[0];if(!d)return closeSheet();openSheet('fix',{mode:'add',doc:d});}
 function toHome(){S.alert=null;S.sheet=null;S.stack=['home'];render();}
 function goHome(){S.applyFlow=false;toHome();}
 function openPush(){S.ver='verified';S.scen='verified';S.stack=['home'];render();}
@@ -897,20 +908,25 @@ SH.docsInfo=()=>`<div class="inner" style="padding-top:16px">${titleBlock('Have 
 SH.otp=()=>`<div class="inner" style="overflow:visible">${titleBlock('Check your inbox',`We sent a 5-digit code to ${esc(S.email)}`)}
   <div class="otp">${[0,1,2,3,4].map(i=>`<div class="${i===S.otp.length?'cur':''}">${S.otp[i]||''}</div>`).join('')}</div>
   <p class="help" style="font-size:13px;color:var(--sub)">Didn't get the code? Check spam or <span id="resend">resend in 0:${String(timerV).padStart(2,'0')}</span></p>
+  <div style="display:flex;gap:20px;margin-top:16px"><button class="link" onclick="toast('Opens the Mail app')">Open Mail app</button><button class="link" onclick="changeEmail()">Change email</button></div>
   <div style="height:16px"></div>
   <div class="keypad">${['1','2','3','4','5','6','7','8','9','*','0','del'].map(k=>`<button onclick="key('${k}')" aria-label="${k==='del'?'Delete':k}">${k==='del'?I.del:k}</button>`).join('')}</div></div>`;
-SH.hidden=()=>`<div class="inner" style="padding-top:16px">${titleBlock('Why are these hidden?','To protect pharmacies, we only show names and addresses to verified pharmacists. We\'re checking your documents now.')}
-  <div class="overline" style="margin-top:24px">IN REVIEW · USUALLY 24–48 HOURS</div>
-  <div>${item('AHPRA registration','PHA0001234567','In review','neutral')}${item('Photo ID','Driver licence','In review','neutral')}${item('Indemnity insurance','Expires 30/06/2027','In review','neutral')}</div>
-  <p class="help" style="font-size:13px;color:var(--sub);margin-top:12px">We'll send you a notification when you're verified.</p>
-  <div style="height:20px"></div>${btn('Got it','primary','closeSheet()')}</div>`;
+const vSheet=(h,d)=>{const m=S.ver==='missing'&&vdocs().length;return `<div class="inner" style="padding-top:16px">${titleBlock(h,d(m))}
+  <div class="overline" style="margin-top:24px">${m?'TO GET VERIFIED':'IN REVIEW · USUALLY 24–48 HOURS'}</div>
+  <div>${vItems()}</div>
+  <p class="help" style="font-size:13px;color:var(--sub);margin-top:12px">${m?'Checks usually take 24–48 hours once everything is in.':"We'll send you a notification when you're verified."}</p>
+  <div style="height:20px"></div>${m?btn('Add documents','primary','addDocs()'):btn('Got it','primary','closeSheet()')}</div>`;};
+const needDocs=()=>`Add your ${vdocs().map(x=>x==='id'?'photo ID':'insurance').join(' and ')} so we can verify you.`;
+SH.hidden=()=>vSheet('Why are these hidden?',m=>'To protect pharmacies, we only show names and addresses to verified pharmacists. '+(m?needDocs():"We're checking your documents now."));
+/* Apply before verification */
+SH.applyNV=()=>vSheet("You can apply once you're verified",m=>m?needDocs()+' Checks usually take 24–48 hours once everything is in.':"We're checking your AHPRA registration, ID and insurance. Meanwhile, finish the rest of your setup so you can apply straight away.");
 SH.upload=()=>{const d=DOCS.find(x=>x.id===S.sheet.doc);const isId=d.id==='id';return `<div class="inner">${titleBlock(d.t,isId?'Choose document type':'')}
+  <div class="note" style="margin-top:14px">Not ready? You can add it later. We'll show shift details once your documents are checked.</div>
   ${isId?`<div style="margin:14px 0">${chips(['Driver licence','Passport'],S.idType,'setIdType')}</div>`:'<div style="height:14px"></div>'}
-  <div class="stack tight">${row({t:'Take a photo',s:isId?(S.idType==='Driver licence'?'Front and back — we\'ll guide you':'Photo page only'):'We\'ll guide you',on:`takePhoto('${d.id}')`})}
-  ${row({t:'Choose a file',s:'JPG, PNG or PDF, up to 10 MB',on:`chooseFile('${d.id}')`})}
-  <div class="note">Not ready? You can add it later. We'll show shift details once your documents are checked.</div></div></div>`;};
+  <div class="stack tight">${row({t:'Take a photo',s:isId?(S.idType==='Driver licence'?'Front and back — we\'ll guide you':'Photo page — we\'ll guide you'):'We\'ll guide you',on:`takePhoto('${d.id}')`})}
+  ${row({t:'Choose a file',s:'JPG, PNG or PDF, up to 10 MB',on:`chooseFile('${d.id}')`})}</div></div>`;};
 SH.photo=()=>{const {doc,side}=S.sheet;const d=DOCS.find(x=>x.id===doc);const lic=doc==='id'&&S.idType==='Driver licence';
-  const ttl=lic?(side==='front'?'Front of licence · 1 of 2':'Back of licence · 2 of 2'):(doc==='id'?'Passport · photo page':d.t);
+  const ttl=lic?(side==='front'?'Front of licence · 1 of 2':'Back of licence · 2 of 2'):(doc==='id'?'Passport photo page · 1 of 1':d.t);
   const back=side==='back';
   return `${header({title:ttl})}<div class="inner">${titleBlock('Check your photo','Make sure all details are easy to read.')}
   <div class="preview"><div class="idcard">
@@ -919,7 +935,7 @@ SH.photo=()=>{const {doc,side}=S.sheet;const d=DOCS.find(x=>x.id===doc);const li
     <b style="left:100px;top:52px;width:150px"></b><b style="left:100px;top:70px;width:120px"></b><b style="left:100px;top:88px;width:140px"></b><b style="left:100px;top:106px;width:90px"></b>
     <b style="left:16px;top:152px;width:${back?110:200}px"></b>${back?'<b style="right:16px;bottom:16px;width:120px;height:40px"></b>':''}
   </div></div>
-  <div class="checks"><div>${I.check}All four corners are in the frame</div><div>${I.check}${back?'Card number is readable':'Text is sharp and readable'}</div><div>${I.check}No glare or shadows</div></div>
+  <div class="checks"><div>${I.check}All four corners are in the frame</div><div>${I.check}${back?'Card number is readable':doc==='id'&&!lic?'Photo, name and passport number are readable':'Text is sharp and readable'}</div><div>${I.check}No glare or shadows</div></div>
   <div class="stack tight">${btn(lic&&!back?'Next':'Confirm','primary','photoNext()')}${btn('Retake photo','secondary','retake()')}</div></div>`;};
 
 SH.filters=()=>`<div class="sh-head" style="padding-top:8px"><div style="display:flex;align-items:center;gap:16px"><h2 style="flex:1">Filters</h2><button class="link" style="color:var(--sub)" onclick="S.flt={};render()">Reset</button><button class="close" aria-label="Close" onclick="closeSheet()">${I.x}</button></div></div><div class="inner">
@@ -951,7 +967,7 @@ SH.sms=()=>`<div class="inner" style="overflow:visible">${titleBlock('Check your
   <div class="keypad">${['1','2','3','4','5','6','7','8','9','*','0','del'].map(k=>`<button onclick="key('${k}')" aria-label="${k==='del'?'Delete':k}">${k==='del'?I.del:k}</button>`).join('')}</div></div>`;
 SH.fix=()=>{const d=S.sheet.doc,add=S.sheet.mode==='add',isId=d==='id';return `<div class="inner">${titleBlock(add?`Add your ${isId?'photo ID':'indemnity insurance'}`:'Upload a new photo ID',add?(isId?'Choose document type':'Certificate of currency'):"We couldn't read your date of birth. Make sure the whole card is in the frame, with no glare.")}
   ${isId?`<div style="margin:14px 0">${chips(['Driver licence','Passport'],S.idType,'setIdType')}</div>`:'<div style="height:14px"></div>'}
-  <div class="stack tight">${row({t:'Take a photo',s:isId?"Front and back — we'll guide you":"We'll guide you",on:'fixDone()'})}
+  <div class="stack tight">${row({t:'Take a photo',s:isId?(S.idType==='Passport'?"Photo page — we'll guide you":"Front and back — we'll guide you"):"We'll guide you",on:'fixDone()'})}
   ${row({t:'Choose a file',s:'JPG, PNG or PDF, up to 10 MB',on:'fixDone()'})}
   <div class="note">${add?"We'll check it within 24–48 hours.":"We'll check it again. This usually takes 24–48 hours."}</div></div></div>`;};
 const AL={
@@ -959,12 +975,12 @@ const AL={
   unsaved:()=>`<div class="alert"><div class="ab"><b>Finish ${itemName().toLowerCase()} later?</b><span>We'll keep what you've entered on this phone and send it once all required fields are filled in.</span></div><button class="b" onclick="alertSave()">Save draft</button><button class="red" onclick="alertDiscard()">Discard</button><button onclick="alertKeep()">Keep editing</button></div>`
 };
 function curKey(){const c=cur(),sh=S.sheet&&S.sheet.name;
-  if(S.scen==='signup'){if(S.alert==='perm')return 'perm';if(sh)return ({docsInfo:'roleSheet',otp:'otp',upload:'upload',hidden:'hidden',photo:S.sheet.side==='back'?'photoBack':'photoFront'})[sh]||sh;if(c==='general'&&S.dobNav)return 'dob';if(c==='general'&&S.addrOpen&&S.f.addr)return 'addr';if(c==='role'&&S.acct)return 'role1';return c==='docs'&&Object.keys(S.docs).length?'docsDone':c;}
-  if(S.scen==='later'){if(sh==='fix')return 'L:fix';return 'L:'+c;}
+  if(S.scen==='signup'){if(S.alert==='perm')return 'perm';if(sh)return ({docsInfo:'roleSheet',otp:'otp',upload:S.idType==='Passport'?'uploadP':'upload',hidden:'hidden',photo:S.idType==='Passport'?'photoP':S.sheet.side==='back'?'photoBack':'photoFront'})[sh]||sh;if(c==='general'&&S.dobNav)return 'dob';if(c==='general'&&S.addrOpen&&S.f.addr)return 'addr';if(c==='role'&&S.acct)return 'role1';return c==='docs'&&Object.keys(S.docs).length?'docsDone':c;}
+  if(S.scen==='later'){if(c==='docs'||c==='general'||c==='ahpra')return 'L:docs';if(sh==='fix'||sh==='hidden'||sh==='applyNV')return 'L:'+sh;return 'L:'+c;}
   if(S.scen==='att'){if(sh==='fix')return 'A:fix';return 'A:'+c;}
   if(S.alert==='unsaved')return 'V:unsaved';
   if(sh==='filters')return 'V:filters';if(sh==='apply')return Object.keys(S.later).length?'V:later':'V:apply';if(sh==='sms')return 'V:sms';
-  if(c==='credpick')return 'V:credpick';if(sh==='sw')return (S.swq||'').trim()?'V:swadd':'V:sw';if(sh==='roles')return 'V:roles';if(sh==='pick'&&S.formId==='bank')return 'V:bankpick';if(c==='form'&&S.formId==='super'&&S.f.sup_type===SMSFT)return 'V:smsf';if(c==='form')return 'V:'+S.formId;if(c==='home'&&!left()&&payLeft()&&S.ver==='verified')return 'V:homepay';if(c==='home'&&!left())return S.hideAllSet?'V:allsetX':'V:allset';if(c==='shiftV')return left()?'V:shift':'V:ready';return 'V:'+c;}
+  if(c==='credpick')return 'V:credpick';if(sh==='sw')return (S.swq||'').trim()?'V:swadd':'V:sw';if(sh==='roles')return 'V:roles';if(sh==='pick'&&S.formId==='bank')return 'V:bankpick';if(c==='form'&&!S.applyFlow&&(S.formId==='exp'||S.formId==='cred'))return 'V:p'+S.formId;if(c==='form'&&S.formId==='super'&&S.f.sup_type===SMSFT)return 'V:smsf';if(c==='form')return 'V:'+S.formId;if(c==='home'&&!left()&&payLeft()&&S.ver==='verified')return 'V:homepay';if(c==='home'&&!left())return S.hideAllSet?'V:allsetX':'V:allset';if(c==='shiftV')return left()?'V:shift':'V:ready';return 'V:'+c;}
 
 /* sheets with search or long lists keep one height while results change */
 const tallSheet=()=>{const n=S.sheet&&S.sheet.name;return ['sw','roles','filters'].includes(n)||(n==='pick'&&S.sheet.list==='BANKS');};
