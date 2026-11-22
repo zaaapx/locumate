@@ -1,0 +1,1015 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Locumate — Wireframes Onboarding &gt; Pharmacy professional &gt; Pharmacist &gt; Shift work</title>
+<meta name="robots" content="noindex">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#212121; --sub:#757575; --line:#D9D9D9; --bg:#F5F5F5; --page:#E6E6E6;
+    --req-bg:#FFF0E0; --req-fg:#B85C00; --ok-bg:#E3F5EA; --ok-fg:#2E9E5B; --ai-bg:#E6F7F6; --ai-fg:#1F7F78;
+    --dis-bg:#E2E2E2; --dis-fg:#9E9E9E;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{font-family:'Outfit',system-ui,sans-serif;color:var(--ink);background:var(--page);display:flex;justify-content:center;align-items:center;gap:40px;-webkit-font-smoothing:antialiased}
+  button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+  input{font:inherit;color:inherit}
+
+  /* side panel (desktop only) */
+  .panel{width:240px;max-height:844px;overflow:auto;font-size:13px}
+  .panel h1{font-size:16px;font-weight:600;margin-bottom:4px}
+  .panel p{color:var(--sub);margin-bottom:16px;line-height:1.4}
+  .panel ol{list-style:none;display:flex;flex-direction:column;gap:2px}
+  .panel li button{width:100%;text-align:left;padding:6px 10px;border-radius:8px;color:var(--ink)}
+  .panel li button:hover{background:#fff}
+  .panel li button.on{background:var(--ink);color:#fff}
+  .panel .reset{margin-top:16px;padding:8px 12px;border:1px solid var(--line);border-radius:10px;background:#fff}
+
+  /* phone */
+  .phone{position:relative;width:390px;height:844px;background:#fff;border-radius:44px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.12)}
+  @media (max-width:760px){
+    body{display:block;background:#fff}
+    .panel{display:none}
+    .phone{width:100vw;height:100dvh;border-radius:0;box-shadow:none}
+  }
+  .status{height:48px;display:flex;align-items:center;justify-content:space-between;padding:0 28px 0 32px;font-weight:600;font-size:15px;flex:none}
+  .status i{display:inline-block;width:18px;height:10px;border:1.5px solid var(--ink);border-radius:3px;margin-left:6px;position:relative}
+  .status i::after{content:"";position:absolute;inset:1px;background:var(--ink);border-radius:1px}
+  .screen{position:absolute;inset:0;display:flex;flex-direction:column;background:#fff}
+  .scroll{flex:1;overflow-y:auto;padding:8px 16px 16px;-webkit-overflow-scrolling:touch}
+  .scroll::-webkit-scrollbar{display:none}
+  .foot{padding:12px 16px 34px;display:flex;flex-direction:column;gap:10px;flex:none}
+  .homebar{position:absolute;left:50%;bottom:8px;transform:translateX(-50%);width:134px;height:5px;border-radius:3px;background:var(--ink);z-index:50}
+
+  /* header */
+  .hdr{height:56px;display:flex;align-items:center;gap:12px;padding:0 16px;flex:none}
+  .back{width:24px;height:24px;display:grid;place-items:center}
+  .hdr .title{flex:1;font-weight:600;font-size:17px}
+  .prog{flex:1;display:flex;gap:6px}
+  .prog span{flex:1;height:4px;border-radius:2px;background:#E2E2E2}
+  .prog span.on{background:var(--ink)}
+  .iconbtn{width:40px;height:40px;margin-right:-8px;display:grid;place-items:center;border-radius:12px}
+  .iconbtn:hover{background:var(--bg)}
+  .skip{font-weight:500;font-size:14px;color:var(--sub)}
+
+  /* type */
+  .eyebrow{font-weight:500;font-size:13px;color:var(--sub);margin-bottom:4px}
+  h2{font-weight:600;font-size:24px;line-height:1.2}
+  .desc{font-size:15px;color:var(--sub);margin-top:4px;line-height:1.35}
+  .overline{font-weight:600;font-size:12px;color:var(--sub);letter-spacing:.02em;margin:18px 0 8px}
+  .stack{display:flex;flex-direction:column;gap:12px}
+  .stack.tight{gap:10px}
+
+  /* buttons */
+  .btn{height:56px;border-radius:14px;font-weight:600;font-size:16px;width:100%;display:flex;align-items:center;justify-content:center;gap:10px;transition:opacity .15s}
+  .btn:active{opacity:.8}
+  .btn.primary{background:var(--ink);color:#fff}
+  .btn.secondary{background:#fff;border:1px solid var(--line)}
+  .btn.text{height:44px}
+  .btn[disabled]{background:var(--dis-bg);color:var(--dis-fg);border:0;cursor:not-allowed}
+  .btn.small{height:36px;width:auto;padding:0 16px;font-size:14px;border-radius:10px}
+  .link{font-weight:600;font-size:14px}
+
+  /* chips */
+  .chips{display:flex;flex-wrap:wrap;gap:8px}
+  .chip{padding:10px 16px;border-radius:99px;border:1px solid var(--line);font-weight:500;font-size:14px;background:#fff}
+  .chip.on{background:var(--ink);border-color:var(--ink);color:#fff}
+
+  /* inputs */
+  .field label{display:block;font-weight:500;font-size:13px;color:var(--sub);margin-bottom:6px}
+  .field input{width:100%;height:52px;border:1px solid var(--line);border-radius:12px;padding:0 16px;font-size:16px;outline:none}
+  .field input:focus{border-color:var(--ink)}
+  .field .help{font-size:12px;color:var(--sub);margin-top:6px}
+  .field{position:relative}
+  .sugg{position:absolute;left:0;right:0;top:82px;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.08);z-index:5;overflow:hidden}
+  .sugg button{display:block;width:100%;text-align:left;padding:12px 16px;font-size:15px}
+  .sugg button small{display:block;font-size:12px;color:var(--sub)}
+  .sugg button:hover{background:var(--bg)}
+
+  /* rows */
+  .row{display:flex;align-items:center;gap:12px;padding:14px 16px;border:1px solid var(--line);border-radius:14px;background:#fff;text-align:left;width:100%}
+  .row .ic{width:40px;height:40px;border-radius:10px;background:var(--bg);flex:none;display:grid;place-items:center}
+  .row .tx{flex:1;min-width:0}
+  .row.filerow{padding:0;gap:0}
+  .fr-main{flex:1;min-width:0;display:flex;align-items:center;gap:12px;padding:14px 0 14px 16px;text-align:left}
+  .fr-x{width:48px;height:48px;margin-right:4px;display:grid;place-items:center;flex:none}
+  .row .t{font-weight:500;font-size:15px}
+  .row .s{font-size:13px;color:var(--sub);margin-top:2px}
+  .row .chev{flex:none}
+  .row.static{cursor:default}
+  .li{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #EEEEEE}
+  .li .t{font-weight:500;font-size:15px}
+  .li .s{font-size:13px;color:var(--sub);margin-top:2px}
+  .li .tx{flex:1;min-width:0}
+  .tag{padding:4px 10px;border-radius:99px;font-weight:500;font-size:12px;white-space:nowrap;background:var(--bg);color:var(--ink)}
+  .tag.neutral{color:var(--sub)}
+  .tag.required{background:var(--req-bg);color:var(--req-fg)}
+  .tag.done{background:var(--ok-bg);color:var(--ok-fg)}
+  .tag.ai{background:var(--ai-bg);color:var(--ai-fg)}
+  .spin{width:12px;height:12px;border:2px solid #cfcfcf;border-top-color:var(--sub);border-radius:50%;display:inline-block;vertical-align:-2px;margin-right:6px;animation:sp .8s linear infinite}
+  @keyframes sp{to{transform:rotate(360deg)}}
+
+  .bar{height:6px;border-radius:3px;background:#EEEEEE;overflow:hidden}
+  .bar>div{height:100%;background:var(--ink);border-radius:3px;transition:width .3s}
+  .note{background:var(--bg);border-radius:12px;padding:14px;font-size:14px;line-height:1.4}
+
+  /* sheet */
+  .overlay{position:absolute;inset:0;background:rgba(0,0,0,.4);z-index:20}
+  .overlay.anim{animation:fade .2s}
+  .sheet{position:absolute;left:0;right:0;bottom:0;background:#fff;border-radius:24px 24px 0 0;z-index:21;padding:12px 0 40px;max-height:calc(100% - 48px);display:flex;flex-direction:column}
+  .sheet.anim{animation:up .25s ease-out}
+  .sheet .grab{width:40px;height:4px;border-radius:2px;background:var(--line);margin:0 auto 8px;flex:none}
+  .sheet .inner{padding:0 16px;overflow-y:auto}
+  .sheet .hdr{padding:0 16px}
+  @keyframes up{from{transform:translateY(40px);opacity:.6}}
+  @keyframes fade{from{opacity:0}}
+
+  /* otp */
+  .otp{display:flex;gap:10px;margin:20px 0 16px}
+  .otp div{width:62px;height:64px;border:1px solid var(--line);border-radius:12px;display:grid;place-items:center;font-weight:600;font-size:24px}
+  .otp div.cur{border:2px solid var(--ink)}
+  .keypad{display:grid;grid-template-columns:repeat(3,1fr);background:#F7F7F7;padding:12px 0 40px;margin:0 -16px -40px}
+  .keypad button{height:56px;font-size:22px}
+
+  /* photo preview */
+  .preview{height:240px;border-radius:16px;background:#E0E0E0;display:grid;place-items:center;margin:16px 0}
+  .idcard{width:290px;height:180px;background:#fff;border:1px solid var(--line);border-radius:12px;position:relative}
+  .idcard b{position:absolute;background:var(--line);border-radius:4px;height:8px}
+  .checks{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
+  .checks div{display:flex;gap:10px;align-items:center;font-size:15px}
+
+  /* home */
+  .card{background:var(--bg);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:12px}
+  .card-h{display:flex;align-items:center;justify-content:space-between}
+  .card-h b{font-weight:600;font-size:16px}
+  .prow{display:flex;align-items:center;gap:10px}
+  .prow .bar{flex:1;background:#E6E6E6}
+  .prow span{font-weight:500;font-size:13px;color:var(--sub)}
+  .next{background:#fff;border-radius:12px;padding:12px;display:flex;align-items:center;gap:12px}
+  .shift{border:1px solid var(--line);border-radius:16px;padding:16px;display:flex;flex-direction:column;gap:12px;text-align:left;width:100%;background:#fff}
+  .shift .top{display:flex;gap:12px;align-items:center}
+  .shift .logo{width:44px;height:44px;border-radius:10px;background:var(--bg)}
+  .shift .name{font-weight:600;font-size:16px}
+  .shift .dist{font-size:13px;color:var(--sub)}
+  .shift hr{border:0;border-top:1px solid #EEE}
+  .shift .ln{display:flex;gap:8px;align-items:flex-start}
+  .shift .lb{font-size:12px;color:var(--sub)}
+  .shift .v{font-weight:500;font-size:14px}
+  .tabs{height:84px;border-top:1px solid var(--line);display:flex;justify-content:space-between;padding:12px 28px 0;flex:none;background:#fff}
+  .tabs div{display:flex;flex-direction:column;align-items:center;gap:4px;font-weight:500;font-size:11px;color:var(--sub)}
+  .tabs div i{width:24px;height:24px;border-radius:6px;background:var(--line)}
+  .tabs div.on{color:var(--ink)}
+  .tabs div.on i{background:var(--ink)}
+  .notice{background:var(--req-bg);border-radius:16px;padding:16px}
+  .notice b{display:block;font-weight:600;font-size:16px;margin-bottom:4px}
+  .notice span{font-size:14px;color:#5C3A00}
+  .img{height:120px;border-radius:16px;background:var(--bg)}
+  .hide{filter:blur(5px);user-select:none;-webkit-user-select:none;pointer-events:none}
+  .img.hide{filter:blur(8px);background:#E4E4E4}
+  .lockable{position:relative}
+  .lockhit{position:absolute;inset:0;z-index:2;background:none;border:0}
+  .hint{background:#EEF0FF;border-radius:16px;padding:14px 16px;display:flex;gap:12px;align-items:flex-start;text-align:left;width:100%}
+  .hint b{display:block;font-weight:600;font-size:15px;color:#29336F;margin-bottom:2px}
+  .hint span{font-size:14px;color:#29336F;line-height:1.35}
+  .notice.info{background:#EEF0FF}.notice.info span{color:#29336F}
+
+  .hero{height:260px;border-radius:24px;background:var(--bg);display:grid;place-items:center;color:var(--sub);font-weight:500;font-size:13px;margin:24px 0}
+  .or{display:flex;align-items:center;gap:12px;color:var(--sub);font-weight:500;font-size:13px}
+  .or::before,.or::after{content:"";flex:1;height:1px;background:var(--line)}
+  .legal{font-size:12px;color:var(--sub);text-align:center;margin-top:4px}
+  .social svg{flex:none}
+
+  .scen{display:flex;flex-direction:column;gap:4px;margin-bottom:14px}
+  .scen button{text-align:left;padding:8px 10px;border-radius:8px;border:1px solid var(--line);background:#fff;font-weight:500}
+  .scen button.on{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+  .card.warn{border:1.5px solid #EE8C2E}
+  .notice.ok{background:var(--ok-bg)} .notice.ok span{color:#1E5E39}
+  .close{width:24px;height:24px;display:grid;place-items:center}
+  .alert-wrap{position:absolute;inset:0;background:rgba(0,0,0,.4);z-index:70;display:grid;place-items:center;animation:fade .2s}
+  .alert{width:270px;border-radius:14px;background:#F2F2F2;overflow:hidden;text-align:center;font-family:-apple-system,system-ui,sans-serif}
+  .alert .ab{padding:20px 16px}
+  .alert .ab b{display:block;font-size:17px;font-weight:600;margin-bottom:4px}
+  .alert .ab span{font-size:13px;line-height:1.35}
+  .alert button{display:block;width:100%;padding:12px;border-top:1px solid #C8C8C8;font-size:17px;color:#007AFF}
+  .alert .row2{display:flex}.alert .row2 button{flex:1}.alert .row2 button+button{border-left:1px solid #C8C8C8}
+  .alert button.b{font-weight:600}.alert button.red{color:#FF3B30}
+  .lock{position:absolute;inset:0;background:#5A6173;color:#fff;display:flex;flex-direction:column;align-items:center}
+  .lock .d{margin-top:48px;font-size:18px}.lock .c{font-size:84px;font-weight:600;line-height:1}
+  .notif{margin:120px 16px 0;align-self:stretch;background:rgba(255,255,255,.88);color:var(--ink);border-radius:20px;padding:12px 14px 12px 12px;display:flex;gap:10px;text-align:left}
+  .notif i{width:38px;height:38px;border-radius:9px;background:#29336F;flex:none}
+  .notif .h{display:flex;justify-content:space-between;font-weight:600;font-size:15px}.notif .h small{font-weight:400;color:var(--sub);font-size:13px}
+  .notif p{font-size:14px;margin-top:2px;line-height:1.3}
+  .qt{display:block;width:calc(100% + 32px);background:#D1D3D9;text-align:center;padding:6px 0;margin:0 -16px}
+  .qt small{display:block;font-size:11px;color:#5A5A60}.qt b{font-size:16px}
+  .phone-in{display:flex;align-items:center;height:52px;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+  .phone-in:focus-within{border-color:var(--ink)}
+  .phone-in span{padding:0 12px 0 16px;border-right:1px solid var(--line);font-size:16px;line-height:24px}
+  .phone-in input{border:0;height:50px;flex:1;min-width:0;padding:0 14px;font-size:16px;outline:none}
+  .field input::placeholder,.phone-in input::placeholder{color:#9E9E9E}
+  .ava-wrap{display:flex;flex-direction:column;align-items:center;gap:26px;margin:4px 0 2px}
+  .ava2{position:relative;width:104px;height:104px;border-radius:24px;border:1.5px solid var(--ink);background:var(--bg);display:grid;place-items:center;font-weight:600;font-size:28px;color:#29336F}
+  .ava2.on{background:#DDE1F3}
+  .ava2 .badge{position:absolute;left:50%;bottom:-18px;transform:translateX(-50%);width:36px;height:36px;border-radius:50%;background:var(--ink);border:3px solid #fff;display:grid;place-items:center}
+  .ava-wrap small{font-size:13px;color:var(--sub)}
+  .ava-row{display:flex;align-items:center;gap:14px}
+  .ava-row .t{font-weight:500;font-size:15px}.ava-row .s{font-size:13px;color:var(--sub);margin-top:2px}
+  .ava{width:64px;height:64px;border-radius:50%;background:var(--bg);display:grid;place-items:center;font-weight:600;font-size:20px;flex:none}
+  .ava.on{background:#DDE1F3;color:#29336F}
+  .addr-in{display:flex;align-items:center;gap:8px;height:52px;border:1px solid var(--line);border-radius:12px;padding:0 14px}
+  .addr-in:focus-within{border-color:var(--ink)}
+  .field .addr-in input{border:0;height:50px;flex:1;min-width:0;font-size:16px;outline:none;padding:0}
+  .dd{position:absolute;left:0;right:0;top:82px;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.08);z-index:6;overflow:hidden}
+  .dd>button{display:flex;gap:10px;align-items:flex-start;width:100%;text-align:left;padding:12px 14px;font-size:15px;border-bottom:1px solid #EEE}
+  .dd>button svg{flex:none;margin-top:2px}
+  .dd>button small{display:block;font-size:12px;color:var(--sub)}
+  .dd b{font-weight:600}
+  .dd .ft{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 14px;font-size:13px}
+  .dd .ft small{color:var(--sub);font-size:12px;white-space:nowrap}
+  .dd .none{padding:12px 14px;font-size:14px;color:var(--sub);border-bottom:1px solid #EEE}
+  .dob-in{display:flex;align-items:center;gap:8px;height:52px;border:1px solid var(--line);border-radius:12px;padding:0 14px 0 16px}
+  .dob-in:focus-within{border-color:var(--ink)}
+  .field .dob-in input{border:0;height:50px;flex:1;min-width:0;font-size:16px;outline:none;padding:0}
+  .dp{position:absolute;left:0;right:0;top:82px;background:#fff;border:1px solid var(--line);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.08);z-index:7;padding:12px}
+  .dp-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px}
+  .dp-h>span{display:flex;gap:4px}
+  .dp-h button{font-size:18px;color:var(--sub);padding:2px 8px;line-height:1}
+  .dp-h .ym button{font-weight:600;font-size:16px;color:var(--ink)}
+  .dp-g{display:grid;grid-template-columns:repeat(7,1fr);row-gap:2px;text-align:center}
+  .dp-g span{font-size:12px;color:var(--sub);font-weight:500;padding:6px 0}
+  .dp-g button{height:36px;font-size:14px;border-radius:18px}
+  .dp-g button.mu{color:#BDBDBD}
+  .dp-g button.on{background:var(--ink);color:#fff}
+  .dp-g button[disabled]{color:#D9D9D9;cursor:default}
+  .dp-g.big{grid-template-columns:repeat(4,1fr);row-gap:8px}.dp-g.big button{height:44px;border-radius:22px}
+  .dob3{border:0;padding:0;margin:0;min-width:0}
+  .dob3 legend{font-weight:500;font-size:13px;color:var(--sub);margin-bottom:6px;padding:0}
+  .dob-row{display:flex;gap:12px}
+  .field input.err{border-color:#C62828}
+  .errtxt{color:#C62828;font-size:13px;margin-top:6px}
+  /* floating labels: inside the field when empty, small and raised when focused or filled */
+  .field input{height:60px;padding:22px 16px 6px}
+  .field:has(> input)>label,.field:has(> .phone-in)>label,.field:has(> .addr-in)>label{position:absolute;left:17px;top:19px;margin:0;font-size:16px;font-weight:400;color:#9E9E9E;pointer-events:none;transition:top .15s ease,font-size .15s ease,color .15s ease;z-index:1;white-space:nowrap}
+  .field:has(> .addr-in)>label{left:41px}
+  .field:has(> input:focus)>label,.field:has(> input:not(:placeholder-shown))>label,.field:has(> .phone-in input:focus)>label,.field:has(> .phone-in input:not(:placeholder-shown))>label,.field:has(> .addr-in input:focus)>label,.field:has(> .addr-in input:not(:placeholder-shown))>label{top:9px;font-size:12px;font-weight:500;color:var(--sub)}
+  .field input::placeholder,.phone-in input::placeholder{color:transparent}
+  .field input:focus::placeholder,.phone-in input:focus::placeholder{color:#9E9E9E}
+  .phone-in,.addr-in{height:60px}
+  .field .phone-in input{height:58px;padding:22px 14px 6px 6px}
+  .phone-in span{align-self:stretch;display:flex;align-items:flex-end;padding:0 0 8px 16px;border-right:0}
+  .field:has(> .phone-in input:placeholder-shown:not(:focus)) .phone-in span{visibility:hidden}
+  .field .addr-in input{height:58px;padding:22px 0 6px}
+  .sugg,.dd{top:66px}
+  .cklist{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff}
+  .ck{display:flex;align-items:center;gap:12px;width:100%;min-height:48px;padding:10px 14px;text-align:left;font-size:15px;border-bottom:1px solid #EEE}
+  .cklist>:last-child{border-bottom:0}
+  .ck .box{width:22px;height:22px;border:1.5px solid #BDBDBD;border-radius:6px;display:grid;place-items:center;flex:none}
+  .ck.on .box{background:var(--ink);border-color:var(--ink)}
+  .ckmore{display:block;width:100%;text-align:left;padding:13px 14px;border-bottom:1px solid #EEE}
+  .ckor{padding:6px 14px;font-size:13px;color:var(--sub);background:var(--bg);border-bottom:1px solid #EEE}
+  .pick{display:flex;align-items:center;gap:10px;width:100%;min-height:60px;border:1px solid var(--line);border-radius:12px;padding:9px 14px 9px 16px;text-align:left}
+  .pick .in{flex:1;min-width:0}
+  .pick .pl{display:block;font-size:12px;font-weight:500;color:var(--sub)}
+  .pick .pl.big{font-size:16px;font-weight:400;color:#9E9E9E}
+  .pick .tok{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+  .tk{display:inline-flex;align-items:center;gap:2px;background:var(--bg);border-radius:99px;padding:5px 10px;font-size:13px}
+  .tk.more{color:var(--sub)}
+  .toks .tk{padding:2px 2px 2px 10px}
+  .tk button{width:28px;height:28px;display:grid;place-items:center}
+  .toks{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-top:10px}
+  .pick-search{padding:0 16px 10px;border-bottom:1px solid #EEE;flex:none}
+  .gh{display:flex;justify-content:space-between;align-items:center;margin:18px 0 8px}
+  .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+  .pick .val{display:block;font-size:16px;margin-top:2px}
+  .ck.rd .box{border-radius:50%}
+  .card-f{border:1px solid var(--line);border-radius:14px;padding:12px}
+  .card-f .gh{margin-bottom:10px}
+  .link.addmore{align-self:flex-start;font-weight:600}
+  .field.sfx input{padding-right:56px}
+  .field.sfx .cur{position:absolute;right:16px;bottom:20px;font-size:13px;font-weight:600;color:var(--sub);pointer-events:none}
+  .seg{display:flex;background:#F0F0F0;border-radius:12px;padding:4px;gap:4px}
+  .seg button{flex:1;height:40px;border-radius:9px;font-size:14px;font-weight:500;color:var(--sub)}
+  .seg button.on{background:#fff;color:var(--ink);font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.12)}
+  .dkb{position:absolute;left:0;right:0;bottom:0;height:258px;z-index:60;background:#F2F2F2;border-top:1px solid #E0E0E0;padding-bottom:34px}
+  .dkb-bar{height:44px;display:flex;justify-content:flex-end;align-items:center;padding:0 16px;border-bottom:1px solid #E6E6E6}
+  .dkb-bar button{font-weight:600;font-size:16px;color:var(--ink)}
+  .dkb-keys{display:grid;grid-template-columns:repeat(3,1fr)}
+  .dkb.abc{height:258px}
+  .abck{padding:6px 3px 0;display:flex;flex-direction:column;gap:8px}
+  .kr{display:flex;gap:5px;justify-content:center}
+  .kr button{flex:0 0 calc(10% - 5px);height:38px;border-radius:6px;background:#fff;box-shadow:0 1px 0 rgba(0,0,0,.25);font-size:18px;display:grid;place-items:center}
+  .kr button.wide{flex:1 1 auto;font-size:15px;color:var(--sub)}
+  .kr button.act,.kr button.del{flex:0 0 auto;min-width:72px;padding:0 10px;background:#D5D7DC;font-size:15px}
+  .kr button.del{min-width:48px}
+  .dkb-keys button{height:45px;font-size:22px;display:grid;place-items:center}
+  #phone.kb .sheet{bottom:258px;max-height:calc(100% - 48px - 258px)}
+  #phone.kb .screen .scroll{padding-bottom:270px}
+  .sfield{display:flex;align-items:center;gap:12px}
+  .sfield .field{flex:1;min-width:0}
+  .field.srch input{padding:0 44px}
+  .field.srch input::placeholder{color:#9E9E9E}
+  .field.srch:has(> input)>label{left:45px}
+  .sic{position:absolute;left:14px;top:50%;transform:translateY(-50%);display:flex;color:#9E9E9E;pointer-events:none;z-index:1}
+  .sclr{position:absolute;right:10px;top:50%;transform:translateY(-50%);display:none;width:32px;height:32px;place-items:center;border-radius:50%;color:var(--sub)}
+  .sfield.has .sclr{display:grid}
+  .scancel{display:none;font-weight:500;font-size:15px;color:var(--ink);padding:8px 0}
+  .sfield:focus-within .scancel,.sfield.has .scancel{display:block}
+  input[type=search]::-webkit-search-cancel-button{-webkit-appearance:none;display:none}
+  .sheet.tall{height:calc(100% - 48px)}
+  .sheet.tall>.inner{flex:1;min-height:0}
+  .field.pwd input{padding-right:52px}
+  .eye{position:absolute;right:8px;top:8px;width:44px;height:44px;display:grid;place-items:center;border-radius:10px;z-index:2}
+  .sh-foot{flex:none;padding:12px 16px 0;border-top:1px solid #EEE;background:#fff}
+  .sh-head{padding:4px 16px 12px;border-bottom:1px solid #EEE;flex:none}
+  .sheet #swList{padding-top:12px;flex:1}
+  .ck .box.plus{border:0;background:var(--ink);color:#fff;font-size:18px;line-height:1}
+  .ck.addrow{font-weight:600}
+  .toast{position:absolute;left:16px;right:16px;top:52px;background:var(--ink);color:#fff;border-radius:12px;padding:12px 16px;font-size:14px;z-index:60;animation:down .2s}
+  @keyframes down{from{transform:translateY(-16px);opacity:0}}
+.panel .allflows{display:inline-block;margin-bottom:10px;font-size:13px;color:#0b359a;text-decoration:none;font-weight:600}
+.panel .allflows:hover{text-decoration:underline}
+/* short windows: the page scrolls instead of cutting off the top of the panel and the phone */
+html{height:100%}
+body{height:auto;min-height:100%;box-sizing:border-box;padding:16px 0}
+@media (max-width:760px){body{padding:0}}
+</style>
+</head>
+<body>
+<aside class="panel">
+  <a class="allflows" href="../index.html">← All prototypes</a>
+  <h1>Wireframes Onboarding &gt; Pharmacy professional &gt; Pharmacist &gt; Shift work</h1>
+  <p>Wireframe prototype. Shift details are blurred until the pharmacist is verified (staff check AHPRA, ID and insurance within 24–48 hours). On Apply, missing items open one after another, documents can wait, and everything saves as you go. Pick a scenario, then tap through it on the phone or jump to any screen. Dummy data only.</p>
+  <div class="scen" id="scen"></div>
+  <ol id="nav"></ol>
+  <button class="reset" onclick="resetAll()">Restart flow</button>
+</aside>
+<main class="phone" id="phone"></main>
+
+<script>
+/* ---------- icons ---------- */
+const I={
+  tick:'<svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  cal:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="4" y="5" width="16" height="15" rx="2" stroke="#757575" stroke-width="1.8"/><path d="M4 10h16M9 3v4M15 3v4" stroke="#757575" stroke-width="1.8" stroke-linecap="round"/></svg>',
+  person:'<svg width="48" height="48" viewBox="0 0 48 48" fill="none"><circle cx="24" cy="17" r="8" fill="#BDBDBD"/><path d="M8 40c2-8 9-12 16-12s14 4 16 12z" fill="#BDBDBD"/></svg>',
+  camw:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 8h3l2-3h6l2 3h3v11H4z" stroke="#fff" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="13" r="3.5" stroke="#fff" stroke-width="2"/></svg>',
+  flt:'<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 7h10M18 7h2M4 17h4M12 17h8" stroke="#212121" stroke-width="2" stroke-linecap="round"/><circle cx="16" cy="7" r="2" stroke="#212121" stroke-width="2"/><circle cx="10" cy="17" r="2" stroke="#212121" stroke-width="2"/></svg>',
+  cam:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 8h3l2-3h6l2 3h3v11H4z" stroke="#757575" stroke-width="1.8" stroke-linejoin="round"/><circle cx="12" cy="13" r="3.5" stroke="#757575" stroke-width="1.8"/></svg>',
+  search:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="2"/><path d="m16 16 4.5 4.5" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>',
+  eye:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z" stroke="#757575" stroke-width="2" stroke-linejoin="round"/><circle cx="12" cy="12" r="3" stroke="#757575" stroke-width="2"/></svg>',
+  eyeOff:'<svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M10.6 5.1A10.7 10.7 0 0 1 12 5c6.4 0 10 7 10 7a17.6 17.6 0 0 1-3 3.9M6.6 6.6C3.6 8.5 2 12 2 12s3.6 7 10 7c1.8 0 3.4-.5 4.8-1.3" stroke="#757575" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2M3 3l18 18" stroke="#757575" stroke-width="2" stroke-linecap="round"/></svg>',
+  xs:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="#757575" stroke-width="2" stroke-linecap="round"/></svg>',
+  x:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="#212121" stroke-width="2" stroke-linecap="round"/></svg>',
+  back:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M15 18l-6-6 6-6" stroke="#212121" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  chev:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M9 18l6-6-6-6" stroke="#9E9E9E" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  check:'<svg width="20" height="20" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="10" fill="#E3F5EA"/><path d="M7.5 12.5l3 3 6-6.5" stroke="#2E9E5B" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+  clock:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#757575" stroke-width="2"/><path d="M12 7v5l3 2" stroke="#757575" stroke-width="2" stroke-linecap="round"/></svg>',
+  dollar:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#757575" stroke-width="2"/><path d="M14.5 9.5c0-1.1-1.1-2-2.5-2s-2.5.9-2.5 2 1.1 1.7 2.5 2 2.5.9 2.5 2-1.1 2-2.5 2-2.5-.9-2.5-2M12 6v1.5M12 16.5V18" stroke="#757575" stroke-width="1.6" stroke-linecap="round"/></svg>',
+  pin:'<svg width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z" stroke="#757575" stroke-width="2"/><circle cx="12" cy="9.5" r="2.5" stroke="#757575" stroke-width="2"/></svg>',
+  del:'<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M9 6h11v12H9l-6-6 6-6z" stroke="#212121" stroke-width="1.6" stroke-linejoin="round"/><path d="M12 10l4 4M16 10l-4 4" stroke="#212121" stroke-width="1.6" stroke-linecap="round"/></svg>',
+  apple:'<svg width="18" height="18" viewBox="0 0 24 24"><path fill="#000" d="M16.4 12.6c0-2.5 2-3.7 2.1-3.8-1.2-1.7-3-1.9-3.6-2-1.5-.2-3 .9-3.8.9-.8 0-2-.9-3.3-.9-1.7 0-3.3 1-4.2 2.5-1.8 3.1-.5 7.7 1.3 10.2.9 1.2 1.9 2.6 3.2 2.6 1.3-.1 1.8-.8 3.3-.8 1.6 0 2 .8 3.4.8 1.4 0 2.3-1.3 3.1-2.5 1-1.4 1.4-2.8 1.4-2.9-.1 0-2.9-1.1-2.9-4.1zM13.9 5.1c.7-.9 1.2-2.1 1.1-3.3-1 0-2.3.7-3 1.6-.7.8-1.3 2-1.1 3.2 1.1.1 2.3-.6 3-1.5z"/></svg>',
+  google:'<svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 12.9 4 4 12.9 4 24s8.9 20 20 20 20-8.9 20-20c0-1.3-.1-2.4-.4-3.5z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3.1l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>'
+};
+
+/* ---------- state ---------- */
+const DOCS=[
+  {id:'id',t:'Photo ID',hint:'Passport or driver licence',req:true,done:'Name, date of birth and address added'},
+  {id:'cv',t:'Resume',hint:'PDF',req:true,done:'CV_Andrii.pdf'},
+  {id:'ins',t:'Indemnity insurance',hint:'Certificate of currency and expiry date',req:true,done:'Expiry date added'},
+  {id:'super',t:'Super choice form',hint:'Fills in your super details',req:false,done:'Fund details added'},
+  {id:'cred',t:'Credential certificates',hint:'Only if you hold advanced credentials',req:false,done:'2 certificates added'}
+];
+const fresh=()=>({stack:['welcome'],social:false,role:'',work:'',email:'andrii@example.com',otp:'',docs:{},idType:'Driver licence',gender:'',f:{},focus:null,sheet:null,photo:null,ver:'review',items:{},later:{},skip:{},flt:{fd:['Mon','Tue','Sat','Sun'],ft:['Early morning','Mid day'],fs:['NSW','VIC'],fk:'25 km',fl:'Yes'},formId:null,applyFlow:false,alert:null,scen:'signup'});
+let S=fresh();
+const SCREENS=[
+  ['welcome','00 Welcome'],['role','01 Role'],['role1','01a Role — Pharmacy professional'],['roleSheet','02 Required documents — sheet'],['account','03 Create account'],['otp','04 Email code — sheet'],
+  ['docs','05 Documents hub — empty'],['upload','06 Upload options — sheet'],['photoFront','06b Check your photo — front'],['photoBack','06c Check your photo — back'],['uploadP','06e Upload options — Passport'],['photoP','06f Check your photo — passport'],['insExp','06d Insurance expiry date — sheet'],['docsDone','07 Documents hub — uploaded'],
+  ['general','08 Your general info'],['avatar','08a Profile photo — sheet'],['addr','08b Home address — suggestions'],['dob','08c Date of birth — keypad'],['ahpra','09 AHPRA registration'],['checking','09b Checking your documents'],['perm','09c Notifications — system prompt'],['home','10 Home — in review'],['hidden','10a Hidden details — sheet'],['all','10b All items — in review'],['shift','11 Shift — not verified'],['applyNV','11a Apply — not verified yet — sheet']
+];
+const SC={
+  signup:{t:'1 · Sign up → in review',l:SCREENS},
+  later:{t:'2 · Documents added later',l:[['L:docs','05 Documents hub — tap Upload later'],['L:checking','09d Checking your documents — documents missing'],['L:home','10c Home — documents missing'],['L:hidden','10h Hidden details — sheet, documents missing'],['L:all','10d All items — documents missing'],['L:fix','Add photo ID — sheet'],['L:shift','11b Shift — documents missing'],['L:applyNV','11c Apply — documents missing — sheet']]},
+  att:{t:'3 · Document needs attention',l:[['A:home','10e Home — needs attention'],['A:fix','10f Re-upload photo ID — sheet'],['A:all','10g All items — needs attention']]},
+  verified:{t:'4 · ID verified → apply',l:[['V:push',"11b You're verified — notification"],['V:home','12 Home — verified'],['V:all','12a All items — verified'],['V:shift','13 Shift — verified'],['V:apply','14 Before you apply — sheet'],['V:mobile','15 Mobile number — 1 of 2'],['V:sms','15a SMS code'],['V:prof','16 Professional certificates — 2 of 2'],['V:exp','17a Experience and software — optional'],['V:roles','17a1 Roles — sheet'],['V:sw','17b Pharmacy software — sheet'],['V:swadd','17c Pharmacy software — add your own'],['V:cred','17d Advanced credentials — optional'],['V:credpick','17e Advanced credentials — picker'],['V:travel','17f Travel requirements — optional'],['V:other','17g Other insurance — optional'],['V:later','18 Before you apply — 1 left'],['V:ready','19 Shift — ready to apply'],['V:applied','20 Applied — add payment details'],['V:homepay','20a Home — payment details left'],['V:bank','21 Bank details — 1 of 3'],['V:bankpick','21a Bank name — sheet'],['V:unsaved','21b Leave unfinished — alert'],['V:tax','22 Tax and business details — 2 of 3'],['V:super','23 Super fund — 3 of 3'],['V:smsf','23a Super fund — self-managed (SMSF)'],['V:allset',"12b Home — all set"],['V:allsetX','12c Home — all set card dismissed'],['V:filters','12d Shift filters — sheet'],['V:pexp','30 Experience and software (from Profile)'],['V:pcred','31 Advanced credentials (from Profile)']]}
+};
+const ITEMS=[
+  {id:'mobile',t:'Mobile number',s:"We'll text you a code",a:'Verify'},
+  {id:'prof',t:'Professional certificates',s:'Vaccination, First Aid and CPR, COVID',a:'Upload'}];
+/* needed before the first payment, not to apply: Locumate invoices the pharmacy on the pharmacist's behalf */
+const PAY=[
+  {id:'bank',t:'Bank details',s:'Bank, account name, BSB, account number',a:'Add'},
+  {id:'tax',t:'Tax and business details',s:'ABN, business name, entity type, GST',a:'Add'},
+  {id:'super',t:'Super fund',s:'Fund details, TFN and choice form',a:'Add'}];
+const FORMS={
+  bank:{t:'Bank details',d:'We pay you here after each shift.',pre:()=>selF('Bank name *','bank_bank','Choose your bank','BANKS'),f:[['bank_name','Account name *','Andrii Petrenko','','Name on your account'],['bank_bsb','BSB *','062 000','','000 000'],['bank_acc','Account number *','12345678','','12345678']],ok:()=>!!S.f.bank_bank,keys:['bank_bank','bank_name','bank_bsb','bank_acc']},
+  super:{t:'Super fund',d:'We pay your super with every shift.',body:()=>superHTML(),ok:()=>supOk(),keys:['sup_fund','sup_abn','sup_title','sup_fn','sup_ln','sup_form','sup_tfn']},
+  tax:{t:'Tax and business details',d:'You work as a contractor, so we need these to pay you.',f:[['tax_abn','ABN *','51 824 753 556',"Don't have one? Apply for free at abr.gov.au",'00 000 000 000'],['tax_bn','Business name *','A. Petrenko Pharmacy Services','','e.g. A. Petrenko Pharmacy Services']],
+    post:()=>`<div class="field"><label>Entity type *</label>${mchips('f','tax_et',['Sole trader','Company / trust / partnership'],false)}</div><div><div class="overline" style="margin-top:0">ARE YOU REGISTERED FOR GST? *</div>${mchips('f','tax_gst',['Yes','No'],false)}</div>`,ok:()=>!!(S.f.tax_gst&&S.f.tax_et),keys:['tax_abn','tax_bn','tax_et','tax_gst']},
+  imm:{t:'Can you vaccinate?',d:'Some pharmacies need a pharmacist who can give vaccines.',yesno:true,ck:'imm_ans'},
+  prof:{t:'Professional certificates',d:'Add a certificate for each training you hold.',body:()=>`<div class="field"><label>Can you vaccinate? *</label>${chips(['Yes','No'],S.f.imm_ans,'setImm')}</div>${S.f.imm_ans==='Yes'?'<div class="note">Add your immunisation training certificate first.</div>':''}`+multiFiles('prof',i=>`<div class="field"><label>Training type *</label>${mchips('f','prof_t'+i,TRAIN,false)}</div>`,'Add another certificate'),ok:()=>!!(S.f.imm_ans&&S.f.prof_t0&&S.f.prof_f0),keys:['imm_ans','prof_t0','prof_f0']},
+  other:{opt:true,t:'Other insurance',d:'Add any other policies you hold, like public liability.',body:()=>multiFiles('other',i=>dateField('other_e'+i,'future',false,'Policy expiry date'),'Add another file'),ok:()=>!!(S.f.other_f0&&S.f.other_e0),keys:['other_f0','other_e0']},
+  exp:{t:'Experience and software',d:"We filled this in from your resume. Check it's right.",opt:true,multi:[['YEARS OF PHARMACY EXPERIENCE','exp_y',['0–3 years','3–5 years','5–10 years','10+ years'],false],['WHAT ROLE(S) ARE YOU SEEKING?','exp_r',['Pharmacist','Pharmacy manager','Clinical pharmacist','Compounding pharmacist','Consultant pharmacist','Hospital pharmacist','Locum pharmacist','Aged care pharmacist','Specialist pharmacist (e.g. oncology, pediatrics, cardiology)','Pharmacy technician / assistant','Research or regulatory pharmacist','Pharmacy educator or sales representative'],true,'roles'],['PHARMACY SOFTWARE','exp_s',['FRED','FredNXT','Minfos','Z Software','LOTS','Mountain Top','Simple','Clear Dispense','RxOne','Amfac','ScriptPro','MyScript','Fred Dispense Plus','Pos Works','Fred Dispense','Others'],true,'sheet']],post:()=>salaryHTML()},
+  travel:{t:'Travel requirements',d:'Pharmacies use this to match you with shifts away from home.',opt:true,body:()=>TRAVELQ.map((q,i)=>`<div><div class="overline" style="margin-top:0">${q}</div>${mchips('f','trv_'+i,['Yes','No'],false)}</div>`).join(''),keys:['trv_0','trv_1','trv_2','trv_3']},
+  cred:{t:'Advanced credentials',d:'Only if you hold any. Pick them, then upload a certificate for each.',opt:true,certs:true,picker:true,multi:[]}
+};
+const CREDS=[['ALL CREDENTIALS',['Advanced Compounding Certification (PCCA)','Advanced Practice Pharmacist Credentialing (AdvPP)','Aged Care On-Site Pharmacist (ACOP) Credential','Antimicrobial Stewardship Certification','Asthma Educator Certification','Business Ownership Certification (Pharmacy Guild of Australia)','Cardiology Pharmacy Specialisation','Cardiovascular Disease Management Certification','Clinical Pharmacy Residency Program Certification (SHPA)','Clinical Trials Management Certification','Critical Care Pharmacy Certification','Diabetes Educator Certification','Geriatric Pharmacy Certification','Good Clinical Practice (GCP) Certification','Home Medicines Review (HMR) Accreditation','Immunisation Training for Pharmacists','Infectious Diseases Pharmacist Certification','Medication Safety Certification (ACSQHC)','Mental Health First Aid Certification','Mental Health Pharmacy Certification','Non-Sterile Compounding Training','Oncology Pharmacy Certification','Pain Management Certification','Pediatric Pharmacy Certification','Pharmacy Leadership Program Certification','Quality Use of Medicines (QUM) Certification','Residential Medication Management Review (RMMR) Accreditation','Sterile Compounding Training','Teaching and Training in Pharmacy Certification']]];
+const CSUG=['Immunisation Training for Pharmacists'];
+const POP=8;
+/* lists as in the client's app (banks: the first 15 of the client's 100+ list) */
+const BANKS=['86 400 Bank','AMP Bank Limited','Australia and New Zealand Banking Group Limited (ANZ)','Australian Military Bank (formerly Australian Defence Credit Union)','Auswide Bank (formerly Wide Bay Building Society)','AWA Alliance Bank','B&E Limited (trading as Bank of us)','Bank Australia (formerly bankmecu)','Bank of Melbourne','Bank of Queensland Limited','Bank of Western Australia Limited (trading as Bankwest)','BankSA','BankVic','BDCU Alliance Bank','Bendigo and Adelaide Bank Limited'];
+const TRAIN=['Immunisation','First Aid and CPR','COVID'];
+const TITLES=['Mr','Ms','Mrs','Dr'];
+const PL={BANKS,TRAIN,TITLES};
+const TRAVELQ=['Are you willing to work outside metro areas?','Are you willing to stay in regional areas for a short stint (1–4 weeks) where accommodation, meal allowance and travel cost are covered?','Would you consider anything longer than 4 weeks?','Are you fluent in a language other than English?'];
+const SMSF=[['smsf_esa','Electronic service address (ESA) *','e.g. smsfdataflow',"Not sure? Ask your accountant.",'smsfdataflow'],['smsf_bsb','BSB of the SMSF *','000 000','','062 000'],['smsf_acc','SMSF account number *','12345678','','10293847'],['smsf_name','SMSF account name *','Name on the fund account','','Petrenko Family Super Fund']];
+const INDF=[['sup_usi','Unique Superannuation Identifier (USI) *','e.g. STA0100AU',"Find it on your fund's website or statement.",'STA0100AU'],['sup_mem','Member number *','e.g. 123456789','','123456789']];
+const selF=(label,key,title,list)=>{const v=S.f[key];return `<button class="pick" onclick="openPick('${key}','${esc(title)}','${list}')" aria-label="${esc(label)}${v?', '+esc(v):''}"><span class="in">${v?`<span class="pl">${label}</span><span class="val">${esc(v)}</span>`:`<span class="pl big">${label}</span>`}</span>${I.chev}</button>`;};
+function openPick(key,title,list){S.pq='';openSheet('pick',{key,title,list});}
+function pickSet(x){S.f[S.sheet.key]=x;S.sheet=null;render();}
+function pickListHTML(){const {key,list}=S.sheet,L=PL[list],q=(S.pq||'').trim().toLowerCase(),r=q?L.filter(x=>x.toLowerCase().includes(q)):L;
+  return `${q?`<div class="sr" aria-live="polite">${r.length} results</div>`:''}<div class="cklist">${r.map(x=>`<button class="ck rd ${S.f[key]===x?'on':''}" role="radio" aria-checked="${S.f[key]===x}" onclick="pickSet('${esc(x)}')"><span class="box">${S.f[key]===x?I.tick:''}</span><span>${esc(x)}</span></button>`).join('')}</div>${r.length?'':`<p class="help" style="margin-top:8px;font-size:13px;color:var(--sub)">Nothing matches. Check the spelling.</p>`}<div style="height:16px"></div>`;}
+/* uploaded file: tap the row to replace the file, × removes it */
+const upRow=(k,name)=>`<div class="row filerow"><button class="fr-main" onclick="replaceFile('${k}')" aria-label="Replace ${esc(name)}"><span class="ic"></span><span class="tx"><div class="t">${esc(name)}</div><div class="s">Uploaded · Tap to replace</div></span></button><button class="fr-x" aria-label="Remove ${esc(name)}" onclick="delete S.f['${k}'];render();toast('File removed')">${I.x}</button></div>`;
+function replaceFile(k){S.f[k]='certificate.pdf';render();toast('File replaced');}
+const fileRow=(k,name='certificate.pdf')=>S.f[k]?upRow(k,name):row({t:'Choose a file',s:'JPG, PNG or PDF, up to 10 MB',on:`pickFile('${k}')`});
+/* repeatable cards "one field + file": certificates (training type), other insurance (expiry date) */
+function multiFiles(p,extra,addL){const n=S.f[p+'_n']||1;let h='';
+  for(let i=0;i<n;i++)h+=`<div class="card-f">${n>1?`<div class="gh"><div class="overline" style="margin:0">${p==='prof'?'CERTIFICATE':'FILE'} ${i+1}</div>${i?`<button class="link" onclick="rmFile('${p}',${i})">Remove</button>`:''}</div>`:''}<div class="stack tight">${extra(i)}${p==='prof'&&!S.f['prof_t'+i]?'':fileRow(p+'_f'+i)}</div></div>`;
+  const max=FMAX[p]||5,full=n>=max;
+  return h+(S.f[p+'_f'+(n-1)]&&!full?`<button class="link addmore" onclick="S.f['${p}_n']=${n+1};render()">+ ${addL}</button>`:'')+`<p class="help" style="margin:${full?'0':'-8px'} 0 0;font-size:13px;color:var(--sub)">${full?`You've added the maximum of ${max} files.`:`Up to ${max} files.`}</p>`;}
+const FMAX={prof:5,other:3};
+function rmFile(p,i){const n=S.f[p+'_n']||1,K=['f','t','e'];
+  for(let j=i;j<n-1;j++)K.forEach(x=>{S.f[p+'_'+x+j]=S.f[p+'_'+x+(j+1)];S.f[p+'_'+x+j+'_raw']=S.f[p+'_'+x+(j+1)+'_raw'];});
+  K.forEach(x=>{delete S.f[p+'_'+x+(n-1)];delete S.f[p+'_'+x+(n-1)+'_raw'];});S.f[p+'_n']=n-1;render();}
+const audIn=(id,label,ph,store='f',dis=false,sg='')=>`<div class="field sfx"><label for="${id}">${label}</label><input id="${id}" type="text" inputmode="decimal" placeholder="${ph}" data-sugg="${sg}" value="${esc(S[store][id]||'')}" ${dis?'disabled':''} oninput="S.${store}['${id}']=this.value"><span class="cur">AUD</span></div>`;
+const salaryHTML=()=>`<div><div class="overline" style="margin-top:0">SALARY EXPECTATIONS</div><div class="stack tight">${audIn('exp_hr','Hourly rate','0.00','f',false,'65.00')}${audIn('exp_yr','Annual salary','0.00','f',false,'120,000')}</div></div>`;
+/* roles: field + modal list with sticky Done */
+const ROLESL=()=>FORMS.exp.multi[1][2];
+const rolesField=k=>{const sel=S.f[k]||[];return `<button class="pick" onclick="openSheet('roles')" aria-label="Roles, ${sel.length} selected"><span class="in">${sel.length?`<span class="pl">Roles · ${sel.length} selected</span><span class="tok">${sel.slice(0,3).map(x=>`<span class="tk">${esc(x)}</span>`).join('')}${sel.length>3?`<span class="tk more">+${sel.length-3} more</span>`:''}</span>`:'<span class="pl big">Choose roles</span>'}</span>${I.chev}</button>`;};
+function rlTg(x){const a=S.f.exp_r||[];S.f.exp_r=a.includes(x)?a.filter(y=>y!==x):[...a,x];const el=document.getElementById('rlList');if(el){el.innerHTML=rlListHTML();return;}render();}
+const rlListHTML=()=>{const sel=S.f.exp_r||[];return `<div class="cklist">${ROLESL().map(x=>ck(sel.includes(x),esc(x),`rlTg('${esc(x)}')`)).join('')}</div><div style="height:16px"></div>`;};
+/* super: as in the client's app */
+const SMSFT='Self-managed super fund (SMSF)',INDT='Industry super fund';
+const si=(l,k,v,ph)=>{SUG[k]=v;return sinput(l,k,v,'','text',v?'Suggested':'',ph);};
+const fields=L=>L.map(([k,l,ph,h,v])=>{SUG[k]=v||'';return sinput(l,k,v||'',h||'','text',v?'Suggested':'',ph);}).join('');
+const seg=(key,opts)=>`<div class="seg" role="radiogroup">${opts.map(([v,l])=>`<button role="radio" aria-checked="${S.f[key]===v}" class="${S.f[key]===v?'on':''}" onclick="S.f['${key}']='${esc(v)}';render()">${l}</button>`).join('')}</div>`;
+/* super: one field set per fund type (client: Industry / SMSF dropdown) */
+function superHTML(){if(!S.f.sup_dob_raw&&S.f.dob){S.f.sup_dob_raw=S.f.dob;S.f.sup_dob=S.f.dob;}if(!S.f.sup_type)S.f.sup_type=INDT;const sm=S.f.sup_type===SMSFT;
+  return `<div><div class="overline" style="margin-top:0">FUND TYPE</div>${seg('sup_type',[[INDT,'Industry fund'],[SMSFT,'Self-managed (SMSF)']])}</div>
+  <div><div class="overline" style="margin-top:0">${sm?'YOUR SMSF':'YOUR FUND'}</div><div class="stack tight">${si('Fund name *','sup_fund',sm?'Petrenko Family Super Fund':'AustralianSuper',sm?'e.g. Petrenko Family Super Fund':'e.g. AustralianSuper')}${si(sm?'ABN of your SMSF *':'ABN of your super fund *','sup_abn',sm?'53 004 085 616':'65 714 394 898','00 000 000 000')}${fields(sm?SMSF:INDF)}</div></div>
+  <div><div class="overline" style="margin-top:0">YOUR NAME AS REGISTERED WITH THE FUND</div><div class="stack tight"><div class="field"><label>Title *</label>${mchips('f','sup_title',TITLES,false)}</div>${si('First name *','sup_fn','Andrii','')}${si('Last name *','sup_ln','Petrenko','')}</div></div>
+  ${dateField('sup_dob','past',false,'Date of birth')}
+  ${si('Tax file number (TFN) *','sup_tfn','123 456 782','000 000 000')}
+  <div><div class="overline" style="margin-top:0">STANDARD CHOICE FORM *</div>${fileRow('sup_form','choice-form.pdf')}</div>
+  <div><div class="overline" style="margin-top:0">BPAY</div><p class="help" style="margin:-2px 0 10px;font-size:13px;color:var(--sub)">Some pharmacies pay super by BPAY.</p><div class="stack tight">${si('BPAY number','sup_bpay','12345','e.g. 12345')}${si('Customer reference number','sup_crn','1234 5678 9012','e.g. 1234 5678 9012')}</div></div>`;}
+const supOk=()=>['sup_type','sup_fund','sup_abn','sup_title','sup_fn','sup_ln','sup_dob','sup_form','sup_tfn'].every(k=>S.f[k])&&(S.f.sup_type===SMSFT?SMSF:INDF).every(x=>S.f[x[0]]);
+const ck=(on,lab,click)=>`<button class="ck ${on?'on':''}" role="checkbox" aria-checked="${on}" onclick="${click}"><span class="box">${on?I.tick:''}</span><span>${lab}</span></button>`;
+const SWL=()=>FORMS.exp.multi[2][2];
+const swField=k=>{const sel=(S.f[k]||[]);const none=sel.includes('NONE');return `<button class="pick" onclick="S.swq='';openSheet('sw')" aria-label="Pharmacy software, ${none?'none':sel.length+' selected'}"><span class="in">${none?`<span class="pl">Pharmacy software</span><span class="tok"><span class="tk">I haven't used any of these</span></span>`:sel.length?`<span class="pl">Pharmacy software · ${sel.length} selected</span><span class="tok">${sel.slice(0,3).map(x=>`<span class="tk">${esc(x)}</span>`).join('')}${sel.length>3?`<span class="tk more">+${sel.length-3} more</span>`:''}</span>`:'<span class="pl big">Choose software</span>'}</span>${I.chev}</button>`;};
+function swListHTML(){const k='exp_s',sel=S.f[k]||[],items=SWL(),q=(S.swq||'').trim(),ql=q.toLowerCase();
+  const custom=sel.filter(x=>x!=='NONE'&&!items.includes(x));
+  const row=x=>ck(sel.includes(x),esc(x),`ckTg('${k}','${esc(x)}')`);
+  if(q){const r=[...custom,...items].filter(x=>x.toLowerCase().includes(ql));const exact=[...custom,...items].some(x=>x.toLowerCase()===ql);
+    return `<div class="sr" aria-live="polite">${r.length} results</div><div class="cklist">${r.map(row).join('')}${exact?'':`<button class="ck addrow" onclick="swAdd()"><span class="box plus">+</span><span>Add “${esc(q)}”</span></button>`}</div>${r.length?'':'<p class="help" style="margin-top:8px;font-size:13px;color:var(--sub)">Not in our list. Add it and we\'ll show it on your profile.</p>'}`;}
+  return `<div class="cklist">${[...custom,...items].map(row).join('')}<div class="ckor">or</div>${ck(sel.includes('NONE'),"I haven't used any of these",`ckTg('${k}','NONE')`)}</div><div style="height:16px"></div>`;}
+function swUpd(){const el=document.getElementById('swList');if(el)el.innerHTML=swListHTML();}
+function swAdd(){const v=(S.swq||'').trim();if(!v)return;const a=(S.f.exp_s||[]).filter(x=>x!=='NONE');if(!a.includes(v))a.push(v);S.f.exp_s=a;S.swq='';render();toast(`${v} added`);}
+function ckTg(k,x){let a=S.f[k]||[];if(x==='NONE')a=a.includes('NONE')?[]:['NONE'];else{a=a.filter(y=>y!=='NONE');a=a.includes(x)?a.filter(y=>y!==x):[...a,x];}S.f[k]=a;if(S.sheet&&S.sheet.name==='sw'){swUpd();swToks();return;}render();}
+function swToks(){const el=document.getElementById('swToks');if(el)el.innerHTML=swToksHTML();}
+const swToksHTML=()=>{const sel=(S.f.exp_s||[]).filter(x=>x!=='NONE');return sel.length?`${sel.map(x=>`<span class="tk">${esc(x)}<button aria-label="Remove ${esc(x)}" onclick="ckTg('exp_s','${esc(x)}')">${I.xs}</button></span>`).join('')}<button class="link" onclick="S.f.exp_s=[];swUpd();swToks()">Clear all</button>`:'';};
+const pickField=()=>{const sel=S.f.cred_l||[];return `<button class="pick" onclick="openCred()" aria-label="Advanced credentials, ${sel.length} selected"><span class="in">${sel.length?`<span class="pl">Advanced credentials · ${sel.length} selected</span><span class="tok">${sel.slice(0,3).map(x=>`<span class="tk">${x}</span>`).join('')}${sel.length>3?`<span class="tk more">+${sel.length-3} more</span>`:''}</span>`:'<span class="pl big">Choose credentials</span>'}</span>${I.chev}</button>`;};
+function openCred(){S.cq='';S.focus=null;S.stack.push('credpick');render();}
+function crTg(x){const a=S.f.cred_l||[];S.f.cred_l=a.includes(x)?a.filter(y=>y!==x):[...a,x];render();}
+function crAddAll(){S.f.cred_l=[...new Set([...(S.f.cred_l||[]),...CSUG])];render();}
+function crAdd(){const v=(S.cq||'').trim();if(!v)return;S.f.cred_l=[...(S.f.cred_l||[]),v];S.cq='';render();toast("Added. We'll check it with your certificate.");}
+function credListHTML(){const sel=S.f.cred_l||[],q=(S.cq||'').trim().toLowerCase();
+  if(q){const r=CREDS.flatMap(g=>g[1]).filter(x=>x.toLowerCase().includes(q));
+    return `<div class="sr" aria-live="polite">${r.length} results</div>${r.length?`<div class="cklist">${r.map(x=>ck(sel.includes(x),x,`crTg('${esc(x)}')`)).join('')}</div>`:`<div class="note">No credentials match “${esc(S.cq)}”. <button class="link" onclick="crAdd()">Add “${esc(S.cq.trim())}”</button></div>`}`;}
+  const sug=CSUG.filter(x=>!sel.includes(x));
+  return `${sug.length?`<div class="gh"><div class="overline" style="margin:0">SUGGESTED FROM YOUR RESUME</div><button class="link" onclick="crAddAll()">Add all</button></div><div class="cklist">${sug.map(x=>ck(false,x,`crTg('${esc(x)}')`)).join('')}</div>`:''}
+  ${CREDS.map(([g,it])=>`<div class="overline">${g}</div><div class="cklist">${it.map(x=>ck(sel.includes(x),x,`crTg('${esc(x)}')`)).join('')}</div>`).join('')}<div style="height:24px"></div>`;}
+function credList(){const el=document.getElementById('credList');if(el)el.innerHTML=credListHTML();}
+const credPickView=()=>{const sel=S.f.cred_l||[];return `${status()}<div class="hdr"><div class="title">Advanced credentials</div><button class="close" aria-label="Close" onclick="goBack()">${I.x}</button></div>
+  <div class="pick-search">${sfield('cq','Search credentials','Credential name',S.cq,"S.cq=this.value;credList()")}
+  ${sel.length?`<div class="toks">${sel.map(x=>`<span class="tk">${x}<button aria-label="Remove ${esc(x)}" onclick="crTg('${esc(x)}')">${I.xs}</button></span>`).join('')}<button class="link" onclick="S.f.cred_l=[];render()">Clear all</button></div>`:''}</div>
+  <div class="scroll" id="credList">${credListHTML()}</div><div class="foot" style="border-top:1px solid #EEE">${btn('Done','primary','goBack()')}</div>`;};
+const OPT=[{id:'exp',t:'Experience and software',s:'Prefilled from your resume',a:'Check'},{id:'cred',t:'Advanced credentials',s:'Only if you hold any',a:'Add'},{id:'travel',t:'Travel requirements',s:'4 quick questions',a:'Add'},{id:'other',t:'Other insurance',s:'Public liability and other policies',a:'Add'}];
+const FLT=[['DAYS','fd',['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],true],['SHIFT TYPE','ft',['Early morning','Mid day','Graveyard','Rural','City'],true],['STATES','fs',['NSW','VIC','QLD','WA','SA','TAS'],true],['DISTANCE','fk',['10 km','25 km','50 km','100 km+'],false],['LONGER ASSIGNMENTS','fl',['Yes','No'],false]];
+const mchips=(store,key,items,multi)=>`<div class="chips">${items.map(x=>{const v=S[store][key];const on=multi?(v||[]).includes(x):v===x;return `<button class="chip ${on?'on':''}" onclick="tg('${store}','${key}','${esc(x)}',${multi})">${x}</button>`;}).join('')}</div>`;
+function fltAll(k){const it=FLT.find(f=>f[1]===k)[2];S.flt[k]=(S.flt[k]||[]).length===it.length?[]:[...it];render();}
+function tg(st,k,x,m){const o=S[st];if(m){const a=o[k]||[];o[k]=a.includes(x)?a.filter(y=>y!==x):[...a,x];}else o[k]=o[k]===x?'':x;render();}
+
+/* ---------- helpers ---------- */
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const status=()=>`<div class="status"><span>9:41</span><span><i></i></span></div>`;
+const header=({back=true,title='',step=0,skip=false,close=false,right=''}={})=>`<div class="hdr">${close?`<button class="close" aria-label="Close" onclick="closeForm()">${I.x}</button>`:back?`<button class="back" aria-label="Back" onclick="goBack()">${I.back}</button>`:''}${step?`<div class="prog" aria-label="Step ${step} of 5">${[1,2,3,4,5].map(i=>`<span class="${i<=step?'on':''}"></span>`).join('')}</div>`:`<div class="title">${title}</div>`}${skip?'<button class="skip">Skip</button>':''}${right}</div>`;
+const titleBlock=(t,d,step)=>`${step?`<div class="eyebrow">Step ${step} of 5</div>`:''}<h2>${t}</h2>${d?`<p class="desc">${d}</p>`:''}`;
+const tag=(label,kind='')=>label?`<span class="tag ${kind}">${label}</span>`:'';
+const row=({t,s,tagL,tagK,chev=true,on='',cls=''})=>`<button class="row ${on?'':'static'} ${cls}" ${on?`onclick="${on}"`:'tabindex="-1"'}><span class="ic"></span><span class="tx"><div class="t">${t}</div>${s?`<div class="s">${s}</div>`:''}</span>${tag(tagL,tagK)}${chev?`<span class="chev">${I.chev}</span>`:''}</button>`;
+const item=(t,s,tagL,tagK)=>`<div class="li"><span class="tx"><div class="t">${t}</div>${s?`<div class="s">${s}</div>`:''}</span>${tag(tagL,tagK)}</div>`;
+const chips=(items,sel,fn)=>`<div class="chips">${items.map(x=>`<button class="chip ${x===sel?'on':''}" onclick="${fn}('${x}')">${x}</button>`).join('')}</div>`;
+const input=(label,val,help='',type='text',id='')=>`<div class="field"><label>${label}</label><input ${id?`id="${id}"`:''} type="${type}" value="${esc(val)}" placeholder=" ">${help?`<div class="help">${help}</div>`:''}</div>`;
+/* empty input with a tap-to-fill suggestion */
+/* number-only fields: numeric keyboard, grouped digits */
+const NUMF={bank_bsb:[3,3],bank_acc:[10],smsf_bsb:[3,3],smsf_acc:[10],tax_abn:[2,3,3,3],sup_abn:[2,3,3,3],sup_tfn:[3,3,3],sup_mem:[12],sup_bpay:[10],sup_crn:[4,4,4,8]};
+const nFmt=(id,v)=>{const g=NUMF[id];let d=v.replace(/\D/g,'').slice(0,g.reduce((a,b)=>a+b,0));const out=[];for(const n of g){if(!d)break;out.push(d.slice(0,n));d=d.slice(n);}return out.join(' ');};
+const sinput=(label,id,sugg,help='',type='text',note='Suggested',ph='')=>{const v=S.f[id]||'';const num=!!NUMF[id];const pw=type==='password',shown=pw&&(S.pwShow||{})[id];return `<div class="field${pw?' pwd':''}"><label>${label}</label><input id="${id}" type="${shown?'text':type}" ${pw?`autocomplete="${id==='pw1'?'new-password':'new-password'}"`:''} ${num?'inputmode="numeric"':''} value="${esc(v)}" placeholder="${esc(ph||' ')}" onfocus="focusF('${id}')${num?`;nFocus('${id}')`:''}" ${num?`onblur="nBlur('${id}')"`:''} oninput="${num?`this.value=nFmt('${id}',this.value);`:''}S.f['${id}']=this.value;if(this.value)this.parentNode.querySelector('.sugg')?.remove();liveBtns()" ${pw?'':'autocomplete="off"'}>${pw?`<button class="eye" type="button" aria-label="${shown?'Hide password':'Show password'}" aria-pressed="${!!shown}" onmousedown="event.preventDefault()" onclick="togglePw('${id}')">${shown?I.eyeOff:I.eye}</button>`:''}${help?`<div class="help">${help}</div>`:''}${S.focus===id&&!v&&sugg?`<div class="sugg"><button onmousedown="event.preventDefault()" onclick="fillF('${id}')">${type==='password'?'••••••••••':esc(sugg)}${note?`<small>${note}</small>`:''}</button></div>`:''}</div>`;};
+const SUG={};
+function togglePw(id){S.pwShow=S.pwShow||{};S.pwShow[id]=!S.pwShow[id];const el=document.getElementById(id);if(!el)return;el.type=S.pwShow[id]?'text':'password';const b=el.parentNode.querySelector('.eye');if(b){b.innerHTML=S.pwShow[id]?I.eyeOff:I.eye;b.setAttribute('aria-label',S.pwShow[id]?'Hide password':'Show password');b.setAttribute('aria-pressed',String(!!S.pwShow[id]));}}
+function focusF(id){if(S.focus===id)return;S.focus=id;if(S.dk&&S.dk.k!==id)S.dk=null;render();const el=document.getElementById(id);if(el){el.focus();}}
+function fillF(id){S.f[id]=SUG[id];if(id==='pw1')S.f.pw2=SUG.pw2;S.focus=null;render();document.activeElement&&document.activeElement.blur&&document.activeElement.blur();}
+/* tap-to-fill suggestion for plain inputs (dates, amounts): data-sugg */
+document.addEventListener('focusin',e=>{const el=e.target;if(!(el instanceof HTMLInputElement)||!el.dataset.sugg||el.value||el.disabled)return;const f=el.closest('.field');if(!f||f.querySelector('.sugg'))return;
+  const d=document.createElement('div');d.className='sugg';d.innerHTML=`<button onmousedown="event.preventDefault()">${esc(el.dataset.sugg)}<small>Suggested</small></button>`;
+  d.querySelector('button').onclick=()=>{el.value=el.dataset.sugg;d.remove();el.dispatchEvent(new Event('input',{bubbles:true}));if(S.dk)kbDone();else el.blur();};f.appendChild(d);});
+document.addEventListener('focusout',e=>{const f=e.target.closest&&e.target.closest('.field');if(f&&e.target.dataset&&e.target.dataset.sugg!==undefined)setTimeout(()=>f.querySelector('.sugg')?.remove(),0);});
+document.addEventListener('input',e=>{if(e.target.dataset&&e.target.dataset.sugg&&e.target.value)e.target.closest('.field')?.querySelector('.sugg')?.remove();});
+/* close suggestion dropdowns without re-rendering, so the tap on a button still lands */
+document.addEventListener('mousedown',e=>{if((S.focus||S.addrOpen)&&!e.target.closest('.field,.keypad,.qt')){S.focus=null;S.addrOpen=false;document.querySelectorAll('#phone .sugg,#addrDD .dd').forEach(n=>n.remove());}});
+const btn=(label,cls='primary',on='',dis=false)=>`<button class="btn ${cls}" ${dis?'disabled':''} onclick="${on}">${label}</button>`;
+let toastT;
+function toast(msg){clearTimeout(toastT);const p=$('#phone');p.querySelector('.toast')?.remove();p.insertAdjacentHTML('beforeend',`<div class="toast">${msg}</div>`);toastT=setTimeout(()=>p.querySelector('.toast')?.remove(),2200);}
+function soon(){toast('Not part of this prototype yet');}
+
+/* ---------- navigation ---------- */
+function changeEmail(){clearInterval(timerT);S.sheet=null;S.otp='';render();const e=document.getElementById('email');if(e){e.focus();e.select();}}
+function go(id){S.sheet=null;S.stack.push(id);render();}
+function goBack(){if(S.sheet){if(S.sheet.name==='photo'&&S.sheet.side==='back'){S.sheet.side='front';return render();} if(S.sheet.name==='photo'){S.sheet={name:'upload',doc:S.sheet.doc};return render();} S.sheet=null;return render();} if(S.stack.length>1){S.stack.pop();} render();}
+function openSheet(name,data){const was=S.sheet;S.sheet={name,...(data||{})};S.anim=!was;render();}
+function closeSheet(){S.sheet=null;render();}
+function jumpOn(id){
+  // set plausible state for direct jumps
+  const seq=SCREENS.map(s=>s[0]); const i=seq.indexOf(id);
+  if(i>=seq.indexOf('docsDone')&&!Object.keys(S.docs).length){S.docs={id:'done',cv:'done'};}
+  if(id==='docs'){S.docs={};}
+  S.sheet=null; S.stack=[...seq.slice(0,i+1)].filter(x=>!['roleSheet','otp','upload','photoFront','photoBack','hidden','avatar','addr','dob'].includes(x)||x===id);
+  if(id==='roleSheet'){S.stack=['welcome','role'];S.acct='Pharmacy professional';S.role='Pharmacist';S.work='Shift work';return openSheet('docsInfo');}
+  if(id==='otp'){S.stack=['welcome','role','account'];return openSheet('otp');}
+  if(id==='upload'){S.stack=['welcome','role','account','docs'];S.docs={};return openSheet('upload',{doc:'id'});}
+  if(id==='photoFront'){S.stack=['welcome','role','account','docs'];S.docs={};return openSheet('photo',{doc:'id',side:'front'});}
+  if(id==='photoBack'){S.stack=['welcome','role','account','docs'];S.docs={};return openSheet('photo',{doc:'id',side:'back'});}
+  if(id==='hidden'){S.stack=['welcome','role','account','docs','general','ahpra','home'];prefill();return openSheet('hidden');}
+  if(id==='docsDone'){S.stack=['welcome','role','account','docs'];S.docs={id:'done',cv:'done'};}
+  if(i>=seq.indexOf('general')){S.docs.ins='done'; prefill();}
+  render();
+}
+function resetAll(){const k=S.scen;S=fresh();S.scen=k;jump(SC[k].l[0][0]);}
+function setScen(k){S=fresh();S.scen=k;jump(SC[k].l[0][0]);}
+function base(ver,docs){S=Object.assign(fresh(),{scen:S.scen,ver,docs:docs||{id:'done',cv:'done',ins:'done'},idType:'Driver licence'});prefill();}
+function jump(k){
+  if(!k.includes(':')){
+    if(k==='role1'){S.scen='signup';jumpOn('role');S.acct='Pharmacy professional';S.role='Pharmacist';S.work='Shift work';return render();}
+    if(k==='insExp'){S.scen='signup';jumpOn('docs');S.docs={id:'done',cv:'done'};S.sheet={name:'insExp',doc:'ins'};return render();}
+    if(k==='dob'){S.scen='signup';jumpOn('general');S.f.dob='';S.f.dob_raw='19/07/';S.dobNav=true;render();const y=document.getElementById('dob');if(y){y.focus();y.setSelectionRange(6,6);}return;}
+    if(k==='avatar'||k==='addr'){S.scen='signup';jumpOn('general');if(k==='avatar')return openSheet('avatar');S.f.addr='10 George';S.addrOpen=true;return render();}
+    if(k==='uploadP'||k==='photoP'){S.scen='signup';jumpOn('docs');S.idType='Passport';S.sheet=k==='uploadP'?{name:'upload',doc:'id'}:{name:'photo',doc:'id',side:'front'};return render();}
+    if(['checking','perm','home','hidden','all','shift','applyNV'].includes(k)){base('review');S.scen='signup';
+      if(k==='checking'||k==='perm'){S.stack=['checking'];if(k==='perm')S.alert='perm';}
+      else if(k==='home'||k==='hidden'){S.stack=['home'];if(k==='hidden')S.sheet={name:'hidden'};}
+      else if(k==='applyNV'){S.stack=['home','shift'];S.sheet={name:'applyNV'};}
+      else S.stack=['home',k];
+      return render();}
+    S.scen='signup';return jumpOn(k);}
+  const [p,id]=k.split(':');
+  if(p==='L'){if(id==='docs'){S=fresh();S.scen='later';return jumpOn('docs');}
+    base('missing',{cv:'done'});S.scen='later';S.stack=['home'];if(id==='all')S.stack.push('all');if(id==='fix')S.sheet={name:'fix',mode:'add',doc:'id'};
+    if(id==='checking')S.stack=['checking'];if(id==='hidden')S.sheet={name:'hidden'};if(id==='shift'||id==='applyNV')S.stack.push('shift');if(id==='applyNV')S.sheet={name:'applyNV'};return render();}
+  if(p==='A'){base('attention');S.scen='att';S.stack=['home'];if(id==='all')S.stack.push('all');if(id==='fix')S.sheet={name:'fix',mode:'fix',doc:'id'};return render();}
+  base(id==='push'?'review':'verified');S.scen='verified';
+  S.stack={push:['push'],home:['home'],all:['home','all'],shift:['home','shiftV'],apply:['home','shiftV'],mobile:['home','shiftV','mobile'],sms:['home','shiftV','mobile'],bank:['home','form'],tax:['home','form'],super:['home','form'],later:['home','shiftV'],exp:['home','shiftV','form'],cred:['home','shiftV','form'],sw:['home','shiftV','form'],roles:['home','shiftV','form'],swadd:['home','shiftV','form'],credpick:['home','shiftV','form','credpick'],bankpick:['home','form'],smsf:['home','form'],unsaved:['home','form'],imm:['home','shiftV','form'],prof:['home','shiftV','form'],other:['home','shiftV','form'],travel:['home','shiftV','form'],filters:['home'],pexp:['home','form'],pcred:['home','form'],ready:['home','shiftV'],allset:['home'],allsetX:['home'],applied:['home','shiftV','applied'],homepay:['home']}[id];
+  if(['apply','mobile','sms','imm','prof','other','travel','later','exp','cred','credpick','sw','swadd','roles'].includes(id)){S.applyFlow=true;S.ctx='apply';}
+  if(['bank','bankpick','unsaved','smsf','tax','super'].includes(id)){S.applyFlow=true;S.ctx='pay';ITEMS.forEach(i=>S.items[i.id]=true);}
+  if(id==='apply'||id==='later')S.sheet={name:'apply'};
+  if(id==='filters'){S.sheet={name:'filters'};}
+  if(id==='sw'||id==='swadd'){ITEMS.forEach(i=>S.items[i.id]=true);S.formId='exp';S.f.exp_y='5–10 years';S.f.exp_r=['Pharmacist','Locum pharmacist'];S.f.exp_s=['FRED','Z Software'];S.swq=id==='swadd'?'Corum':'';S.sheet={name:'sw'};}
+  if(id==='credpick'){ITEMS.forEach(i=>S.items[i.id]=true);S.formId='cred';S.f.cred_l=['Advanced Compounding Certification (PCCA)','Advanced Practice Pharmacist Credentialing (AdvPP)'];S.cq='';}
+  if(id==='roles'){ITEMS.forEach(i=>S.items[i.id]=true);S.formId='exp';S.f.exp_y='5–10 years';S.f.exp_r=['Pharmacist','Locum pharmacist'];S.f.exp_s=['FRED','Z Software'];S.sheet={name:'roles'};}
+  if(id==='exp'||id==='cred'){ITEMS.forEach(i=>S.items[i.id]=true);S.formId=id;if(id==='exp'){S.f.exp_y='5–10 years';S.f.exp_r=['Pharmacist','Locum pharmacist'];S.f.exp_s=['FRED','Z Software'];}else{S.f.cred_l=['Advanced Compounding Certification (PCCA)','Advanced Practice Pharmacist Credentialing (AdvPP)'];}}
+  if(id==='super'){S.formId='super';['bank','tax'].forEach(x=>S.items[x]=true);}
+  if(id==='later'){S.items.mobile=true;S.later={prof:true};}
+  if(id==='mobile'||id==='sms'){S.formId='mobile';if(id==='sms'){S.f.mob='412 345 678';S.otp='';S.sheet={name:'sms'};startTimer();}}
+  if(id==='bank'||id==='bankpick'){S.formId='bank';if(id==='bankpick'){S.pq='';S.sheet={name:'pick',key:'bank_bank',title:'Choose your bank',list:'BANKS'};}}
+  if(id==='smsf'){S.formId='super';['bank','tax'].forEach(x=>S.items[x]=true);Object.assign(S.f,{sup_type:SMSFT,sup_fund:'Petrenko Family Super Fund',sup_title:'Mr',sup_fn:'Andrii',sup_ln:'Petrenko',sup_form:1,sup_tfn:'123 456 782'});}
+  if(id==='unsaved'){S.formId='bank';Object.assign(S.f,{bank_bank:'Commonwealth Bank',bank_name:'Andrii Petrenko'});S.alert='unsaved';}
+  if(id==='prof'){S.formId=id;S.items.mobile=true;}
+  if(id==='other'){S.formId=id;ITEMS.forEach(i=>S.items[i.id]=true);['exp','cred','travel'].forEach(x=>S.items[x]=true);}
+  if(id==='travel'){ITEMS.forEach(i=>S.items[i.id]=true);S.items.exp=true;S.items.cred=true;S.formId='travel';}
+  if(id==='tax'){S.formId='tax';S.items.bank=true;}
+  if(['ready','applied','homepay','allset','allsetX'].includes(id))ITEMS.forEach(i=>S.items[i.id]=true);
+  if(['allset','allsetX'].includes(id))PAY.forEach(i=>S.items[i.id]=true);
+  if(id==='allsetX')S.hideAllSet=true;
+  if(id==='pexp'||id==='pcred'){ITEMS.forEach(i=>S.items[i.id]=true);PAY.forEach(i=>S.items[i.id]=true);S.applyFlow=false;S.formId=id==='pexp'?'exp':'cred';if(id==='pexp'){S.f.exp_y='5–10 years';S.f.exp_r=['Pharmacist','Locum pharmacist'];S.f.exp_s=['FRED','Z Software'];}else S.f.cred_l=['Advanced Compounding Certification (PCCA)','Advanced Practice Pharmacist Credentialing (AdvPP)'];}
+  render();}
+
+/* ---------- actions ---------- */
+function setRole(v){S.role=v;render();}
+function setAcct(v){S.acct=v;render();}
+function setWork(v){S.work=v;render();}
+function setGender(v){S.gender=v;render();}
+function setIdType(v){S.idType=v;render();}
+function startSocial(){S.social=true;go('role');}
+function startEmail(){S.social=false;go('role');}
+function roleContinue(){openSheet('docsInfo');}
+function docsInfoContinue(){S.sheet=null;S.stack.push(S.social?'docs':'account');render();}
+function accountContinue(){S.email=(S.f.email||S.email);S.focus=null;S.otp='';openSheet('otp');startTimer();}
+let timerV=42,timerT;
+function startTimer(){clearInterval(timerT);timerV=42;timerT=setInterval(()=>{timerV=Math.max(0,timerV-1);const el=$('#resend');if(el)el.textContent=timerV?`resend in 0:${String(timerV).padStart(2,'0')}`:'resend now';if(!timerV)clearInterval(timerT);},1000);}
+function key(k){
+  if(k==='del')S.otp=S.otp.slice(0,-1); else if(/\d/.test(k)&&S.otp.length<5)S.otp+=k;
+  document.querySelectorAll('.otp div').forEach((b,i)=>{b.textContent=S.otp[i]||'';b.className=i===S.otp.length?'cur':'';});
+  if(S.otp.length===5){if(S.sheet&&S.sheet.name==='sms'){setTimeout(smsDone,400);return;} setTimeout(()=>{clearInterval(timerT);S.sheet=null;S.stack.push('docs');render();toast('Email verified');},450);}
+}
+function openDoc(id){ if(S.docs[id]==='done'||S.docs[id]==='reading') return toast(S.docs[id]==='done'?'Already uploaded':'Still reading this one'); openSheet('upload',{doc:id}); }
+function takePhoto(doc){ openSheet('photo',{doc,side:'front'}); }
+function chooseFile(doc){ if(doc==='ins')return openSheet('insExp',{doc}); S.sheet=null; readDoc(doc); }
+function photoNext(){ const sh=S.sheet; const twoSided=sh.doc==='id'&&S.idType==='Driver licence';
+  if(sh.side==='front'&&twoSided) return openSheet('photo',{doc:sh.doc,side:'back'});
+  if(sh.doc==='ins')return openSheet('insExp',{doc:'ins'}); S.sheet=null; readDoc(sh.doc); }
+function retake(){ toast('Camera opens again'); }
+function readDoc(id){ S.docs[id]='reading'; render(); setTimeout(()=>{S.docs[id]='done'; if(cur()==='docs')render();}, 2200); }
+function prefill(){ if(S.docs.id==='done'){ const pass=S.idType==='Passport'; const v=pass?{fn:'Andrii',ln:'Petrenko',dob:'19/07/1990'}:{fn:'Andrii',ln:'Petrenko',dob:'19/07/1990',addr:'10 George St, Sydney NSW 2000',unit:'Unit 5'}; for(const k in v) if(!S.f[k]) S.f[k]=v[k]; if(pass&&!S.gender) S.gender='Male'; S.prefilled=pass?'passport':'licence'; } }
+function docsContinue(){ prefill(); S.ver=['id','ins'].every(d=>S.docs[d]==='done')?'review':'missing'; if(S.ver==='missing')S.scen='later'; go('general'); }
+function cur(){return S.stack[S.stack.length-1];}
+
+/* ---------- screens ---------- */
+const V={};
+V.credpick=()=>credPickView();
+V.welcome=()=>`${status()}<div class="scroll" style="display:flex;flex-direction:column">
+  <div class="hero">Illustration / logo</div>
+  <h2>Pharmacy shifts on your terms</h2><p class="desc">Find and book locum shifts near you.</p>
+  <div style="flex:1;min-height:24px"></div>
+  <div class="stack">
+    <button class="btn secondary social" onclick="startSocial()">${I.apple} Continue with Apple</button>
+    <button class="btn secondary social" onclick="startSocial()">${I.google} Continue with Google</button>
+    <div class="or">or</div>
+    ${btn('Create an account','primary','startEmail()')}
+    ${btn('I already have an account','secondary','soon()')}
+    <p class="legal">By continuing, you agree to our Terms and Privacy Policy.</p>
+  </div></div><div style="height:34px"></div>`;
+
+V.role=()=>`${status()}${header({step:1})}<div class="scroll">
+  ${titleBlock('What do you do?','We\'ll tailor your profile and the shifts you see.',1)}
+  <div class="overline">I'M SIGNING UP AS</div>${chips(['Pharmacy professional','Employer'],S.acct,'setAcct')}
+  ${S.acct==='Pharmacy professional'?`<div class="overline">I AM A</div>${chips(['Pharmacist','Dispensary technician','Student / intern','Retail staff'],S.role,'setRole')}
+  <div class="overline">I'M LOOKING FOR</div>${chips(['Full-time / part-time','Shift work'],S.work,'setWork')}`:S.acct==='Employer'?`<div class="note" style="margin-top:16px">Employer sign-up isn't part of this prototype.</div>`:''}
+  </div><div class="foot">${btn('Continue','primary','roleContinue()',!(S.acct==='Pharmacy professional'&&S.role&&S.work))}</div>`;
+
+V.account=()=>`${status()}${header({step:2})}<div class="scroll stack">
+  <div>${titleBlock('Create your account','You\'ll confirm your email with a code.',2)}</div>
+  ${sinput('Email *','email',SUG.email='andrii@example.com','','email','From this device')}
+  ${sinput('Password *','pw1',SUG.pw1='password1','At least 8 characters, including a number','password','Use a strong password')}
+  ${sinput('Confirm password *','pw2',SUG.pw2='password1','','password','Use a strong password')}
+  </div><div class="foot">${btn('Continue','primary','accountContinue()',!(S.f.email&&S.f.pw1&&S.f.pw2))}</div>`;
+
+const docState=()=>{const req=DOCS.filter(d=>d.req);const up=req.filter(d=>S.docs[d.id]).length;const reading=Object.values(S.docs).includes('reading');return {req,up,reading,any:Object.keys(S.docs).length>0};};
+const docRow=d=>{const st=S.docs[d.id];
+  if(st==='done') return row({t:d.t,s:d.done,tagL:'Done',tagK:'done',on:`openDoc('${d.id}')`});
+  if(st==='reading') return row({t:d.t,s:d.id==='cv'?'CV_Andrii.pdf':'Uploaded',tagL:'<span class="spin"></span>Reading…',tagK:'neutral',on:`openDoc('${d.id}')`});
+  return row({t:d.t,s:d.hint,tagL:d.req?'Required':'Optional',tagK:d.req?'required':'neutral',on:`openDoc('${d.id}')`});};
+V.docs=()=>{const {up,reading,any}=docState();return `${status()}${header({step:3})}<div class="scroll">
+  ${titleBlock('Upload your documents','We\'ll use them to fill in your profile and show shifts that suit you. Upload a photo or a file.',3)}
+  <div style="margin:16px 0 12px"><div class="eyebrow">${up} of 3 required documents uploaded</div><div class="bar"><div style="width:${up/3*100}%"></div></div></div>
+  <div class="stack tight">${DOCS.filter(d=>d.req).map(docRow).join('')}</div>
+  <div class="overline">OPTIONAL</div><div class="stack tight">${DOCS.filter(d=>!d.req).map(docRow).join('')}</div>
+  </div><div class="foot">${any?btn(reading?'Reading your documents…':'Continue','primary','docsContinue()',reading):btn('Upload later','primary','docsContinue()')}</div>`;};
+V.docsDone=V.docs;
+
+/* dates are typed: Day / Month / Year fields, numeric keypad, checked on blur */
+const pad=n=>String(n).padStart(2,'0');
+const DLBL={dob:'Date of birth',exp:'AHPRA expiry date'};
+function dVal(k,dir){const raw=S.f[k+'_raw']??S.f[k]??'',n=DLBL[k];
+  if(!raw)return {v:'',e:''};
+  const m=raw.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);if(!m)return {e:`${n} must be in the format DD/MM/YYYY`};
+  const d=+m[1],mo=+m[2],y=+m[3],dt=new Date(y,mo-1,d);
+  if(mo<1||mo>12||dt.getMonth()!==mo-1||dt.getDate()!==d)return {e:`${n} must be a real date`};
+  const now=new Date();if(dir==='past'&&dt>now)return {e:`${n} must be in the past`};if(dir==='future'&&dt<now)return {e:`${n} must be in the future`};
+  return {v:raw,e:''};}
+function dType(k,el,dir){const d=el.value.replace(/\D/g,'').slice(0,8);el.value=[d.slice(0,2),d.slice(2,4),d.slice(4,8)].filter(Boolean).join('/');S.f[k+'_raw']=el.value;S.dobNav=false;const r=dVal(k,dir);S.f[k]=r.e?'':r.v;liveBtns();}
+function dCheck(k,dir){setTimeout(()=>{const r=dVal(k,dir);S.dErr=S.dErr||{};if((S.dErr[k]||'')!==r.e){S.dErr[k]=r.e;render();}},0);}
+const dateField=(k,dir,auto,lbl)=>{if(lbl)DLBL[k]=lbl;const e=(S.dErr||{})[k];
+  return `<div class="field"><label for="${k}">${DLBL[k]} *</label><input id="${k}" type="text" inputmode="numeric" maxlength="10" placeholder="DD/MM/YYYY" data-sugg="${DSUG(k)}" ${auto?'name="birthday" autocomplete="bday"':'autocomplete="off"'} value="${esc(S.f[k+'_raw']??S.f[k]??'')}" class="${e?'err':''}" ${e?`aria-describedby="${k}_err"`:''} onfocus="dFocus('${k}','${dir}')" oninput="dType('${k}',this,'${dir}')" onblur="dBlur('${k}','${dir}')">${e?`<div class="errtxt" id="${k}_err">${e}</div>`:''}</div>`;};
+/* numeric keypad for every date field (on desktop; phones show their own) */
+/* search field: icon on the left, quick clear inside, Cancel on the right while searching */
+const sfield=(id,label,ph,val,onin,extra='',style='')=>`<div class="sfield ${val?'has':''}" style="${style}"><div class="field srch"><span class="sic">${I.search}</span><input id="${id}" type="search" placeholder="${label}" aria-label="${label}" value="${esc(val||'')}" oninput="this.closest('.sfield').classList.toggle('has',!!this.value);${onin}" ${extra}><button class="sclr" aria-label="Clear search" onmousedown="event.preventDefault()" onclick="sClear('${id}')">${I.xs}</button></div><button class="scancel" onmousedown="event.preventDefault()" onclick="sCancel('${id}')">Cancel</button></div>`;
+function sClear(id){const el=document.getElementById(id);if(!el)return;el.value='';el.dispatchEvent(new Event('input',{bubbles:true}));el.focus();}
+function sCancel(id){const el=document.getElementById(id);if(!el)return;if(el.value){el.value='';el.dispatchEvent(new Event('input',{bubbles:true}));}const e2=document.getElementById(id);if(e2)e2.blur();}
+const DSUG=k=>k==='dob'||k==='sup_dob'?'19/07/1990':k==='exp'?'30/11/2027':/^(ins|other)_e/.test(k)?'30/06/2027':'';
+const KBH=258,TOUCH=!!(window.matchMedia&&matchMedia('(pointer:coarse)').matches);
+function dFocus(k,dir){if(TOUCH)return;S.dk={k,dir};kbAttach();const el=document.getElementById(k);if(el)setTimeout(()=>el.scrollIntoView&&el.scrollIntoView({block:'center',behavior:'smooth'}),30);}
+function nFocus(k){if(TOUCH)return;S.dk={k,num:true};kbAttach();}
+function nBlur(k){if(S.dk&&S.dk.k===k){S.dk=null;kbRemove();}}
+function dBlur(k,dir){if(S.dk&&S.dk.k===k){S.dk=null;kbRemove();}dCheck(k,dir);}
+function kbAttach(){const p=$('#phone');if(!p)return;const mode=(S.dk&&S.dk.mode)||'num';const ex=p.querySelector('.dkb');if(ex){if(ex.dataset.mode===mode)return;ex.remove();}
+  p.classList.add('kb');const d=document.createElement('div');d.className='dkb'+(mode==='num'||mode==='dec'?'':' abc');d.dataset.mode=mode;
+  const K=(x,lab,cls='')=>`<button class="${cls}" onmousedown="event.preventDefault()" onclick="dkey('${x}')" aria-label="${x==='del'?'Delete':x==='sp'?'Space':x==='ret'?'Return':x}">${lab}</button>`;
+  let keys;
+  if(mode==='num'||mode==='dec')keys=`<div class="dkb-keys">${['1','2','3','4','5','6','7','8','9',mode==='dec'?'.':'','0','del'].map(x=>x?K(x,x==='del'?I.del:x):'<span></span>').join('')}</div>`;
+  else{const r=a=>`<div class="kr">${a.split('').map(c=>K(c,c)).join('')}</div>`;
+    const last=mode==='email'?K('@','@')+K('sp','space','wide')+K('.','.')+K('ret','return','act'):K('sp','space','wide')+K('ret',mode==='search'?'search':'return','act');
+    keys=`<div class="abck">${r('qwertyuiop')}${r('asdfghjkl')}<div class="kr">${'zxcvbnm'.split('').map(c=>K(c,c)).join('')}${K('del',I.del,'del')}</div><div class="kr">${last}</div></div>`;}
+  d.innerHTML=`<div class="dkb-bar"><button onmousedown="event.preventDefault()" onclick="kbDone()">Done</button></div>${keys}`;p.appendChild(d);}
+/* every other input in the phone gets the keyboard that matches it */
+const kbMode=el=>el.inputMode==='decimal'?'dec':el.inputMode==='numeric'||el.inputMode==='tel'?'num':el.type==='email'?'email':el.type==='search'?'search':'text';
+document.addEventListener('focusin',e=>{if(TOUCH)return;const el=e.target;if(!(el instanceof HTMLInputElement)||!el.id||el.id==='mob'||!el.closest('#phone'))return;if(S.dk&&S.dk.k===el.id)return;
+  S.dk={k:el.id,mode:kbMode(el),gen:true};kbAttach();setTimeout(()=>el.scrollIntoView&&el.scrollIntoView({block:'center',behavior:'smooth'}),30);});
+document.addEventListener('focusout',e=>{const id=e.target&&e.target.id;if(!S.dk||!S.dk.gen||S.dk.k!==id)return;const was=S.dk;setTimeout(()=>{if(S.dk!==was)return;const a=document.activeElement;if(!(a&&a.id===id)){S.dk=null;kbRemove();}},0);});
+function kbRemove(){const p=$('#phone');if(!p)return;p.classList.remove('kb');p.querySelector('.dkb')?.remove();}
+function kbDone(){const el=S.dk&&document.getElementById(S.dk.k);if(el)el.blur();else{S.dk=null;kbRemove();}}
+function dkey(x){if(!S.dk)return;const {k,dir}=S.dk,el=document.getElementById(k);if(!el)return;if(S.dk.gen){let v=el.value;if(x==='del')v=v.slice(0,-1);else if(x==='ret'){return kbDone();}else if(x==='sp')v+=' ';else v+=(S.dk.mode==='text'&&(!v||v.endsWith(' '))&&el.type!=='password'?x.toUpperCase():x);el.value=v;el.dispatchEvent(new Event('input',{bubbles:true}));return;}if(S.dk.num){const d=el.value.replace(/\D/g,'');el.value=x==='del'?d.slice(0,-1):d+x;el.dispatchEvent(new Event('input',{bubbles:true}));return;}let d=el.value.replace(/\D/g,'');d=x==='del'?d.slice(0,-1):(d.length<8?d+x:d);el.value=d;dType(k,el,dir);}
+const ADDR=['10 George St, Sydney NSW 2000','10 George St, Parramatta NSW 2150','10 George St, Hornsby NSW 2077','10 Georges River Rd, Croydon Park NSW 2133','120 Crown St, Surry Hills NSW 2010','285 King St, Newtown NSW 2042'];
+function addrHTML(){if(!S.addrOpen)return '';const q=(S.f.addr||'').trim();
+  if(!q)return S.prefilled&&S.prefilled!=='passport'?`<div class="dd"><button onmousedown="event.preventDefault()" onclick="pickAddr('${esc(SUG.addr)}')">${I.pin}<span>${esc(SUG.addr)}</span></button></div>`:'';
+  const ql=q.toLowerCase(),m=ADDR.filter(a=>a.toLowerCase().includes(ql)).slice(0,4);
+  const hi=a=>{const i=a.toLowerCase().indexOf(ql);return esc(a.slice(0,i))+'<b>'+esc(a.slice(i,i+q.length))+'</b>'+esc(a.slice(i+q.length));};
+  return `<div class="dd">${m.length?m.map(a=>`<button onmousedown="event.preventDefault()" onclick="pickAddr('${esc(a)}')">${I.pin}<span>${hi(a)}</span></button>`).join(''):'<div class="none">No addresses found. Check the spelling.</div>'}<div class="ft"><button class="link" onmousedown="event.preventDefault();soon()">Can't find it? Enter it manually</button><small>powered by Google</small></div></div>`;}
+function addrDD(){const el=document.getElementById('addrDD');if(el)el.innerHTML=addrHTML();}
+function pickAddr(a){S.f.addr=a;S.addrOpen=false;S.focus=null;render();document.activeElement&&document.activeElement.blur&&document.activeElement.blur();}
+function liveBtns(){genBtn();const ib=document.getElementById('insBtn');if(ib)ib.disabled=!S.f.ins_e0;if(cur()==='form'&&S.formId){const f=document.querySelector('.foot .btn.primary');if(f)f.disabled=!valid(S.formId);}}
+function genBtn(){const b=document.getElementById('genBtn');if(b)b.disabled=!(S.f.fn&&S.f.ln&&S.f.dob&&S.gender&&S.f.addr);}
+const addrField=()=>`<div class="field"><label>Home address *</label><div class="addr-in">${I.pin}<input id="addr" type="text" autocomplete="off" placeholder="Start typing your address" value="${esc(S.f.addr||'')}" onfocus="S.focus=null;S.addrOpen=true;addrDD()" oninput="S.f.addr=this.value;S.addrOpen=true;addrDD();genBtn()"></div><div id="addrDD">${addrHTML()}</div></div>`;
+V.general=()=>`${status()}${header({step:4})}<div class="scroll stack">
+  <div>${titleBlock('Your general info','',4)}</div>
+  <div class="ava-row"><div class="ava${S.avatar?' on':''}">${S.avatar?'AP':I.cam}</div><div style="flex:1;min-width:0"><div class="t">Profile photo</div><div class="s">Optional</div></div>${btn(S.avatar?'Change':'Add photo','secondary small',"openSheet('avatar')")}</div>
+  ${sinput('First name *','fn',SUG.fn='Andrii','','text','')}${sinput('Last name *','ln',SUG.ln='Petrenko','','text','')}${dateField('dob','past',true)}
+  <div class="field"><label>Gender *</label>${chips(['Female','Male','Other'],S.gender,'setGender')}<div class="help">Used for ID and insurance checks</div></div>
+  ${(SUG.addr='10 George St, Sydney NSW 2000',addrField())}${sinput('Apartment / unit','unit',SUG.unit='Unit 5','','text','')}
+  </div><div class="foot">${btn('Continue','primary','go(\'ahpra\')',!(S.f.fn&&S.f.ln&&S.f.dob&&S.gender&&S.f.addr)).replace('<button','<button id="genBtn"')}</div>`;
+
+V.ahpra=()=>`${status()}${header({step:5})}<div class="scroll stack">
+  <div>${titleBlock('AHPRA registration','',5)}</div>
+  ${sinput('AHPRA registration number *','ahpra',SUG.ahpra='PHA0001234567','3 letters and 10 digits, e.g. PHA0001234567','text','Found in your AHPRA record')}
+  ${dateField('exp','future',false)}
+  <div class="note">We'll check it together with your ID and insurance.</div>
+  </div><div class="foot">${btn('Send for review','primary','afterAhpra()')}</div>`;
+
+const LOCK='<svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="5" y="11" width="14" height="10" rx="2" stroke="#29336F" stroke-width="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3" stroke="#29336F" stroke-width="2"/></svg>';
+const SHIFTS=[
+  {n:'Priceline Pharmacy',d:'3 km away',reg:'Inner Sydney · ~3 km',date:'Sat 14 Nov · 8:00–17:00',rate:'$62.00',addr:'120 Crown St, Surry Hills NSW 2010'},
+  {n:'TerryWhite Chemmart',d:'6 km away',reg:'Inner West · ~6 km',date:'Mon 16 Nov · 9:00–18:00',rate:'$58.00',addr:'285 King St, Newtown NSW 2042'}];
+/* verified=false: real name/address are never rendered, only blurred placeholders (the API shouldn't send them either) */
+const shiftCard=(x,verified)=>{const nm=verified?x.n:'Pharmacy Name Here', ad=verified?x.addr:'00 Street Name, Suburb NSW 0000', h=verified?'':' hide';
+  return `<div class="lockable"><button class="shift" onclick="go('${verified?'shiftV':'shift'}')"><div class="top"><span class="logo${h}"></span><span style="flex:1"><div class="name${h}">${nm}</div><div class="dist">${verified?x.d:x.reg}</div></span></div><hr>
+  <div class="ln">${I.clock}<span><div class="lb">Date</div><div class="v">${x.date}</div></span></div>
+  <div class="ln">${I.dollar}<span><div class="lb">Hourly rate (excl. super)</div><div class="v">${x.rate}</div></span></div>
+  <div class="ln">${I.pin}<span class="v${h}">${ad}</span></div></button></div>`;};
+const tabs=()=>`<div class="tabs">${['Shifts','Jobs','Calendar','Chat','Profile'].map((t,i)=>`<div class="${i?'':'on'}"><i></i>${t}</div>`).join('')}</div>`;
+const left=()=>ITEMS.filter(i=>!S.items[i.id]).length;
+const firstLeft=()=>ITEMS.find(i=>!S.items[i.id]);
+const payLeft=()=>PAY.filter(i=>!S.items[i.id]).length;
+const firstPay=()=>PAY.find(i=>!S.items[i.id]);
+const isPay=id=>PAY.some(i=>i.id===id);
+const vdocs=()=>['id','ins'].filter(d=>S.docs[d]!=='done');
+const DN={id:'Photo ID',ins:'Indemnity insurance'};
+const pl=n=>`${n} item${n===1?'':'s'}`;
+const homeCard=(h,sub,t,s,a,on,cls='')=>`<div class="card ${cls}"><div class="card-h"><b>${h}</b><button class="link" onclick="go('all')">View all</button></div><div class="prow"><span>${sub}</span></div>${t?`<div class="next"><span class="row ic" style="border:0;padding:0;width:36px;height:36px;border-radius:8px;background:var(--bg)"></span><span style="flex:1"><div class="t" style="font-weight:500;font-size:15px">${t}</div><div class="s" style="font-size:13px;color:var(--sub)">${s}</div></span><button class="btn primary small" onclick="${on}">${a}</button></div>`:''}</div>`;
+V.home=()=>{const ver=S.ver,L=left(),nx=firstLeft(),v=ver==='verified';let card;
+  if(ver==='missing'){const d=vdocs()[0];card=d?homeCard('Add your documents to get verified',`We need your ${vdocs().map(x=>x==='id'?'photo ID':'insurance').join(' and ')}`,DN[d],'Needed to see shift details','Upload',`openSheet('fix',{mode:'add',doc:'${d}'})`):'';}
+  else if(ver==='attention')card=homeCard('Your photo ID needs attention',"We couldn't read it. Upload a clearer photo.",'Photo ID','Photo is blurry','Re-upload',`openSheet('fix',{mode:'fix',doc:'id'})`,'warn');
+  else if(!L&&payLeft()){const p=firstPay();card=homeCard('Add your payment details',`${pl(payLeft())} left before your first payment`,p.t,'Needed to get paid',p.a,`startPay('setup')`);}
+  else if(!L)card=(S.hideAllSet?'':`<div class="card"><div class="card-h"><b>You're all set</b><button class="close" aria-label="Close" onclick="S.hideAllSet=true;render()">${I.xs}</button></div><div class="prow"><span>${v?'You can apply for shifts':"We'll let you know when you're verified"}</span></div></div>`)
+    +(!OPT.some(o=>!S.items[o.id])?'':`<div class="card"><div class="card-h"><b>Stand out to pharmacies</b><span style="display:flex;gap:16px;align-items:center"><button class="link" onclick="go('all')">View all</button></span></div><div class="prow"><span>${pl(OPT.filter(o=>!S.items[o.id]).length).replace('item','optional item')} · pharmacies see these on your profile</span></div><div class="next"><span class="row ic" style="border:0;padding:0;width:36px;height:36px;border-radius:8px;background:var(--bg)"></span><span style="flex:1"><div class="t" style="font-weight:500;font-size:15px">${OPT.find(o=>!S.items[o.id]).t}</div><div class="s" style="font-size:13px;color:var(--sub)">${OPT.find(o=>!S.items[o.id]).s}</div></span><button class="btn primary small" onclick="S.applyFlow=true;S.ctx='setup';openItem('${OPT.find(o=>!S.items[o.id]).id}')">${OPT.find(o=>!S.items[o.id]).a}</button></div></div>`);
+  else card=homeCard('Finish your account setup',`${pl(L)} left to apply`,nx.t,'Needed to apply',nx.a,`S.applyFlow=true;S.ctx='setup';openItem('${nx.id}')`);
+  return `${status()}${header({back:false,title:'Shifts',right:`<button class="iconbtn" aria-label="Filters" onclick="openSheet('filters')">${I.flt}</button>`})}<div class="scroll stack">${card}
+  <div class="overline" style="margin:4px 0 0">SHIFTS NEAR YOU</div>
+  ${v?'':`<button class="hint" onclick="openSheet('hidden')">${LOCK}<span><b>Names and addresses are hidden</b><span>${ver==='missing'?'Add your ID and insurance so we can verify you.':"You'll see them once we've verified your documents."}</span></span></button>`}
+  ${SHIFTS.map(x=>shiftCard(x,v)).join('')}
+  </div>${tabs()}`;};
+
+V.all=()=>{const ver=S.ver,L=left(),miss=ver==='missing'?vdocs().length:ver==='attention'?1:0;
+  const vrow=(t,s,d)=>{
+    if(ver==='verified')return row({t,s,tagL:'Verified',tagK:'done',chev:false});
+    if(ver==='missing'&&d&&S.docs[d]!=='done')return row({t,s:d==='id'?'Passport or driver licence':'Certificate of currency and expiry date',tagL:'Upload',tagK:'required',on:`openSheet('fix',{mode:'add',doc:'${d}'})`});
+    if(ver==='attention'&&d==='id')return row({t,s:'Photo is blurry. Upload a clearer one',tagL:'Re-upload',tagK:'required',on:`openSheet('fix',{mode:'fix',doc:'id'})`});
+    return row({t,s,tagL:'In review',tagK:'neutral',chev:false});};
+  const vgroup=`<div class="overline">${ver==='verified'?'VERIFIED':ver==='review'||ver==='attention'?'TO GET VERIFIED · USUALLY 24–48 HOURS':'TO GET VERIFIED'}</div><div class="stack tight">${vrow('AHPRA registration','PHA0001234567')}${vrow('Photo ID','Driver licence','id')}${vrow('Indemnity insurance','Expires 30/06/2027','ins')}</div>`;
+  const todo=ITEMS.filter(i=>!S.items[i.id]),ptodo=PAY.filter(i=>!S.items[i.id]),done=[...ITEMS,...PAY].filter(i=>S.items[i.id]);
+  const desc={review:"We're checking your documents. Finish the rest so you can apply as soon as you're verified.",missing:'Add your photo ID and insurance so we can verify you. Then finish the rest to apply.',attention:'Your photo ID needs a new upload. AHPRA and insurance are still in review.',verified:"You're verified. Finish these to apply for shifts and get paid."}[ver];
+  return `${status()}${header({title:'Account setup'})}<div class="scroll">
+  ${titleBlock(`${pl(L+miss+payLeft())} left`,desc)}
+  ${ver!=='verified'?vgroup:''}
+  ${todo.length?`<div class="overline">TO APPLY</div><div class="stack tight">${todo.map(i=>row({t:i.t,s:i.s,tagL:i.a,tagK:'required',on:`S.applyFlow=true;S.ctx='setup';openItem('${i.id}')`})).join('')}</div>`:''}
+  ${ptodo.length?`<div class="overline">TO GET PAID</div><div class="stack tight">${ptodo.map(i=>row({t:i.t,s:i.s,tagL:i.a,tagK:'required',on:`S.applyFlow=true;S.ctx='setup';openItem('${i.id}')`})).join('')}</div>`:''}
+  ${OPT.some(o=>!S.items[o.id])?`<div class="overline">YOUR PROFILE · OPTIONAL</div><div class="stack tight">${OPT.filter(o=>!S.items[o.id]).map(o=>row({t:o.t,s:o.s,tagL:o.a,tagK:o.id==='exp'?'ai':'neutral',on:`S.applyFlow=true;S.ctx='setup';openItem('${o.id}')`})).join('')}</div>`:''}
+  <div class="overline">DONE</div><div class="stack tight">
+  ${row({t:'Resume',s:'CV_Andrii.pdf',tagL:'Done',tagK:'done',on:'soon()'})}${[...done,...OPT.filter(o=>S.items[o.id])].map(i=>row({t:i.t,s:'Saved',tagL:'Done',tagK:'done',on:`S.applyFlow=true;S.ctx='setup';openItem('${i.id}')`})).join('')}${ver==='verified'?vrow('AHPRA registration','PHA0001234567')+vrow('Photo ID','Driver licence','id')+vrow('Indemnity insurance','Expires 30/06/2027','ins'):''}</div>
+  <div style="height:24px"></div>
+  </div>`;};
+
+V.shift=()=>`${status()}${header({title:'Shift'})}<div class="scroll stack">
+  <div class="notice info"><b>Shift details unlock after verification</b><span>${S.ver==='missing'&&vdocs().length?needDocs()+' Checks usually take 24–48 hours.':'We\'re checking your AHPRA, ID and insurance. This usually takes 24–48 hours.'}</span></div>
+  <div class="img hide"></div>
+  <div><h2>Locum pharmacist</h2><p class="desc hide">Pharmacy Name Here · Suburb NSW</p></div>
+  ${row({t:'Sat 14 Nov · 8:00–17:00',s:'9 hours',chev:false})}
+  ${row({t:'$62.00 per hour',s:'Excl. super',chev:false})}
+  ${row({t:'<span class="hide">00 Street Name, Suburb NSW 0000</span>',s:'Inner Sydney · ~3 km',chev:false})}
+  </div><div class="foot">${btn('Apply','primary',"openSheet('applyNV')")}${S.ver==='missing'&&vdocs().length?btn('Add documents','secondary','addDocs()'):btn('View verification status','secondary',"openSheet('hidden')")}</div>`;
+V.shiftV=()=>{const L=left();return `${status()}${header({title:'Shift'})}<div class="scroll stack">
+  ${L?`<div class="notice"><b>${pl(L)} left before you can apply</b><span>Tap Apply. We'll ask only for what's missing, then bring you back here.</span></div>`:`<div class="notice ok"><b>You're ready to apply</b><span>You can apply for this shift now.</span></div>`}
+  <div class="img"></div>
+  <div>${titleBlock('Locum pharmacist','Priceline Pharmacy · Surry Hills NSW')}</div>
+  ${row({t:'Sat 14 Nov · 8:00–17:00',s:'9 hours',chev:false})}
+  ${row({t:'$62.00 per hour',s:'Excl. super',chev:false})}
+  ${row({t:'120 Crown St, Surry Hills NSW 2010',s:'3 km away',chev:false})}
+  </div><div class="foot">${btn('Apply','primary','startApply()')}${btn('Save for later','text',"toast('Saved to your shifts')")}</div>`;};
+
+/* AHPRA, ID and insurance: In review, or Upload when the document was skipped */
+const VDOCS=[['ahpra','AHPRA registration','PHA0001234567','PHA0001234567'],['id','Photo ID','Driver licence','Passport or driver licence'],['ins','Indemnity insurance','Expires 30/06/2027','Certificate of currency and expiry date']];
+const vMiss=d=>d!=='ahpra'&&S.docs[d]!=='done';
+const vRows=()=>VDOCS.map(([d,t,s,ms])=>vMiss(d)?row({t,s:ms,tagL:'Upload',tagK:'required',on:`openSheet('fix',{mode:'add',doc:'${d}'})`}):row({t,s:d==='id'&&S.idType==='Passport'?'Passport':s,tagL:'In review',tagK:'neutral',chev:false})).join('');
+const vItems=()=>VDOCS.map(([d,t,s,ms])=>vMiss(d)?`<button class="li" style="width:100%;text-align:left" onclick="openSheet('fix',{mode:'add',doc:'${d}'})"><span class="tx"><div class="t">${t}</div><div class="s">${ms}</div></span>${tag('Upload','required')}${I.chev}</button>`:item(t,d==='id'&&S.idType==='Passport'?'Passport':s,'In review','neutral')).join('');
+V.checking=()=>{const m=S.ver==='missing'&&vdocs().length;return `${status()}<div class="hdr"></div><div class="scroll stack">
+  <div>${m?titleBlock("We're checking your AHPRA",`To get verified, we also need your ${vdocs().map(x=>x==='id'?'photo ID':'insurance').join(' and ')}. Checks usually take 24–48 hours once everything is in.`):titleBlock("We're checking your documents",'Our team checks your AHPRA registration, ID and insurance. This usually takes 24–48 hours.')}</div>
+  <div class="overline" style="margin:0">${m?'TO GET VERIFIED':'WHAT WE CHECK'}</div><div class="stack tight">${vRows()}</div>
+  <div class="overline" style="margin:0">WHAT HAPPENS NEXT</div>
+  <div class="note">${m?"Add your documents now or later from Home. We'll let you know when you're verified. Meanwhile you can see shift dates and rates.":"We'll let you know when you're verified. Meanwhile you can see shift dates and rates, and finish the rest of your profile."}</div>
+  </div><div class="foot">${btn('Turn on notifications','primary',"S.alert='perm';render()")}${btn('Not now','text','toHome()')}</div>`;};
+
+V.push=()=>`<div class="lock"><div class="status" style="align-self:stretch;color:#fff"><span>9:41</span><span></span></div><div class="d">Wednesday 5 November</div><div class="c">9:41</div>
+  <button class="notif" onclick="openPush()"><i></i><span style="flex:1"><div class="h">You're verified<small>now</small></div><p>You can now see pharmacy names and addresses. Finish your account setup to apply.</p></span></button></div>`;
+
+V.mobile=()=>{SUG.mob='412 345 678';return `${status()}${header({close:true})}<div class="scroll stack">
+  <div>${S.applyFlow?`<div class="eyebrow">1 of ${ITEMS.length} · ${S.ctx==='setup'?'Account setup':'Before you apply'}</div>`:''}${titleBlock('Mobile number',"Pharmacies use it to contact you about a shift. We'll text you a code to confirm it.")}</div>
+  <div class="field"><label>Mobile number *</label><div class="phone-in"><span>+61</span><input id="mob" type="tel" inputmode="numeric" autocomplete="tel-national" placeholder="412 345 678" value="${esc(S.f.mob||'')}" inputmode="none" onfocus="S.focus='mob'"></div></div>
+  </div><div class="foot">${btn('Send code','primary','sendSms()',!mobOk()).replace('<button','<button id="sendBtn"')}
+  <button class="qt" id="qt" style="${S.f.mob?'display:none':''}" onmousedown="event.preventDefault();fillMob()"><small>From this device</small><b>+61 412 345 678</b></button>
+  <div class="keypad">${['1','2','3','4','5','6','7','8','9','','0','del'].map(k=>k?`<button onmousedown="event.preventDefault();mkey('${k}')" aria-label="${k==='del'?'Delete':k}">${k==='del'?I.del:k}</button>`:'<span></span>').join('')}</div></div>`;};
+const mobOk=()=>(S.f.mob||'').replace(/\D/g,'').length===9;
+function mkey(k){let d=(S.f.mob||'').replace(/\D/g,'');if(k==='del')d=d.slice(0,-1);else if(d.length<9)d+=k;S.f.mob=[d.slice(0,3),d.slice(3,6),d.slice(6,9)].filter(Boolean).join(' ');
+  const i=document.getElementById('mob');if(i){i.value=S.f.mob;i.focus({preventScroll:true});}const b=document.getElementById('sendBtn');if(b)b.disabled=!mobOk();const q=document.getElementById('qt');if(q)q.style.display=S.f.mob?'none':'';}
+function fillMob(){S.f.mob='412 345 678';render();}
+
+const FKEYS=id=>{const F=FORMS[id];if(F.keys)return F.keys;if(F.multi)return F.multi.map(x=>x[1]);if(F.f)return F.f.map(x=>x[0]);if(F.chips||F.yesno)return [F.ck];return [id+'_file'];};
+const dirty=id=>FKEYS(id).some(k=>S.f[k]);
+const valid=id=>{const F=FORMS[id];if(F.opt)return true;if(F.ok&&!F.ok())return false;if(F.f)return F.f.filter(x=>x[1].includes('*')).every(x=>S.f[x[0]]);if(F.ok)return true;return FKEYS(id).every(k=>S.f[k]);};
+V.form=()=>{const id=S.formId,F=FORMS[id];let body='';
+  if(F.body)body=F.body();
+  if(F.f)body=F.f.map(([k,l,v,h,ph])=>{SUG[k]=v;return sinput(l,k,v,h,'text','Suggested',ph);}).join('');
+  if(F.chips)body=`<div class="field"><label>${F.q}</label>${chips(F.chips,S.f[F.ck],'setImm')}</div>`;
+  if(F.multi)body=(F.picker?`<div>${pickField()}</div>`:'')+F.multi.map(([l,k,it,m,kind])=>`<div>${kind==='sheet'?'':`<div class="overline" style="margin-top:0">${l}</div>`}${kind==='sheet'?swField(k):kind==='roles'?rolesField(k):mchips('f',k,it,m)}</div>`).join('')+(F.certs&&(S.f.cred_l||[]).length?`<div><div class="overline" style="margin-top:0">CERTIFICATES</div><div class="stack tight">${S.f.cred_l.map(c=>{const u=S.f['cert_'+c];return row({t:c,s:u?'certificate.pdf':'JPG, PNG or PDF, up to 10 MB',tagL:u?'Uploaded':'Upload',tagK:u?'done':'required',on:`S.f['cert_${c}']=1;render()`});}).join('')}</div></div>`:'');
+  if(F.pre)body=F.pre()+body;if(F.post)body+=F.post();
+  if(F.file)body+=S.f[id+'_file']?upRow(id+'_file','certificate.pdf'):row({t:'Choose a file',s:'JPG, PNG or PDF, up to 10 MB',on:`pickFile('${id}_file')`});
+  const nx=S.applyFlow?nextAfter(id,!!S.later[id]):null;
+  return `${status()}${header({close:true})}<div class="scroll stack"><div>${S.applyFlow?`<div class="eyebrow">${F.opt?'Optional · '+(S.ctx==='setup'?'Account setup':'Before you apply'):isPay(id)?ppos(id)+' of '+PAY.length+' · Before you get paid':pos(id)+' of '+ITEMS.length+' · '+(S.ctx==='setup'?'Account setup':'Before you apply')}</div>`:''}${titleBlock(F.t,F.d)}</div>${body}${F.extra?`<div class="note">${F.extra}</div>`:''}</div>
+  <div class="foot">${F.yesno?btn('Yes','primary',"answer('Yes')")+btn('No','secondary',"answer('No')"):S.applyFlow?btn(nx?`Next: ${nx.t}`:'Finish','primary','saveForm()',!valid(id))+(F.opt?btn('Skip','text','skipItem()'):DOCITEMS.includes(id)?btn('Do this later','text','laterItem()'):''):btn('Save','primary','saveForm()',!valid(id))}</div>`;};
+
+V.applied=()=>`${status()}<div class="hdr"></div><div class="scroll stack">
+  <div>${titleBlock('Application sent',"Priceline Pharmacy will review it. We'll let you know when they reply.")}</div>
+  <div class="overline" style="margin:0">YOUR SHIFT</div>${row({t:'Sat 14 Nov · 8:00–17:00',s:'Priceline Pharmacy · Surry Hills',tagL:'Applied',tagK:'neutral',on:'soon()'})}
+  <div class="overline" style="margin:0">WHAT HAPPENS NEXT</div><div class="note">Most pharmacies reply within a day. You can find this shift in Calendar.</div>
+  ${payLeft()?`<div class="notice"><b>Add your payment details</b><span>We invoice the pharmacy for you after the shift. Add your bank, tax and super details before your first shift ends.</span></div>`:''}
+  </div><div class="foot">${payLeft()?btn('Add payment details','primary',"startPay('pay')")+btn('Do this later','text','goHome()'):btn('View my shifts','primary','soon()')+btn('Back to shifts','text','goHome()')}</div>`;
+
+/* ---------- flow actions (verification + apply) ---------- */
+function afterAhpra(){S.stack=['checking'];render();}
+/* first missing document → its upload sheet */
+function addDocs(){const d=vdocs()[0];if(!d)return closeSheet();openSheet('fix',{mode:'add',doc:d});}
+function toHome(){S.alert=null;S.sheet=null;S.stack=['home'];render();}
+function goHome(){S.applyFlow=false;toHome();}
+function openPush(){S.ver='verified';S.scen='verified';S.stack=['home'];render();}
+function openItem(id){if(id==='exp'&&!S.f.exp_y){S.f.exp_y='5–10 years';S.f.exp_r=['Pharmacist','Locum pharmacist'];S.f.exp_s=['FRED','Z Software'];}if(id==='mobile')S.focus='mob';S.sheet=null;S.focus=null;S.formId=id;S.stack.push(id==='mobile'?'mobile':'form');render();}
+function startPay(ctx){S.applyFlow=true;S.ctx=ctx||'pay';S.stack=['home'];openItem(firstPay().id);}
+function startApply(){if(!left())return go('applied');S.applyFlow=true;S.ctx='apply';openSheet('apply');}
+function exitForm(){S.alert=null;S.sheet=null;S.focus=null;S.stack.pop();if(S.applyFlow&&S.ctx==='apply'&&left())S.sheet={name:'apply'};render();}
+const DOCITEMS=['super','prof','other'];
+const pos=id=>ITEMS.findIndex(i=>i.id===id)+1;
+const ppos=id=>PAY.findIndex(i=>i.id===id)+1;
+function nextAfter(id,catchUp){const oi=OPT.findIndex(o=>o.id===id);const nOpt=from=>OPT.slice(from).find(o=>o.id!==id&&!S.items[o.id]&&!S.skip[o.id]);
+  if(oi>=0)return nOpt(oi+1);
+  if(isPay(id)){const k=ppos(id);let o=PAY.filter(i=>!S.items[i.id]&&!S.later[i.id]&&i.id!==id);if(!o.length&&catchUp)o=PAY.filter(i=>!S.items[i.id]&&i.id!==id);return o.find(i=>ppos(i.id)>k)||o[0];}
+  let open=ITEMS.filter(i=>!S.items[i.id]&&!S.later[i.id]&&i.id!==id);if(!open.length&&catchUp)open=ITEMS.filter(i=>!S.items[i.id]&&i.id!==id);const k=pos(id);return open.find(i=>pos(i.id)>k)||open[0]||nOpt(0);}
+function advance(id,catchUp){const n=nextAfter(id,catchUp);S.alert=null;S.sheet=null;S.focus=null;S.stack.pop();
+  if(n){openItem(n.id);return;}
+  if(isPay(id)){render();toast(payLeft()?'Saved. Add the rest before your first shift ends.':"Payment details saved. You're ready to get paid");return;}
+  if(!left()){render();toast(payLeft()?"You're ready to apply":'Your profile is complete');return;}
+  if(S.ctx==='setup'){render();toast('Saved. Add the rest when you have the files.');return;}
+  S.sheet={name:'apply'};render();}
+function answer(v){S.f[FORMS[S.formId].ck]=v;saveForm();}
+function skipItem(){S.skip[S.formId]=true;advance(S.formId);}
+function laterItem(){S.later[S.formId]=true;advance(S.formId);}
+/* a step is sent only when it's complete; a half-filled step stays as a draft on this phone */
+function closeForm(){const id=S.formId;const d=id!=='mobile'&&dirty(id)&&!S.items[id];if(d&&valid(id)){const t=itemName();S.items[id]=true;delete S.later[id];exitForm();return toast(`${t} saved`);}if(d){S.alert='unsaved';return render();}exitForm();}
+function itemName(){return ([...ITEMS,...PAY,...OPT].find(i=>i.id===S.formId)||{t:''}).t;}
+function saveForm(){const id=S.formId;const wasLater=!!S.later[id];S.items[id]=true;delete S.later[id];if(S.applyFlow)return advance(id,wasLater);const t=itemName();exitForm();toast(left()||payLeft()?`${t} saved`:'Your profile is complete');}
+function alertSave(){exitForm();toast('Draft saved on this phone');}
+function alertDiscard(){FKEYS(S.formId).forEach(k=>delete S.f[k]);exitForm();}
+function alertKeep(){S.alert=null;render();}
+function setImm(v){S.f.imm_ans=v;if(v==='Yes'&&!S.f.prof_t0)S.f.prof_t0='Immunisation';render();}
+function pickFile(k){S.f[k]='certificate.pdf';render();}
+function sendSms(){S.otp='';S.focus=null;openSheet('sms');startTimer();}
+function pasteCode(){S.otp='48132';document.querySelectorAll('.otp div').forEach((b,i)=>{b.textContent=S.otp[i];b.className='';});setTimeout(smsDone,400);}
+function smsDone(){clearInterval(timerT);S.items.mobile=true;if(S.applyFlow){advance('mobile');toast('Mobile number verified');return;}exitForm();toast('Mobile number verified');}
+function fixDone(){const d=S.sheet.doc;if(d==='ins'){S.sheet={name:'insExp',from:'fix'};return render();}S.sheet=null;S.docs[d]='done';
+  if(S.ver==='attention'||!vdocs().length){S.ver='review';}
+  render();toast(`${DN[d]} uploaded. We'll check it within 24–48 hours`);}
+
+/* ---------- sheets ---------- */
+const SH={};
+SH.docsInfo=()=>`<div class="inner" style="padding-top:16px">${titleBlock('Have these documents ready','We\'ll read them to fill in most of your profile. You can add them later too.')}
+  <div class="overline" style="margin-top:24px">REQUIRED</div><div>${DOCS.filter(d=>d.req).map(d=>item(d.t,d.hint,'Required','required')).join('')}</div>
+  <div class="overline" style="margin-top:24px">OPTIONAL — SAVES TIME</div>${DOCS.filter(d=>!d.req).map(d=>item(d.t,d.id==='cred'?d.hint:'','Optional','neutral')).join('')}
+  <div style="height:24px"></div>${btn('Continue','primary','docsInfoContinue()')}</div>`;
+SH.otp=()=>`<div class="inner" style="overflow:visible">${titleBlock('Check your inbox',`We sent a 5-digit code to ${esc(S.email)}`)}
+  <div class="otp">${[0,1,2,3,4].map(i=>`<div class="${i===S.otp.length?'cur':''}">${S.otp[i]||''}</div>`).join('')}</div>
+  <p class="help" style="font-size:13px;color:var(--sub)">Didn't get the code? Check spam or <span id="resend">resend in 0:${String(timerV).padStart(2,'0')}</span></p>
+  <div style="display:flex;gap:20px;margin-top:16px"><button class="link" onclick="toast('Opens the Mail app')">Open Mail app</button><button class="link" onclick="changeEmail()">Change email</button></div>
+  <div style="height:16px"></div>
+  <div class="keypad">${['1','2','3','4','5','6','7','8','9','*','0','del'].map(k=>`<button onclick="key('${k}')" aria-label="${k==='del'?'Delete':k}">${k==='del'?I.del:k}</button>`).join('')}</div></div>`;
+const vSheet=(h,d)=>{const m=S.ver==='missing'&&vdocs().length;return `<div class="inner" style="padding-top:16px">${titleBlock(h,d(m))}
+  <div class="overline" style="margin-top:24px">${m?'TO GET VERIFIED':'IN REVIEW · USUALLY 24–48 HOURS'}</div>
+  <div>${vItems()}</div>
+  <p class="help" style="font-size:13px;color:var(--sub);margin-top:12px">${m?'Checks usually take 24–48 hours once everything is in.':"We'll send you a notification when you're verified."}</p>
+  <div style="height:20px"></div>${m?btn('Add documents','primary','addDocs()'):btn('Got it','primary','closeSheet()')}</div>`;};
+const needDocs=()=>`Add your ${vdocs().map(x=>x==='id'?'photo ID':'insurance').join(' and ')} so we can verify you.`;
+SH.hidden=()=>vSheet('Why are these hidden?',m=>'To protect pharmacies, we only show names and addresses to verified pharmacists. '+(m?needDocs():"We're checking your documents now."));
+/* Apply before verification */
+SH.applyNV=()=>vSheet("You can apply once you're verified",m=>m?needDocs()+' Checks usually take 24–48 hours once everything is in.':"We're checking your AHPRA registration, ID and insurance. Meanwhile, finish the rest of your setup so you can apply straight away.");
+SH.upload=()=>{const d=DOCS.find(x=>x.id===S.sheet.doc);const isId=d.id==='id';return `<div class="inner">${titleBlock(d.t,isId?'Choose document type':'')}
+  <div class="note" style="margin-top:14px">Not ready? You can add it later. We'll show shift details once your documents are checked.</div>
+  ${isId?`<div style="margin:14px 0">${chips(['Driver licence','Passport'],S.idType,'setIdType')}</div>`:'<div style="height:14px"></div>'}
+  <div class="stack tight">${row({t:'Take a photo',s:isId?(S.idType==='Driver licence'?'Front and back — we\'ll guide you':'Photo page — we\'ll guide you'):'We\'ll guide you',on:`takePhoto('${d.id}')`})}
+  ${row({t:'Choose a file',s:'JPG, PNG or PDF, up to 10 MB',on:`chooseFile('${d.id}')`})}</div></div>`;};
+SH.photo=()=>{const {doc,side}=S.sheet;const d=DOCS.find(x=>x.id===doc);const lic=doc==='id'&&S.idType==='Driver licence';
+  const ttl=lic?(side==='front'?'Front of licence · 1 of 2':'Back of licence · 2 of 2'):(doc==='id'?'Passport photo page · 1 of 1':d.t);
+  const back=side==='back';
+  return `${header({title:ttl})}<div class="inner">${titleBlock('Check your photo','Make sure all details are easy to read.')}
+  <div class="preview"><div class="idcard">
+    <b style="left:16px;top:18px;width:150px;height:10px"></b>
+    ${back?'':'<b style="left:16px;top:48px;width:70px;height:90px;background:#F5F5F5;border-radius:6px"></b>'}
+    <b style="left:100px;top:52px;width:150px"></b><b style="left:100px;top:70px;width:120px"></b><b style="left:100px;top:88px;width:140px"></b><b style="left:100px;top:106px;width:90px"></b>
+    <b style="left:16px;top:152px;width:${back?110:200}px"></b>${back?'<b style="right:16px;bottom:16px;width:120px;height:40px"></b>':''}
+  </div></div>
+  <div class="checks"><div>${I.check}All four corners are in the frame</div><div>${I.check}${back?'Card number is readable':doc==='id'&&!lic?'Photo, name and passport number are readable':'Text is sharp and readable'}</div><div>${I.check}No glare or shadows</div></div>
+  <div class="stack tight">${btn(lic&&!back?'Next':'Confirm','primary','photoNext()')}${btn('Retake photo','secondary','retake()')}</div></div>`;};
+
+SH.filters=()=>`<div class="sh-head" style="padding-top:8px"><div style="display:flex;align-items:center;gap:16px"><h2 style="flex:1">Filters</h2><button class="link" style="color:var(--sub)" onclick="S.flt={};render()">Reset</button><button class="close" aria-label="Close" onclick="closeSheet()">${I.x}</button></div></div><div class="inner">
+  ${FLT.map(([l,k,it,m])=>`${m?`<div class="gh"><div class="overline" style="margin:0">${l}</div><button class="link" onclick="fltAll('${k}')">${(S.flt[k]||[]).length===it.length?'Clear all':'Select all'}</button></div>`:`<div class="overline">${l}</div>`}${mchips('flt',k,it,m)}${k==='fl'?`<p class="help" style="margin:8px 0 0;font-size:13px;color:var(--sub)">Assignments of 1–13 weeks where accommodation and travel costs are covered.</p>`:''}${k==='fk'?`<div class="overline">RATE</div><div class="stack tight">${audIn('rate','Minimum rate per hour','0.00','flt',false,'60.00')}${audIn('wrate','Minimum weekend rate per hour','0.00','flt',!!S.flt.same,'75.00')}${ck(!!S.flt.same,'Same as weekday rate','S.flt.same=!S.flt.same;if(S.flt.same)S.flt.wrate=S.flt.rate;render()')}</div>`:''}`).join('')}
+  <div style="height:16px"></div></div><div class="sh-foot">${btn('Show 18 shifts','primary',"closeSheet();toast('Filters saved')")}</div>`;
+SH.sw=()=>`<div class="sh-head"><div style="display:flex;align-items:center;gap:16px"><h2 style="flex:1;font-size:20px">Pharmacy software</h2><button class="close" aria-label="Close" onclick="closeSheet()">${I.x}</button></div>
+  ${sfield('swq','Search or add software','e.g. Minfos',S.swq,"S.swq=this.value;swUpd()",`onkeydown="if(event.key==='Enter'){event.preventDefault();swAdd()}"`,'margin-top:12px')}
+  <div class="toks" id="swToks">${swToksHTML()}</div></div><div class="inner" id="swList">${swListHTML()}</div><div class="sh-foot">${btn('Done','primary','closeSheet()')}</div>`;
+SH.roles=()=>`<div class="sh-head"><div style="display:flex;align-items:center;gap:16px"><h2 style="flex:1;font-size:20px">What role(s) are you seeking?</h2><button class="close" aria-label="Close" onclick="closeSheet()">${I.x}</button></div></div><div class="inner" id="rlList" style="padding-top:12px">${rlListHTML()}</div><div class="sh-foot">${btn('Done','primary','closeSheet()')}</div>`;
+SH.pick=()=>`<div class="sh-head"><div style="display:flex;align-items:center;gap:16px"><h2 style="flex:1;font-size:20px">${S.sheet.title}</h2><button class="close" aria-label="Close" onclick="closeSheet()">${I.x}</button></div>
+  ${S.sheet.list==='BANKS'?`${sfield('pq','Search banks','e.g. Westpac',S.pq,"S.pq=this.value;const l=document.getElementById('pkList');if(l)l.innerHTML=pickListHTML()",'','margin-top:12px')}`:''}</div><div class="inner" id="pkList">${pickListHTML()}</div>`;
+SH.insExp=()=>`<div class="inner" style="padding-top:16px">${titleBlock('When does this policy expire?',"certificate.pdf is uploaded. Add the expiry date and we'll remind you before it runs out.")}<div style="height:16px"></div>
+  ${dateField('ins_e0','future',false,'Policy expiry date')}<div style="height:20px"></div>${btn('Save','primary','insSave()',!S.f.ins_e0).replace('<button ','<button id="insBtn" ')}</div>`;
+function insSave(){const from=S.sheet.from;S.sheet=null;if(from==='fix'){S.docs.ins='done';if(S.ver==='attention'||!vdocs().length)S.ver='review';render();toast("Indemnity insurance uploaded. We'll check it within 24–48 hours");return;}readDoc('ins');}
+SH.avatar=()=>`<div class="inner" style="padding-top:16px">${titleBlock('Profile photo','Use a clear, recent photo of your face. Pharmacies see it on your profile.')}<div style="height:16px"></div><div class="stack tight">${row({t:'Take a photo',on:'setAvatar()'})}${row({t:'Choose from library',on:'setAvatar()'})}${S.avatar?row({t:'Remove photo',on:'S.avatar=false;closeSheet()'}):''}</div></div>`;
+function setAvatar(){S.avatar=true;closeSheet();toast('Photo added');}
+SH.apply=()=>{const L=ITEMS.filter(i=>!S.items[i.id]);const later=L.filter(i=>S.later[i.id]),todo=L.filter(i=>!S.later[i.id]),done=ITEMS.filter(i=>S.items[i.id]);
+  const first=todo[0]||later[0];const anyDone=done.length>0;
+  const desc=!anyDone?"About 2 minutes, plus 4 optional steps. Have your certificates ready. We'll bring you back to this shift.":(todo.length?"Everything you've added is saved. Pick up where you left off.":'Add these when you have the files. Everything else is saved.');
+  const r=(i,tag,k,on)=>row({t:i.t,tagL:tag,tagK:k,chev:!!on,on});
+  return `<div class="inner" style="padding-top:16px"><div style="display:flex;gap:12px;align-items:flex-start"><div style="flex:1">${titleBlock(`${pl(L.length)} left before you can apply`,desc)}</div><button class="close" aria-label="Close" style="margin-top:4px" onclick="closeSheet()">${I.x}</button></div>
+  <div class="stack tight" style="margin-top:16px">${later.map(i=>r(i,'Later','required',`openItem('${i.id}')`)).join('')}${todo.map(i=>r(i,'To do','neutral',`openItem('${i.id}')`)).join('')}${done.map(i=>r(i,'Done','done','')).join('')}</div>
+  <div style="height:20px"></div>${btn(anyDone?`Continue: ${first.t}`:'Continue','primary',`openItem('${first.id}')`)}</div>`;};
+SH.sms=()=>`<div class="inner" style="overflow:visible">${titleBlock('Check your messages',`We sent a 5-digit code to +61 ${esc(S.f.mob||'412 345 678')}`)}
+  <div class="otp">${[0,1,2,3,4].map(i=>`<div class="${i===S.otp.length?'cur':''}">${S.otp[i]||''}</div>`).join('')}</div>
+  <p class="help" style="font-size:13px;color:var(--sub)">Didn't get the code? <span id="resend">Resend in 0:${String(timerV).padStart(2,'0')}</span></p>
+  <div style="height:16px"></div>
+  <button class="qt" onclick="pasteCode()"><small>From Messages</small><b>48132</b></button>
+  <div class="keypad">${['1','2','3','4','5','6','7','8','9','*','0','del'].map(k=>`<button onclick="key('${k}')" aria-label="${k==='del'?'Delete':k}">${k==='del'?I.del:k}</button>`).join('')}</div></div>`;
+SH.fix=()=>{const d=S.sheet.doc,add=S.sheet.mode==='add',isId=d==='id';return `<div class="inner">${titleBlock(add?`Add your ${isId?'photo ID':'indemnity insurance'}`:'Upload a new photo ID',add?(isId?'Choose document type':'Certificate of currency'):"We couldn't read your date of birth. Make sure the whole card is in the frame, with no glare.")}
+  ${isId?`<div style="margin:14px 0">${chips(['Driver licence','Passport'],S.idType,'setIdType')}</div>`:'<div style="height:14px"></div>'}
+  <div class="stack tight">${row({t:'Take a photo',s:isId?(S.idType==='Passport'?"Photo page — we'll guide you":"Front and back — we'll guide you"):"We'll guide you",on:'fixDone()'})}
+  ${row({t:'Choose a file',s:'JPG, PNG or PDF, up to 10 MB',on:'fixDone()'})}
+  <div class="note">${add?"We'll check it within 24–48 hours.":"We'll check it again. This usually takes 24–48 hours."}</div></div></div>`;};
+const AL={
+  perm:()=>`<div class="alert"><div class="ab"><b>“Locumate” Would Like to Send You Notifications</b><span>Notifications may include alerts, sounds and icon badges. These can be configured in Settings.</span></div><div class="row2"><button onclick="toHome()">Don't Allow</button><button class="b" onclick="toHome();toast('Notifications on')">Allow</button></div></div>`,
+  unsaved:()=>`<div class="alert"><div class="ab"><b>Finish ${itemName().toLowerCase()} later?</b><span>We'll keep what you've entered on this phone and send it once all required fields are filled in.</span></div><button class="b" onclick="alertSave()">Save draft</button><button class="red" onclick="alertDiscard()">Discard</button><button onclick="alertKeep()">Keep editing</button></div>`
+};
+function curKey(){const c=cur(),sh=S.sheet&&S.sheet.name;
+  if(S.scen==='signup'){if(S.alert==='perm')return 'perm';if(sh)return ({docsInfo:'roleSheet',otp:'otp',upload:S.idType==='Passport'?'uploadP':'upload',hidden:'hidden',photo:S.idType==='Passport'?'photoP':S.sheet.side==='back'?'photoBack':'photoFront'})[sh]||sh;if(c==='general'&&S.dobNav)return 'dob';if(c==='general'&&S.addrOpen&&S.f.addr)return 'addr';if(c==='role'&&S.acct)return 'role1';return c==='docs'&&Object.keys(S.docs).length?'docsDone':c;}
+  if(S.scen==='later'){if(c==='docs'||c==='general'||c==='ahpra')return 'L:docs';if(sh==='fix'||sh==='hidden'||sh==='applyNV')return 'L:'+sh;return 'L:'+c;}
+  if(S.scen==='att'){if(sh==='fix')return 'A:fix';return 'A:'+c;}
+  if(S.alert==='unsaved')return 'V:unsaved';
+  if(sh==='filters')return 'V:filters';if(sh==='apply')return Object.keys(S.later).length?'V:later':'V:apply';if(sh==='sms')return 'V:sms';
+  if(c==='credpick')return 'V:credpick';if(sh==='sw')return (S.swq||'').trim()?'V:swadd':'V:sw';if(sh==='roles')return 'V:roles';if(sh==='pick'&&S.formId==='bank')return 'V:bankpick';if(c==='form'&&!S.applyFlow&&(S.formId==='exp'||S.formId==='cred'))return 'V:p'+S.formId;if(c==='form'&&S.formId==='super'&&S.f.sup_type===SMSFT)return 'V:smsf';if(c==='form')return 'V:'+S.formId;if(c==='home'&&!left()&&payLeft()&&S.ver==='verified')return 'V:homepay';if(c==='home'&&!left())return S.hideAllSet?'V:allsetX':'V:allset';if(c==='shiftV')return left()?'V:shift':'V:ready';return 'V:'+c;}
+
+/* sheets with search or long lists keep one height while results change */
+const tallSheet=()=>{const n=S.sheet&&S.sheet.name;return ['sw','roles','filters'].includes(n)||(n==='pick'&&S.sheet.list==='BANKS');};
+/* sheets that sit on top of which screen */
+const SHEET_BASE={avatar:'general',docsInfo:'role',otp:'account',upload:'docs',photo:'docs',sms:'mobile',apply:'shiftV'};
+
+/* ---------- render ---------- */
+function render(){
+  const p=$('#phone'); let id=cur();
+  if(S.sheet&&SHEET_BASE[S.sheet.name]&&id!==SHEET_BASE[S.sheet.name]) id=SHEET_BASE[S.sheet.name];
+  const an=S.anim?' anim':'';S.anim=false;
+  const keep=S._last===id?{sc:p.querySelector('.screen .scroll')?.scrollTop||0,sh:p.querySelector('.sheet .inner')?.scrollTop||0,sheet:!!S.sheet}:null;S._last=id;
+  p.innerHTML=`<section class="screen">${V[id]()}</section>${S.sheet?`<div class="overlay${an}" onclick="${['otp','sms'].includes(S.sheet.name)?'':'closeSheet()'}"></div><div class="sheet${an}${tallSheet()?' tall':''}" role="dialog"><div class="grab"></div>${SH[S.sheet.name]()}</div>`:''}${S.alert?`<div class="alert-wrap" role="alertdialog">${AL[S.alert]()}</div>`:''}<div class="homebar"></div>`;
+  if(S.sheet&&S.sheet.name==='insExp'&&!S.sheet.af){S.sheet.af=1;setTimeout(()=>{const el=document.getElementById('ins_e0');if(el)el.focus({preventScroll:true});},60);}
+  if(S.dk){const el=document.getElementById(S.dk.k);if(el){kbAttach();el.focus({preventScroll:true});}else S.dk=null;}
+  if(keep){const sc=p.querySelector('.screen .scroll');if(sc)sc.scrollTop=keep.sc;const si=p.querySelector('.sheet .inner');if(si&&keep.sheet)si.scrollTop=keep.sh;}
+  $('#scen').innerHTML=Object.entries(SC).map(([k,v])=>`<button class="${k===S.scen?'on':''}" onclick="setScen('${k}')">${v.t}</button>`).join('');
+  if(cur()==='mobile'&&!S.sheet){const m=document.getElementById('mob');if(m)m.focus({preventScroll:true});}
+  const ak=curKey();
+  $('#nav').innerHTML=SC[S.scen].l.map(([k,l])=>`<li><button class="${k===ak?'on':''}" onclick="jump('${k}')">${l}</button></li>`).join('');
+}
+render();
+</script>
+</body>
+</html>
