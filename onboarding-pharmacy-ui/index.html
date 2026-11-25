@@ -260,9 +260,9 @@
   .errtxt{color:#C62828;font-size:13px;margin-top:6px}
   /* floating labels: inside the field when empty, small and raised when focused or filled */
   .field input{height:60px;padding:22px 16px 6px}
-  .field:has(> input)>label,.field:has(> .phone-in)>label,.field:has(> .addr-in)>label{position:absolute;left:17px;top:19px;margin:0;font-size:16px;font-weight:400;color:#9E9E9E;pointer-events:none;transition:top .15s ease,font-size .15s ease,color .15s ease;z-index:1;white-space:nowrap}
+  .field:has(> input)>label,.field:has(> .dwrap input)>label,.field:has(> .phone-in)>label,.field:has(> .addr-in)>label{position:absolute;left:17px;top:19px;margin:0;font-size:16px;font-weight:400;color:#9E9E9E;pointer-events:none;transition:top .15s ease,font-size .15s ease,color .15s ease;z-index:1;white-space:nowrap}
   .field:has(> .addr-in)>label{left:41px}
-  .field:has(> input:focus)>label,.field:has(> input:not(:placeholder-shown))>label,.field:has(> .phone-in input:focus)>label,.field:has(> .phone-in input:not(:placeholder-shown))>label,.field:has(> .addr-in input:focus)>label,.field:has(> .addr-in input:not(:placeholder-shown))>label{top:9px;font-size:12px;font-weight:500;color:var(--sub)}
+  .field:has(> input:focus)>label,.field:has(> .dwrap input:focus)>label,.field:has(> input:not(:placeholder-shown))>label,.field:has(> .dwrap input:not(:placeholder-shown))>label,.field:has(> .phone-in input:focus)>label,.field:has(> .phone-in input:not(:placeholder-shown))>label,.field:has(> .addr-in input:focus)>label,.field:has(> .addr-in input:not(:placeholder-shown))>label{top:9px;font-size:12px;font-weight:500;color:var(--sub)}
   .field input::placeholder,.phone-in input::placeholder{color:transparent}
   .field input:focus::placeholder,.phone-in input:focus::placeholder{color:#9E9E9E}
   .phone-in,.addr-in{height:60px}
@@ -608,8 +608,8 @@
   .field input{height:56px;border:1px solid var(--bd);border-radius:12px;padding:26px 12px 8px;font:500 16px/20px var(--ff);color:#000}
   .field input:not(:placeholder-shown){border-color:var(--bd2)}
   .field input:focus{border:1.5px solid #0b359a;padding:25.5px 11.5px 7.5px}
-  .field:has(> input)>label,.field:has(> .phone-in)>label,.field:has(> .addr-in)>label{left:13px;top:19px;font:400 14px/18px var(--ff);color:var(--k3)}
-  .field:has(> input:focus)>label,.field:has(> input:not(:placeholder-shown))>label,.field:has(> .phone-in input:focus)>label,.field:has(> .phone-in input:not(:placeholder-shown))>label,.field:has(> .addr-in input:focus)>label,.field:has(> .addr-in input:not(:placeholder-shown))>label{top:9px;font:500 12px/16px var(--ff);color:var(--k3)}
+  .field:has(> input)>label,.field:has(> .dwrap input)>label,.field:has(> .phone-in)>label,.field:has(> .addr-in)>label{left:13px;top:19px;font:400 14px/18px var(--ff);color:var(--k3)}
+  .field:has(> input:focus)>label,.field:has(> .dwrap input:focus)>label,.field:has(> input:not(:placeholder-shown))>label,.field:has(> .dwrap input:not(:placeholder-shown))>label,.field:has(> .phone-in input:focus)>label,.field:has(> .phone-in input:not(:placeholder-shown))>label,.field:has(> .addr-in input:focus)>label,.field:has(> .addr-in input:not(:placeholder-shown))>label{top:9px;font:500 12px/16px var(--ff);color:var(--k3)}
   .field .help{font:400 12px/16px var(--ff);color:var(--k3);margin-top:4px;padding:0 12px}
   .errtxt{font:400 12px/16px var(--ff);color:#be4141;margin-top:4px;padding:0 12px}
   .field input.err,.phone-in.err{border-color:#ed5151!important}
@@ -1027,7 +1027,7 @@
 /* input text starts 12px from the outer edge (1px stroke inside the padding) */
 .field input{padding-left:11px;padding-right:11px}
 .field input:focus{padding-left:10.5px;padding-right:10.5px}
-.field:has(> input)>label,.field:has(> .phone-in)>label,.field:has(> .addr-in)>label{left:12px}
+.field:has(> input)>label,.field:has(> .dwrap input)>label,.field:has(> .phone-in)>label,.field:has(> .addr-in)>label{left:12px}
 .pick{padding-left:11px;padding-right:11px}
 .addr-in{padding:0 11px}
 .phone-in span{padding-left:11px}
@@ -1045,12 +1045,13 @@ body{height:auto;min-height:100%;box-sizing:border-box;padding:16px 0}
 .sheet .inner>.sht{position:sticky;top:0;z-index:5;background:#fff;margin-bottom:0;padding-bottom:16px}
 /* sheets: buttons pinned to the bottom, content scrolls between title and buttons */
 .sheet>.inner{min-height:0;flex:0 1 auto}
-.sheet>.sh-foot.pin{flex:none;background:#fff;padding:16px 24px 0;display:flex;flex-direction:column;gap:8px}
+.sheet>.sh-foot.pin{border-top:0;flex:none;background:#fff;padding:16px 24px 0;display:flex;flex-direction:column;gap:8px}
 .sheet>.sh-foot.pin>.stack{margin:0}
+.sheet>.sh-foot.pin>.stack>.btn{margin-top:0}
 /* in-app camera */
 .camv{position:absolute;inset:0;z-index:40;background:#000;overflow:hidden;color:#fff}
 .camv .status{position:absolute;top:0;left:0;right:0;z-index:3}
-.camv .feed{position:absolute;left:0;right:0;top:0;height:704px;background:radial-gradient(90% 60% at 50% 44%,#6e665d 0%,#3d3833 55%,#1c1a17 100%)}
+.camv .feed{position:absolute;left:0;right:0;top:0;bottom:150px;background:radial-gradient(90% 60% at 50% 44%,#6e665d 0%,#3d3833 55%,#1c1a17 100%)}
 .camv .subj{position:absolute;left:50%;transform:translate(-50%,-50%) rotate(-2deg);box-shadow:0 14px 30px rgba(0,0,0,.45);border-radius:10px;overflow:hidden;background:#fff}
 .camv .subj.face{transform:translate(-50%,-50%);border-radius:0;box-shadow:none;background:none}
 .camv .subj svg{width:100%;height:100%;display:block}
@@ -1065,10 +1066,12 @@ body{height:auto;min-height:100%;box-sizing:border-box;padding:16px 0}
 .camv .camtop{position:absolute;top:59px;left:0;right:0;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;z-index:3}
 .camv .cbtn{width:44px;height:44px;border-radius:22px;background:rgba(255,255,255,.16);display:flex;align-items:center;justify-content:center;border:0;padding:0}
 .camv .ct{text-align:center;font:600 17px/22px var(--ff)}
-.camv .ct span{display:block;font:400 14px/18px var(--ff);opacity:.8}
+.camv .ct span{display:block;font:400 14px/18px var(--ff);color:rgba(255,255,255,.8)}
+.camv b{font-weight:600}
+.camv .status,.camv .status .tm{color:#fff}
 .camv .chint{position:absolute;left:24px;right:24px;text-align:center;z-index:2;font:600 17px/22px var(--ff)}
-.camv .chint span{display:block;font:400 14px/18px var(--ff);opacity:.8;margin-top:4px}
-.camv .cbot{position:absolute;left:0;right:0;bottom:0;height:170px;display:flex;align-items:center;justify-content:center;z-index:3;padding-bottom:20px;box-sizing:border-box}
+.camv .chint span{display:block;font:400 14px/18px var(--ff);color:rgba(255,255,255,.8);margin-top:4px}
+.camv .cbot{position:absolute;left:0;right:0;bottom:0;height:150px;display:flex;align-items:center;justify-content:center;z-index:3;padding-bottom:20px;box-sizing:border-box}
 .camv .shutter{width:78px;height:78px;border-radius:50%;border:4px solid #fff;background:none;padding:4px;cursor:pointer}
 .camv .shutter i{display:block;width:100%;height:100%;border-radius:50%;background:#fff;transition:transform .1s}
 .camv .shutter:active i{transform:scale(.9)}
@@ -1076,11 +1079,9 @@ body{height:auto;min-height:100%;box-sizing:border-box;padding:16px 0}
 @keyframes snap{from{opacity:.9}to{opacity:0}}
 #phone:has(.camv) .homebar{background:#fff}
 .dwrap{position:relative}
-.dghost{position:absolute;inset:0;display:flex;align-items:center;pointer-events:none;color:#9a9a9a;border:0 solid transparent;white-space:pre;overflow:hidden;box-sizing:border-box}
+.dghost{position:absolute;inset:0;display:flex;align-items:center;pointer-events:none;color:#9E9E9E;border:0 solid transparent;white-space:pre;overflow:hidden;box-sizing:border-box}
 .dghost:empty{display:none}
 .dghost i{font-style:normal;visibility:hidden}
-.field:has(> .dwrap)>label{position:absolute;left:17px;top:19px;margin:0;font-size:16px;font-weight:400;color:#9E9E9E;pointer-events:none;transition:top .15s ease,font-size .15s ease,color .15s ease;z-index:1;white-space:nowrap}
-.field:has(> .dwrap input:focus)>label,.field:has(> .dwrap input:not(:placeholder-shown))>label{top:9px;font-size:12px;font-weight:500;color:var(--sub)}
 /* long sheets open up to 24px from the top of the screen */
 #phone .sheet{max-height:calc(100% - 24px)}
 #phone .sheet.tall,#phone .sheet.tall:has(#fltBtn){height:calc(100% - 24px)}
@@ -1088,10 +1089,16 @@ body{height:auto;min-height:100%;box-sizing:border-box;padding:16px 0}
 #phone.kb .sheet.tall{height:auto}
 /* password dots: system font, so mobile browsers draw normal-size bullets instead of Outfit's fallback */
 .field input[type=password]:not(:placeholder-shown){font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-weight:400;letter-spacing:1px}
-.scard.inrev{width:100%;text-align:left;cursor:pointer}
+.scard.inrev{width:100%;text-align:left;cursor:pointer;padding-top:10px;padding-bottom:10px}
 .scard.inrev .rv-ic{width:32px;height:32px;border-radius:16px;background:#E8EEFB;display:grid;place-items:center;flex:none}
-.scard.inrev .sub{font:400 14px/18px var(--ff);color:#484848}
 .scard.inrev .chev{flex:none;display:grid;place-items:center}
+.otp{position:relative}
+.otp-in{position:absolute;inset:0;width:100%;height:100%;opacity:0;font-size:16px;border:0;padding:0;color:transparent;caret-color:transparent}
+#phone .tsug{position:absolute;left:0;right:0;bottom:0;height:44px;background:#d1d3d9;display:none;align-items:center;justify-content:center;z-index:60}
+#phone.kbnative .tsug{display:flex}
+html.touch #phone .field .sugg{display:none}
+.tsug button{display:flex;flex-direction:column;align-items:center;font:400 12px/14px var(--ff);color:#3c3c43;padding:4px 24px}
+.tsug button b{font:600 16px/20px var(--ff);color:#000;letter-spacing:.02em}
 </style>
 </head>
 <body>
@@ -1123,7 +1130,7 @@ export function useKeyboardInset() {
   transition: bottom .2s;
 }</pre></details>
   <button class="reset" onclick="resetAll()">Restart flow</button>
-  <div class="build">Updated 25 Nov 2026, 14:05</div>
+  <div class="build">Updated 25 Nov 2026, 14:40</div>
 </aside>
 <main class="phone" id="phone"></main>
 
@@ -1271,7 +1278,7 @@ const GROUPS=[
  ['Sign Up',[['welcome','00','Welcome'],['role','01','Role — start'],['role1','01a','Role'],['roleSheet','01b','Documents to have ready — sheet'],['account','02','Create account'],['otp','02a','Email code — sheet'],['docs','03','Documents hub — empty'],['upload','03a','Upload options — sheet'],['cam','03a1','Camera — licence front'],['camBack','03a2','Camera — licence back'],['uploadP','03b','Upload options — passport'],['camP','03b1','Camera — passport'],['camCV','03b2','Camera — resume'],['source','03b3','Choose a file — sheet'],['photoFront','03c','Check your photo — front'],['photoBack','03d','Check your photo — back'],['photoP','03e','Check your photo — passport'],['photoCV','03e1','Check your photo — resume'],['photoIns','03e2','Check your photo — insurance'],['photoSuper','03e3','Check your photo — super choice form'],['photoCred','03e4','Check your photo — advanced credentials'],['docsReading','03f','Documents hub — reading'],['insExp','03g','Insurance expiry date — sheet'],['docsDone','03h','Documents hub — uploaded'],['general','04','About you'],['avatar','04a','Profile photo — sheet'],['camAva','04a1','Camera — profile photo'],['addr','04b','Home address — suggestions'],['dob','04c','Date of birth — keypad'],['dobErr','04d','Date of birth — error'],['ahpra','05','AHPRA registration'],['ahpraAlert','05a','Unsaved changes — alert'],['checking','06','Checking your documents'],['perm','06a','Notifications — system prompt'],['home','07','Home — in review'],['hidden','07a','Hidden details — sheet'],['all','07b','All items — in review'],['shift','07c','Shift — not verified'],['applyNV','07d','Apply — not verified yet — sheet'],['homeRev','07e','Home — all done, still in review']]],
  ['States while waiting for verification',[['L:checking','08','Checking — documents missing'],['L:home','08a','Home — documents missing'],['L:hidden','08b','Hidden details — documents missing'],['L:all','08c','All items — documents missing'],['L:fix','08d','Upload your photo ID — sheet'],['L:shift','08e','Shift — documents missing'],['L:applyNV','08f','Apply — documents missing — sheet'],['A:home','09','Home — needs attention'],['A:fix','09a','Upload a new photo ID — sheet'],['A:all','09b','All items — needs attention']]],
  ['Verified',[['V:home','10a','Home — verified'],['V:all','10b','All items — verified'],['V:allset','10c','Home — all set'],['V:allsetX','10d','Home — all set card dismissed'],['V:filters','10e','Shift filters — sheet'],['V:nomatch','10f','Home — no shifts match filters']]],
- ['Apply with missing items',[['V:shift','11','Shift — verified'],['V:apply','11a','Before you apply — sheet'],['V:mobile','11b','Mobile number — 1 of 2'],['V:sms','11c','SMS code — sheet'],['V:prof','11d','Professional certificates — 2 of 2'],['V:source','11d1','Choose a file — certificate'],['V:exp','11e','Experience and software — optional'],['V:roles','11f','Roles — sheet'],['V:sw','11g','Pharmacy software — sheet'],['V:swadd','11h','Pharmacy software — add your own'],['V:cred','11i','Advanced credentials — optional'],['V:credpick','11j','Advanced credentials — picker'],['V:credNone','11j1','Advanced credentials — no results'],['V:travel','11k','Travel requirements — optional'],['V:other','11l','Other insurance — optional'],['V:later','11m','Before you apply — 1 left'],['V:ready','11n','Shift — ready to apply'],['V:applied','11o','Applied — add payment details'],['V:homepay','12','Home — payment details left'],['V:bank','12a','Bank details — 1 of 3'],['V:bankpick','12b','Bank name — sheet'],['V:bankNone','12b1','Bank name — no results'],['V:unsaved','12c','Leave unfinished — alert'],['V:tax','12d','Tax and business details — 2 of 3'],['V:super','12e','Super fund — 3 of 3'],['V:smsf','12f','Super fund — self-managed (SMSF)'],['V:pexp','13','Experience and software — profile'],['V:pcred','13a','Advanced credentials — profile'],['V:psaved','13b','Experience and software — saved'],['V:homefull','13c','Home — profile complete']]]];
+ ['Apply with missing items',[['V:shift','11','Shift — verified'],['V:apply','11a','Before you apply — sheet'],['V:mobile','11b','Mobile number — 1 of 2'],['V:sms','11c','SMS code — sheet'],['V:prof','11d','Professional certificates — 2 of 2'],['V:source','11d5','Choose a file — certificate'],['V:exp','11e','Experience and software — optional'],['V:roles','11f','Roles — sheet'],['V:sw','11g','Pharmacy software — sheet'],['V:swadd','11h','Pharmacy software — add your own'],['V:cred','11i','Advanced credentials — optional'],['V:credpick','11j','Advanced credentials — picker'],['V:credNone','11j1','Advanced credentials — no results'],['V:travel','11k','Travel requirements — optional'],['V:other','11l','Other insurance — optional'],['V:later','11m','Before you apply — 1 left'],['V:ready','11n','Shift — ready to apply'],['V:applied','11o','Applied — add payment details'],['V:homepay','12','Home — payment details left'],['V:bank','12a','Bank details — 1 of 3'],['V:bankpick','12b','Bank name — sheet'],['V:bankNone','12b1','Bank name — no results'],['V:unsaved','12c','Leave unfinished — alert'],['V:tax','12d','Tax and business details — 2 of 3'],['V:super','12e','Super fund — 3 of 3'],['V:smsf','12f','Super fund — self-managed (SMSF)'],['V:pexp','13','Experience and software — profile'],['V:pcred','13a','Advanced credentials — profile'],['V:psaved','13b','Experience and software — saved'],['V:homefull','13c','Home — profile complete']]]];
 const SC={
   signup:{t:'1 · Sign up → in review',l:GROUPS[0][1]},
   later:{t:'2 · Documents added later',l:[['L:docs','03','Documents hub — tap Upload later'],...GROUPS[1][1].filter(x=>x[0].startsWith('L:'))]},
@@ -1279,7 +1286,7 @@ const SC={
   verified:{t:'4 · ID verified → apply',l:[...GROUPS[2][1],...GROUPS[3][1]]}};
 let SCN='signup';
 const FIGURL='https://www.figma.com/design/SyRRLLJajD6Yyz8VBrpvyh/Andrii---Locumate_AUS_MobileApp--Copy-?node-id=';
-const FIG={"00": "2276-9600", "01": "2393-10689", "01a": "2276-9643", "01b": "2276-9710", "02": "2276-9844", "02a": "2276-9903", "03": "2393-10766", "03a": "2393-10992", "03b": "2393-11062", "03c": "2394-11150", "03d": "2394-11212", "03e": "2394-11273", "03e1": "3218-18537", "03e2": "3218-18805", "03e3": "3218-19083", "03e4": "3218-19397", "03f": "2393-10877", "03g": "2394-11336", "03h": "2277-9838", "04": "2277-9946", "04a": "2394-11763", "04b": "2394-11831", "04c": "2394-11963", "04d": "2394-12107", "05": "2277-10029", "05a": "2395-13140", "06": "2277-10085", "06a": "2394-12210", "07a": "2394-12239", "07b": "2395-12602", "07c": "2395-12822", "07d": "2395-12901", "07": "2502-23265", "08a": "2483-13579", "08b": "2394-12300", "08c": "2483-13626", "08d": "2483-13849", "08e": "2483-13997", "08f": "2483-14067", "09": "2395-13027", "09a": "2395-13083", "09b": "2483-14241", "08": "2483-13476", "10a": "2486-14666", "10b": "2486-15034", "10c": "2486-15155", "10d": "2486-15542", "10e": "2487-15519", "10f": "2543-19063", "10g": "3172-17243", "11": "2488-15795", "11a": "2488-15895", "11b": "2488-16015", "11c": "2488-16186", "11d": "2488-16367", "11e": "2488-16524", "11f": "2488-16688", "11g": "2488-16836", "11h": "2490-16595", "11i": "2490-16714", "11j": "2490-16839", "11k": "2490-17005", "11l": "2490-17119", "11m": "2490-17222", "11n": "2490-17335", "11o": "2490-17397", "12": "2494-17289", "12a": "2494-17331", "12b": "2494-17449", "12c": "2494-17624", "12d": "2494-17724", "12e": "2494-17853", "12f": "2494-18083", "13": "2494-18237", "13a": "2494-18318", "11j1": "2543-18793", "12b1": "2543-18938", "13b": "2543-19313", "13c": "3326-19868", "10e1": "3350-19828", "11p": "3172-17500", "11q": "3172-17704", "11c1": "3174-15199", "11d1": "3174-15350", "11d2": "3174-15465", "11d3": "3174-15578", "11d4": "3174-15688", "12a1": "3174-15821"};
+const FIG={"00": "2276-9600", "01": "2393-10689", "01a": "2276-9643", "01b": "2276-9710", "02": "2276-9844", "02a": "2276-9903", "03": "2393-10766", "03a": "2393-10992", "03b": "2393-11062", "03c": "2394-11150", "03d": "2394-11212", "03e": "2394-11273", "03e1": "3218-18537", "03e2": "3218-18805", "03e3": "3218-19083", "03e4": "3218-19397", "03f": "2393-10877", "03g": "2394-11336", "03h": "2277-9838", "04": "2277-9946", "04a": "2394-11763", "04b": "2394-11831", "04c": "2394-11963", "04d": "2394-12107", "05": "2277-10029", "05a": "2395-13140", "06": "2277-10085", "06a": "2394-12210", "07a": "2394-12239", "07b": "2395-12602", "07c": "2395-12822", "07d": "2395-12901", "07": "2502-23265", "08a": "2483-13579", "08b": "2394-12300", "08c": "2483-13626", "08d": "2483-13849", "08e": "2483-13997", "08f": "2483-14067", "09": "2395-13027", "09a": "2395-13083", "09b": "2483-14241", "08": "2483-13476", "10a": "2486-14666", "10b": "2486-15034", "10c": "2486-15155", "10d": "2486-15542", "10e": "2487-15519", "10f": "2543-19063", "10g": "3172-17243", "11": "2488-15795", "11a": "2488-15895", "11b": "2488-16015", "11c": "2488-16186", "11d": "2488-16367", "11e": "2488-16524", "11f": "2488-16688", "11g": "2488-16836", "11h": "2490-16595", "11i": "2490-16714", "11j": "2490-16839", "11k": "2490-17005", "11l": "2490-17119", "11m": "2490-17222", "11n": "2490-17335", "11o": "2490-17397", "12": "2494-17289", "12a": "2494-17331", "12b": "2494-17449", "12c": "2494-17624", "12d": "2494-17724", "12e": "2494-17853", "12f": "2494-18083", "13": "2494-18237", "13a": "2494-18318", "11j1": "2543-18793", "12b1": "2543-18938", "13b": "2543-19313", "13c": "3326-19868", "10e1": "3350-19828", "11p": "3172-17500", "11q": "3172-17704", "11c1": "3174-15199", "11d1": "3174-15350", "11d2": "3174-15465", "11d3": "3174-15578", "11d4": "3174-15688", "12a1": "3174-15821","03a1":"3419-24440","03a2":"3419-24515","03b1":"3419-24610","03b2":"3419-24814","03b3":"3421-24528","04a1":"3419-24894","07e":"3421-25352","11d5":"3421-24878"};
 const FIGPOST={"upload":()=>{S.idType=PREF.idType='Driver licence';render()},"L:fix":()=>{S.idType=PREF.idType='Driver licence';render()},"A:fix":()=>{S.idType=PREF.idType='Driver licence';render()},"account":()=>{stSet(1)},"otp":()=>{S.otp='491';render()},"general":()=>{stSet(1)},"avatar":()=>{pre();render()},"ahpra":()=>{setF({ahpra:'PHA0001234567'});render()},"V:filters":()=>{S.flt2={type:['Full Time'],skills:['Medication packing','Vaccinations']};render()},"V:mobile":()=>{setF({mob:'412 345 678'});render()},"V:sms":()=>{S.otp='491';render()},"V:prof":()=>{stSet(2)},"V:exp":()=>{stSet(1)},"V:travel":()=>{stSet(1)},"V:super":()=>{setF({sup_fund:'AustralianSuper'});render()},"V:pexp":()=>{stSet(1)}};
 const STSEM={
  role:{Start:'01',Filled:'01a'},
@@ -1450,7 +1457,17 @@ function fillF(id){S.f[id]=SUG[id];if(id==='pw1')S.f.pw2=SUG.pw2;S.focus=null;re
 function kbSugg(){const el=S.dk&&document.getElementById(S.dk.k);if(!el)return;el.value=el.dataset.sugg;el.dispatchEvent(new Event('input',{bubbles:true}));kbDone();}
 document.addEventListener('input',e=>{const t=e.target;if(S.dk&&t.id===S.dk.k)document.querySelectorAll('#phone .kbar .ksg').forEach(b=>{if(b.getAttribute('onclick')==='kbSugg()')b.style.display=t.value?'none':'';});});
 /* tap-to-fill suggestion for plain inputs (dates, amounts): data-sugg */
-document.addEventListener('focusin',e=>{const el=e.target;if(!(el instanceof HTMLInputElement)||!el.dataset.sugg||el.value||el.disabled)return;if(!TOUCH&&(el.inputMode==='numeric'||el.inputMode==='decimal'))return;const f=el.closest('.field');if(!f||f.querySelector('.sugg'))return;
+function tsugShow(el){tsugHide();if(el.value)return;const p=$('#phone');
+  /* fields with their own suggestion (name, email, password): the same suggestion moves into the bar */
+  const own=!el.dataset.sugg&&el.closest('.field')?.querySelector('.sugg button');if(!el.dataset.sugg&&!own)return;
+  const d=document.createElement('div');d.className='tsug';
+  d.innerHTML=own?`<button onmousedown="event.preventDefault()">${own.innerHTML}</button>`:`<button onmousedown="event.preventDefault()"><small>${esc(el.dataset.snote||'Suggested')}</small><b>${esc(el.dataset.sshow||el.dataset.sugg)}</b></button>`;
+  d.querySelector('button').onclick=()=>{tsugHide();if(own){own.click();return;}el.value=el.dataset.sugg;el.dispatchEvent(new Event('input',{bubbles:true}));el.blur();};p.appendChild(d);kbApply();}
+function tsugHide(){const t=document.querySelector('#phone .tsug');if(t){t.remove();kbApply();}}
+document.addEventListener('focusin',e=>{if(!TOUCH)return;const el=e.target;if(el instanceof HTMLInputElement&&el.closest('#phone'))tsugShow(el);});
+document.addEventListener('focusout',()=>{if(TOUCH)setTimeout(()=>{const a=document.activeElement;if(!(a instanceof HTMLInputElement&&a.closest('#phone')))tsugHide();},0);});
+document.addEventListener('input',e=>{if(TOUCH&&e.target.value)tsugHide();});
+document.addEventListener('focusin',e=>{const el=e.target;if(TOUCH)return;if(!(el instanceof HTMLInputElement)||!el.dataset.sugg||el.value||el.disabled)return;if(el.inputMode==='numeric'||el.inputMode==='decimal')return;const f=el.closest('.field');if(!f||f.querySelector('.sugg'))return;
   const d=document.createElement('div');d.className='sugg';d.innerHTML=`<button onmousedown="event.preventDefault()">${esc(el.dataset.sugg)}<small>Suggested</small></button>`;
   d.querySelector('button').onclick=()=>{el.value=el.dataset.sugg;d.remove();el.dispatchEvent(new Event('input',{bubbles:true}));if(S.dk)kbDone();else el.blur();};f.appendChild(d);});
 document.addEventListener('focusout',e=>{const f=e.target.closest&&e.target.closest('.field');if(f&&e.target.dataset&&e.target.dataset.sugg!==undefined)setTimeout(()=>f.querySelector('.sugg')?.remove(),0);});
@@ -1661,7 +1678,7 @@ const sfield=(id,label,ph,val,onin,extra='',style='')=>`<div class="sfield ${val
 function sClear(id){const el=document.getElementById(id);if(!el)return;el.value='';el.dispatchEvent(new Event('input',{bubbles:true}));el.focus();}
 function sCancel(id){const el=document.getElementById(id);if(!el)return;if(el.value){el.value='';el.dispatchEvent(new Event('input',{bubbles:true}));}const e2=document.getElementById(id);if(e2)e2.blur();}
 const DSUG=k=>k==='dob'||k==='sup_dob'?'19/07/1990':k==='exp'?'30/11/2027':/^(ins|other)_e/.test(k)?'30/06/2027':'';
-const KBH=350,TOUCH=!!(window.matchMedia&&matchMedia('(pointer:coarse)').matches);
+const KBH=350,TOUCH=!!((window.matchMedia&&matchMedia('(pointer:coarse)').matches)||/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)||(navigator.maxTouchPoints>1&&/Mac/.test(navigator.platform)));if(TOUCH)document.documentElement.classList.add('touch');
 function dFocus(k,dir){if(TOUCH)return;S.dk={k,dir};kbAttach();const el=document.getElementById(k);if(el)setTimeout(()=>kbScroll(el),80);setTimeout(()=>kbScroll(el),260);}
 function nFocus(k){if(TOUCH)return;S.dk={k,num:true};kbAttach();}
 function nBlur(k){if(S.dk&&S.dk.k===k){S.dk=null;kbRemove();}}
@@ -1683,7 +1700,8 @@ document.addEventListener('focusin',e=>{if(TOUCH)return;const el=e.target;if(!(e
 document.addEventListener('focusout',e=>{const id=e.target&&e.target.id;if(!S.dk||!S.dk.gen||S.dk.k!==id)return;const was=S.dk;setTimeout(()=>{if(S.dk!==was)return;const a=document.activeElement;if(!(a&&a.id===id)){S.dk=null;kbRemove();}},0);});
 
 /* real phones: the primary action rides above the system keyboard (same approach as in the app: visualViewport, or WebToNative's keyboard event inside the app) */
-(function(){const set=kb=>{const p=$('#phone');if(!p||!TOUCH)return;if(kb>80){p.classList.add('kb','kbnative');p.style.setProperty('--kbh',kb+'px');}else if(p.classList.contains('kbnative')){p.classList.remove('kb','kbnative');p.style.removeProperty('--kbh');}};
+let KBN=0;function kbApply(){const p=$('#phone');if(!p||!TOUCH||!p.classList.contains('kbnative'))return;const t=p.querySelector('.tsug');if(t)t.style.bottom=KBN+'px';p.style.setProperty('--kbh',(KBN+(t?44:0))+'px');}
+(function(){const set=kb=>{const p=$('#phone');if(!p||!TOUCH)return;if(kb>80){KBN=kb;p.classList.add('kb','kbnative');kbApply();}else if(p.classList.contains('kbnative')){p.classList.remove('kb','kbnative');p.style.removeProperty('--kbh');}};
   const vv=window.visualViewport;if(vv){const upd=()=>set(window.innerHeight-vv.height-vv.offsetTop);vv.addEventListener('resize',upd);vv.addEventListener('scroll',upd);}
   if(window.WTN&&WTN.on)WTN.on('keyboard',e=>set(e.data.visible?e.data.height/(/Android/i.test(navigator.userAgent)?devicePixelRatio:1):0));})();
 function kbScroll(el){if(el&&el.id&&!el.isConnected)el=document.getElementById(el.id);const p=$('#phone'),sc=el&&el.closest('.scroll');if(!p||!sc)return;const pr=p.getBoundingClientRect();const f=p.querySelector('.foot:not(.kbfoot)');const kbh=parseFloat(getComputedStyle(p).getPropertyValue('--kbh'))||350;
@@ -1762,7 +1780,7 @@ V.home=()=>{const ver=S.ver,L=left(),nx=firstLeft(),v=ver==='verified';let card=
   else if(ver==='attention')card=homeCard({h:'Your photo ID needs attention',sub:"We couldn't read your date of birth. Upload a clearer photo.",t:'Photo ID',s:'Photo is blurry',a:'Re-upload',on:`openSheet('fix',{mode:'fix',doc:'id'})`});
   else if(!L&&payLeft()&&S.applied){const p=firstPay();card=homeCard({h:'Add your payment details',seg:segs(3-payLeft(),3),sub:`${pl(payLeft())} left before your first payment`,t:p.t,s:'Needed to get paid',a:p.a,on:`startPay('setup')`});}
   else if(!L&&!v){const o=OPT.filter(o=>!S.items[o.id]);/* everything is done but the documents are still in review: this card stays until verified */
-    card=`<button class="scard allset inrev" onclick="go('all')"><span class="rv-ic">${ki('clock','#0B359A')}</span><div class="tx"><b>We're checking your documents</b><div class="sub">Usually 24–48 hours. We'll let you know when you're verified.</div></div><span class="chev">${I.chev}</span></button>`
+    card=`<button class="scard allset inrev" onclick="go('all')"><span class="rv-ic">${ki('clock','#0B359A')}</span><div class="tx"><b>We're checking your documents</b><div class="sub">Usually 24–48 hours. We'll let you know when you're verified.</div></div></button>`
     +(o.length?homeCard({h:'Stand out to pharmacies',sub:`${o.length} optional item${o.length===1?'':'s'} · pharmacies see these on your profile`,t:o[0].t,s:o[0].s,a:o[0].a,on:`S.applyFlow=true;S.ctx='setup';openItem('${o[0].id}')`}):'');}
   else if(!L){const o=OPT.filter(o=>!S.items[o.id]);card=(S.hideAllSet?'':`<div class="scard allset"><svg width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true"><circle cx="16" cy="16" r="16" fill="#34C759"/><path d="M9.33325 16.2632L13.619 21L22.6666 11" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><div class="tx"><b>You're all set</b><div class="sub">${v?'You can apply for shifts.':"We'll let you know when you're verified."}</div></div><button class="xp" aria-label="Close" onclick="S.hideAllSet=true;render()"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M8 8L16 16M16 8L8 16" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>`)
     +(o.length?homeCard({h:'Stand out to pharmacies',sub:`${o.length} optional item${o.length===1?'':'s'} · pharmacies see these on your profile`,t:o[0].t,s:o[0].s,a:o[0].a,on:`S.applyFlow=true;S.ctx='setup';openItem('${o[0].id}')`}):'');}
@@ -1806,7 +1824,7 @@ V.shift=()=>{const m=S.ver==='missing'&&vdocs().length;return `${status()}${jdNa
   ${jdBody(false)}
   </div><div class="foot">${m?btn('Upload documents','primary',"openSheet('applyNV')"):btn('Apply','primary',"openSheet('applyNV')",true)+btn('View verification status','secondary',"openSheet('applyNV')")}</div>`;};
 V.shiftV=()=>{const L=left();return `${status()}${jdNav()}<div class="scroll stack jdsc">
-  ${L?notice("Tap Add information. We'll ask only for what's missing, then bring you back here.",true,`${pl(L)} left before you can apply`,'lock'):notice('Tap Apply to send your application.',false,"You're ready to apply",'check-circle')}
+  ${L?notice("Tap Add information. We'll ask only for what's missing, then bring you back here.",true,`${pl(L)} left before you can apply`,'lock'):''}
   ${jdBody(true)}
   </div><div class="foot">${L?btn('Add information','primary','startApply()'):btn('Apply','primary','startApply()')+btn('Save for later','secondary',"toast('Saved to your shifts')")}</div>`;};
 
@@ -1827,10 +1845,11 @@ V.push=()=>`<div class="lock"><div class="status" style="align-self:stretch;colo
 
 const kbdBar=(done,mid='')=>`<div class="kbar"><span class="kch"><span>‹</span><span>›</span></span>${mid}<button onmousedown="event.preventDefault()" onclick="${done}">Done</button></div>`;
 const kbdKeys=(fn,star='*')=>`<div class="keypad">${['1','2','3','4','5','6','7','8','9',star,'0','del'].map(k=>k?`<button onmousedown="event.preventDefault()" onclick="${fn}('${k}')" aria-label="${k==='del'?'Delete':k}">${k==='del'?I.del:k}</button>`:'<span></span>').join('')}</div>`;
+function mobIn(el){const d=el.value.replace(/\D/g,'').replace(/^61/,'').slice(0,9);S.f.mob=[d.slice(0,3),d.slice(3,6),d.slice(6,9)].filter(Boolean).join(' ');el.value=S.f.mob;if(S.err)delete S.err.mob;const b=document.getElementById('sendBtn');if(b)b.disabled=!mobOk();}
 function mobFill(){S.f.mob='412 345 678';if(S.err)delete S.err.mob;render();}
-V.mobile=()=>{SUG.mob='412 345 678';const kb=S.mobKb!==false;return `${status()}${S.applyFlow?flowHdr('mobile'):header({close:true,title:'Profile'})}<div class="scroll stack">
+V.mobile=()=>{SUG.mob='412 345 678';const kb=S.mobKb!==false&&!TOUCH;return `${status()}${S.applyFlow?flowHdr('mobile'):header({close:true,title:'Profile'})}<div class="scroll stack">
   <div style="margin-bottom:12px">${titleBlock('Mobile number',"Pharmacies use it to contact you about a shift. We'll text you a code to confirm it.")}</div>
-  <div class="field"><label>Mobile number *</label><div class="phone-in${(S.err||{}).mob?' err':''}${kb?' foc':''}"><span>+61</span><input id="mob" type="tel" inputmode="none" autocomplete="tel-national" placeholder="412 345 678" value="${esc(S.f.mob||'')}" onfocus="S.focus='mob'" onclick="if(S.mobKb===false){S.mobKb=true;render();}"></div>${(S.err||{}).mob?`<div class="errtxt">${S.err.mob}</div>`:''}</div>
+  <div class="field"><label>Mobile number *</label><div class="phone-in${(S.err||{}).mob?' err':''}${kb?' foc':''}"><span>+61</span><input id="mob" type="tel" inputmode="${TOUCH?'tel':'none'}" autocomplete="tel-national" placeholder="412 345 678" value="${esc(S.f.mob||'')}" ${TOUCH?`data-sugg="412 345 678" data-sshow="+61 412 345 678" data-snote="From My Card" oninput="mobIn(this)"`:''} onfocus="S.focus='mob'" onclick="if(S.mobKb===false){S.mobKb=true;render();}"></div>${(S.err||{}).mob?`<div class="errtxt">${S.err.mob}</div>`:''}</div>
   </div>${kb?`<div class="foot kbfoot">${btn('Send code','primary','sendSms()',!mobOk()).replace('<button','<button id="sendBtn" onmousedown="event.preventDefault()"')}</div><div class="kbd">${kbdBar("S.mobKb=false;render()",S.f.mob?'':`<button class="ksg" onmousedown="event.preventDefault()" onclick="mobFill()"><small>From My Card</small><b>+61 412 345 678</b></button>`)}${kbdKeys('mkey','*')}</div>`:`<div class="foot">${btn('Send code','primary','sendSms()',!mobOk()).replace('<button','<button id="sendBtn"')}</div>`}`;};
 const mobOk=()=>!VAL.mob(S.f.mob||'');
 function mkey(k){if(k==='*')return;if((S.err||{}).mob){delete S.err.mob;document.querySelector('.phone-in')?.classList.remove('err');document.querySelector('.phone-in')?.parentNode.querySelector('.errtxt')?.remove();}let d=(S.f.mob||'').replace(/\D/g,'');if(k==='del')d=d.slice(0,-1);else if(d.length<9)d+=k;S.f.mob=[d.slice(0,3),d.slice(3,6),d.slice(6,9)].filter(Boolean).join(' ');
@@ -1919,13 +1938,14 @@ SH.docsInfo=()=>`<div class="inner">${sheetTitle('Have these documents ready','W
   <div class="overline">Optional, saves time</div><div class="stack tight">${DOCS.filter(d=>!d.req).map(d=>item(d.t,d.hint,'Optional','neutral')).join('')}</div>
   <div style="height:16px"></div>${btn('Continue','primary','docsInfoContinue()')}</div>`;
 const otpCells=()=>[0,1,2,3,4].map(i=>`<div class="${S.otpErr?'err':S.otp[i]?'fill':i===S.otp.length?'cur':''}">${S.otp[i]||''}</div>`).join('');
-const otpBlock=()=>`<div class="otp">${otpCells()}</div>`;
+const otpBlock=()=>`<div class="otp">${otpCells()}${TOUCH?`<input class="otp-in" id="otpIn" inputmode="numeric" autocomplete="one-time-code" maxlength="5" aria-label="Code" value="${esc(S.otp||'')}" oninput="otpIn(this)">`:''}</div>`;
+function otpIn(el){const v=el.value.replace(/\D/g,'').slice(0,5);el.value=v;S.otpErr=false;S.otp='';[...v].forEach(key);if(!v)key('del');}
 const resendHTML=()=>timerV?`Resend in 0:${String(timerV).padStart(2,'0')}`:`<button class="link" style="font-size:12px" onclick="startTimer();S.otpErr=false;S.otp='';render();toast('Code sent')">Resend code</button>`;
 SH.otp=()=>`<div class="inner" style="overflow:visible">${sheetTitle('Check your inbox',`We sent a 5-digit code to <b>${esc(S.email)}</b>`,true,'clearInterval(timerT);closeSheet()')}
   ${otpBlock()}
   <div class="otp-h">${S.otpErr?`<span class="errtxt" style="margin:0">That code didn't work. Check it and try again.</span>`:`<span>Didn't get the code? Check spam.</span>`}<span id="resend">${resendHTML()}</span></div>
   <div style="display:flex;gap:36px;justify-content:center;margin-top:24px"><button class="link" onclick="toast('Opens the Mail app')">Open Mail app</button><button class="link" onclick="changeEmail()">Change email</button></div>
-  ${kbdKeys('key')}</div>`;
+  ${TOUCH?'':kbdKeys('key')}</div>`;
 const vSheet=(h,d)=>{const m=S.ver==='missing'&&vdocs().length;return `<div class="inner">${sheetTitle(h,d(m))}
   <div class="overline">${m?'To get verified · usually 24–48 hours':'In review · usually 24–48 hours'}</div>
   <div class="stack tight">${vItems()}</div>
@@ -1982,11 +2002,23 @@ SH.photo=()=>{const {doc,side}=S.sheet;const d=DOCS.find(x=>x.id===doc);const li
 function pinFoot(){const sh=document.querySelector('#phone .sheet');if(!sh||sh.querySelector(':scope>.sh-foot'))return;const inn=sh.querySelector(':scope>.inner');if(!inn)return;
   const isB=e=>e&&(e.matches('button.btn')||(e.classList.contains('stack')&&e.children.length>0&&[...e.children].every(c=>c.matches('button.btn'))));
   const out=[];let e=inn.lastElementChild;while(isB(e)){out.unshift(e);e=e.previousElementSibling;}
-  if(!out.length)return;const ib=getComputedStyle(inn);const pad=out[0].getBoundingClientRect().top-(e?e.getBoundingClientRect().bottom:inn.getBoundingClientRect().top+parseFloat(ib.paddingTop));
-  if(e&&e.tagName==='DIV'&&!e.className&&!e.children.length&&/height:\s*\d+px/.test(e.getAttribute('style')||'')){const q=e.previousElementSibling;e.remove();if(q)q.style.marginBottom='0';}else if(e)e.style.marginBottom='0';inn.style.paddingBottom='0';
-  const f=document.createElement('div');f.className='sh-foot pin';f.style.paddingTop=pad+'px';out.forEach(o=>{o.style.marginTop='0';f.appendChild(o);});sh.appendChild(f);}
+  if(!out.length)return;const h0=sh.getBoundingClientRect().height,pb=getComputedStyle(inn).paddingBottom;
+  if(e&&e.tagName==='DIV'&&!e.className&&!e.children.length&&/height:\s*\d+px/.test(e.getAttribute('style')||''))e.remove();
+  const f=document.createElement('div');f.className='sh-foot pin';f.style.paddingTop='0';f.style.paddingBottom=pb;inn.style.paddingBottom='0';out.forEach(o=>{o.style.marginTop='0';f.appendChild(o);});sh.appendChild(f);
+  /* keep the sheet exactly as tall as before: the gap above the buttons moves into the pinned footer */
+  const d=h0-sh.getBoundingClientRect().height;f.style.paddingTop=Math.max(0,d)+'px';
+  /* when the content scrolls under the buttons, keep a small gap above them */
+  if(inn.scrollHeight>inn.clientHeight+1)f.style.paddingTop=Math.max(16,d)+'px';}
+/* a sheet grows so nothing inside is cut off: popups (suggestions, dropdowns) and field borders stay visible */
+function fitSheet(){const sh=document.querySelector('#phone .sheet');if(!sh)return;const i=sh.querySelector(':scope>.inner');if(!i||getComputedStyle(i).overflowY==='visible')return;
+  if(i.dataset.pb===undefined)i.dataset.pb=parseFloat(getComputedStyle(i).paddingBottom)||0;const base=+i.dataset.pb;
+  const r=i.getBoundingClientRect(),off=e=>e.getBoundingClientRect().bottom-r.top+i.scrollTop;
+  let flow=0,all=0;[...i.children].forEach(c=>{if(getComputedStyle(c).position!=='absolute')flow=Math.max(flow,off(c)+(parseFloat(getComputedStyle(c).marginBottom)||0));});
+  i.querySelectorAll('*').forEach(e=>{if(e.getBoundingClientRect().height)all=Math.max(all,off(e));});
+  const ex=all-flow;i.style.paddingBottom=(ex>1?Math.max(base,Math.ceil(ex+4)):base)+'px';}
+document.addEventListener('focusin',()=>setTimeout(fitSheet,60));document.addEventListener('focusout',()=>setTimeout(fitSheet,60));
 /* in-app camera: full screen, the frame matches the shape of the document */
-const CAMDOC={licFront:['Front of licence','1 of 2','Fit the front of your licence in the frame'],licBack:['Back of licence','2 of 2','Turn the card over and fit the back in the frame'],passport:['Passport photo page','','Fit the photo page in the frame'],cv:['Resume','','Fit the first page in the frame'],ins:['Indemnity insurance','','Fit the certificate in the frame'],super:['Super choice form','','Fit the whole form in the frame'],cred:['Advanced credentials','','Fit the certificate in the frame'],avatar:['Profile photo','','Center your face in the circle']};
+const CAMDOC={licFront:['Front of licence','1 of 2','Fit the front of your licence in the frame'],licBack:['Back of licence','2 of 2','Fit the back of your licence in the frame'],passport:['Passport photo page','','Fit the photo page in the frame'],cv:['Resume','','Fit the first page in the frame'],ins:['Indemnity insurance','','Fit the certificate in the frame'],super:['Super choice form','','Fit the whole form in the frame'],cred:['Advanced credentials','','Fit the certificate in the frame'],avatar:['Profile photo','','Center your face in the circle']};
 function camKey(doc,side){return doc==='avatar'?'avatar':doc==='id'?(S.idType==='Passport'?'passport':side==='back'?'licBack':'licFront'):doc;}
 function openCam(doc,side,then,from){S._from=from||null;S.sheet={name:'cam',doc,side:side||'front',then:then||'',from:S._from};S.anim=false;render();}
 function camShoot(){const c=S.sheet;const v=document.querySelector('#phone .camv');if(v)v.classList.add('snap');
@@ -1995,20 +2027,24 @@ function camClose(){const c=S.sheet;if(c.from){S.sheet=Object.assign({},c.from);
 const BOLT='<svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M13 3L5 14h6l-1 7 8-11h-6l1-7z" stroke="#fff" stroke-width="1.5" stroke-linejoin="round"/></svg>';
 const FACE='<svg viewBox="0 0 280 280"><circle cx="140" cy="122" r="56" fill="#d8c1aa"/><path d="M84 110c4-40 30-58 56-58s52 18 56 58c-12-18-30-26-56-26s-44 8-56 26z" fill="#4a3b30"/><path d="M36 280c8-64 50-96 104-96s96 32 104 96z" fill="#3c5a7d"/></svg>';
 const camV=()=>{const c=S.sheet,k=camKey(c.doc,c.side),[t,st,hint]=CAMDOC[k],av=k==='avatar';
-  const [w,h]=av?[280,280]:({licFront:[340,214],licBack:[340,214],passport:[340,240]})[k]||[296,420];const cy=388;
+  let [w,h]=av?[280,280]:({licFront:[340,214],licBack:[340,214],passport:[340,240]})[k]||[296,420];
+  /* fit the frame between the top bar and the hint + shutter, on any screen height */
+  /* frame + hint sit in the upper part of the space between the top bar and the shutter, never under the shutter */
+  const PH=(document.getElementById('phone')||{}).clientHeight||874,TOP=115,BOT=150,HINT=68,GAP=16,avail=PH-TOP-BOT-HINT-GAP*2,sc=Math.min(1,avail/h);w=Math.round(w*sc);h=Math.round(h*sc);
+  const slack=avail-h,cy=Math.round(TOP+GAP+slack*0.35+h/2);
   const subj=av?`<div class="subj face" style="top:${cy}px;width:${w}px;height:${h}px">${FACE}</div>`:`<div class="subj" style="top:${cy}px;width:${Math.round(w*.92)}px;height:${Math.round(h*.92)}px">${SKEL[k]()}</div>`;
   return `<div class="camv" role="dialog" aria-label="Camera"><div class="feed">${subj}</div>
   <div class="frame${av?' round':''}" style="top:${cy}px;width:${w}px;height:${h}px"><i></i><i></i><i></i><i></i></div>
   ${status(true)}
   <div class="camtop"><button class="cbtn" aria-label="Close camera" onclick="camClose()">${ki('close','#fff')}</button><div class="ct"><b>${t}</b>${st?`<span>${st}</span>`:''}</div><button class="cbtn" aria-label="Flash" onclick="toast('Flash on')">${BOLT}</button></div>
-  <div class="chint" style="top:${cy+h/2+20}px"><b>${hint}</b><span>${av?'Use good light and look straight at the camera.':'Use good light. Avoid glare and shadows.'}</span></div>
+  <div class="chint" style="top:${cy+h/2+16}px"><b>${hint}</b><span>${av?'Use good light and look straight at the camera.':'Use good light. Avoid glare and shadows.'}</span></div>
   <div class="cbot"><button class="shutter" aria-label="Take photo" onclick="camShoot()"><i></i></button></div></div>`;};
 /* Choose a file: where the file comes from */
 function openSource(then,from){S._from=from||null;S.sheet={name:'source',then,from:S._from};S.anim=!from;render();}
 function srcPick(){const t=S.sheet.then;S.sheet=null;Function(t)();}
 function srcClose(){const f=S.sheet.from;if(f){S.sheet=Object.assign({},f);S.anim=false;return render();}closeSheet();}
 function pickFileSrc(k){openSource(`pickFile('${k}')`);}
-SH.source=()=>`<div class="inner">${sheetTitle('Choose a file','JPG, PNG or PDF, up to 10 MB',true,'srcClose()')}<div class="stack tight">${row({t:'Photo library',s:'Photos and screenshots on this phone',ic:'library',on:'srcPick()'})}${row({t:'Files',s:'This phone, iCloud Drive or Google Drive',ic:'doc',on:'srcPick()'})}</div></div>`;
+SH.source=()=>`<div class="inner">${sheetTitle('Choose a file','JPG, PNG or PDF, up to 10 MB',true,'srcClose()')}<div class="stack tight">${row({t:'Photo library',s:'Photos and screenshots on this phone',ic:'library',on:'srcPick()'})}${row({t:'Files',s:'This phone, iCloud Drive or Google Drive',ic:'docdl',on:'srcPick()'})}</div></div>`;
 
 const JSK=['Patient counselling and education','Medication preparation and dispensing','Vaccinations','Sterile and non-sterile compounding','Medication packing','Clinical decision-making','Customer service and communication','Inventory management and purchasing','Team player','Attention to detail'];
 const SKILLS=['Patient counselling and education','Inventory management and purchasing','Sterile and non-sterile compounding','Quality assurance and improvement','Leadership and management','Collaboration and communication','Clinical decision-making','Medication packing','Customer service and communication','Medication preparation and dispensing','Vaccinations','Sales','Retail Management','Problem Solving','Technology & Innovation','Empathy','Team player','Time Management','Decision-Making','Critical Thinking','Adaptable','Experience with Pharmacotherapy','Attention to detail','Stress Management'];
@@ -2039,13 +2075,13 @@ SH.apply=()=>{const L=ITEMS.filter(i=>!S.items[i.id]);const todo=L,done=ITEMS.fi
   const first=todo.find(i=>!S.later[i.id])||todo[0];const anyDone=done.length>0;
   const desc=!anyDone?"About 2 minutes, plus 4 optional steps. Have your certificates ready. We'll bring you back to this shift.":"About a minute, plus 4 optional steps. We'll bring you back to this shift.";
   return `<div class="inner">${sheetTitle(`${pl(L.length)} left before you can apply`,desc)}
-  <div class="stack tight">${ITEMS.map(i=>S.items[i.id]?row({t:i.t,s:i.id==='mobile'?'+61 '+(S.f.mob||'412 345 678'):i.s,tagL:'Done',chev:false}):row({t:i.t,s:i.s,tagL:'To do',chev:false,on:`openItem('${i.id}')`})).join('')}</div>
+  <div class="stack tight">${ITEMS.map(i=>S.items[i.id]?row({t:i.t,s:i.id==='mobile'?'+61 '+(S.f.mob||'412 345 678'):i.s,tagL:'Done',chev:false}):row({t:i.t,s:i.s,tagL:'To do',on:`openItem('${i.id}')`})).join('')}</div>
   <div style="height:16px"></div>${btn('Continue','primary',`openItem('${first.id}')`)}</div>`;};
 SH.sms=()=>`<div class="inner" style="overflow:visible">${sheetTitle('Check your messages',`We sent a 5-digit code to +61 ${esc((S.f.mob||'412 345 678').replace(/^(\d)(\d).*(\d)(\d)$/,'$1$2* *** *$3$4').replace(/^(\d\d)\d (\d)/,'$1* $2'))}`,true,'clearInterval(timerT);closeSheet()')}
   ${otpBlock()}
   <div class="otp-h">${S.otpErr?`<span class="errtxt" style="margin:0">That code didn't work. Check it and try again.</span>`:`<span>Didn't get the code? Check the number.</span>`}<span id="resend">${resendHTML()}</span></div>
   <div style="display:flex;justify-content:center;margin-top:24px"><button class="link" onclick="clearInterval(timerT);closeSheet()">Change number</button></div>
-  ${(S.otp||'').length>=5?'':`<div class="ksug"><button onmousedown="event.preventDefault()" onclick="autoCode()"><small>From Messages</small><b>49173</b></button></div>`}${kbdKeys('key')}</div>`;
+  ${(S.otp||'').length>=5?'':`<div class="ksug"><button onmousedown="event.preventDefault()" onclick="autoCode()"><small>From Messages</small><b>49173</b></button></div>`}${TOUCH?'':kbdKeys('key')}</div>`;
 SH.fix=()=>{const d=S.sheet.doc,add=S.sheet.mode==='add',isId=d==='id';return `<div class="inner">${sheetTitle(add?`Upload your ${isId?'photo ID':'indemnity insurance'}`:'Upload a new photo ID',add?(isId?'Choose document type':'Certificate of currency and expiry date'):"The photo was blurry and we couldn't read your date of birth. Retake it in good light, with the whole card in the frame.")}
   ${isId?`<div style="margin:0 0 12px">${chips(['Driver licence','Passport'],S.idType,'setIdType')}</div>`:''}
   ${docPrev(isId?'id':'ins')}<div class="stack tight">${row({t:'Take a photo',s:isId?(S.idType==='Passport'?"Photo page. We'll guide you.":"Front and back. We'll guide you."):"We'll guide you.",on:`openCam('${d}','front','S.sheet=S._from;fixDone()',S.sheet)`})}
@@ -2194,7 +2230,9 @@ function render(){setTimeout(()=>{if(S.hq&&document.getElementById('hq'))hqFilte
   const keep=S._last===id?{sc:p.querySelector('.screen .scroll')?.scrollTop||0,sh:p.querySelector('.sheet .inner')?.scrollTop||0,sheet:!!S.sheet}:null;S._last=id;
   p.classList.toggle('hassheet',!!S.sheet);
   p.innerHTML=`<section class="screen">${V[id]()}</section>${S.sheet&&S.sheet.name==='cam'?camV():S.sheet?`<div class="overlay${an}" onclick="${['otp','sms'].includes(S.sheet.name)?'':'closeSheet()'}"></div><div class="sheet${an}${tallSheet()?' tall':''}" role="dialog"><div class="grab"></div>${SH[S.sheet.name]()}</div>`:''}${S.alert?`<div class="alert-wrap" role="alertdialog">${AL[S.alert]()}</div>`:''}<div class="homebar"></div>`;
-  pinFoot();dGhosts();
+  pinFoot();dGhosts();fitSheet();
+  if(TOUCH){const o=document.getElementById('otpIn');if(o&&document.activeElement!==o)o.focus({preventScroll:true});}
+  if(TOUCH){const a=document.activeElement;if(a instanceof HTMLInputElement&&a.closest('#phone'))tsugShow(a);else kbApply();}
   if(S.sheet&&S.sheet.name==='insExp'&&!S.sheet.af){S.sheet.af=1;setTimeout(()=>{const el=document.getElementById('ins_e0');if(el)el.focus({preventScroll:true});},60);}
   if(S.dk){const el=document.getElementById(S.dk.k);if(el){kbAttach();el.focus({preventScroll:true});}else S.dk=null;}
   if(keep){const sc=p.querySelector('.screen .scroll');if(sc)sc.scrollTop=keep.sc;const si=p.querySelector('.sheet .inner');if(si&&keep.sheet)si.scrollTop=keep.sh;}
