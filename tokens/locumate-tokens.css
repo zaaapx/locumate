@@ -1,0 +1,376 @@
+/*
+  Locumate design tokens
+  Source: Figma "Andrii - Locumate_AUS_MobileApp (Copy)", variables (Primitives, Color, Layout, Typography),
+  text styles and effect styles. Generated 25 Nov 2026 for the onboarding handoff.
+
+  How to use
+  1. Include this file once, before the app styles.
+  2. Use the semantic tokens (--lm-color-*, --lm-text-*, --lm-bg-*, --lm-border-*, ...) in components,
+     not the primitives (--lm-primary-500, ...). The semantic names are the same as in Figma.
+  3. The last block sets Element Plus 1.0.2 variables. In 1.0.2 the -light-1...9 shades are NOT
+     derived from --el-color-primary, so every shade is set here explicitly.
+  Units: px. Fonts: Outfit 300/400/500/600/700 (Google Fonts).
+*/
+
+/* 1. Primitives: colour scales (use through the semantic tokens below) */
+:root {
+  --lm-primary-50: #f5f8fd;
+  --lm-primary-100: #ebf1fa;
+  --lm-primary-150: #dae3f4;
+  --lm-primary-200: #c5d2ec;
+  --lm-primary-250: #abbee3;
+  --lm-primary-300: #8fa8d8;
+  --lm-primary-350: #718fcb;
+  --lm-primary-400: #5174bc;
+  --lm-primary-450: #2f57ac;
+  --lm-primary-500: #0b359a;
+  --lm-primary-550: #0a308b;
+  --lm-primary-600: #092a7b;
+  --lm-primary-650: #08256c;
+  --lm-primary-700: #07205c;
+  --lm-primary-750: #061b4d;
+  --lm-primary-800: #04153e;
+  --lm-primary-850: #03102e;
+  --lm-primary-900: #020b1f;
+  --lm-primary-950: #01050f;
+  --lm-secondary-50: #f2faf9;
+  --lm-secondary-100: #ebf6f5;
+  --lm-secondary-150: #dff0ee;
+  --lm-secondary-200: #cee8e6;
+  --lm-secondary-250: #bbdfdb;
+  --lm-secondary-300: #a4d4d0;
+  --lm-secondary-350: #8bc8c3;
+  --lm-secondary-400: #6ebbb5;
+  --lm-secondary-450: #4aaea7;
+  --lm-secondary-500: #009f98;
+  --lm-secondary-550: #008f89;
+  --lm-secondary-600: #007f7a;
+  --lm-secondary-650: #006f6a;
+  --lm-secondary-700: #005f5b;
+  --lm-secondary-750: #00504c;
+  --lm-secondary-800: #00403d;
+  --lm-secondary-850: #00302e;
+  --lm-secondary-900: #00201e;
+  --lm-secondary-950: #00100f;
+  --lm-red-50: #fdf6f5;
+  --lm-red-100: #fef0ef;
+  --lm-red-150: #fee6e3;
+  --lm-red-200: #ffd8d5;
+  --lm-red-250: #ffc8c4;
+  --lm-red-300: #feb6b0;
+  --lm-red-350: #fca19b;
+  --lm-red-400: #f88a84;
+  --lm-red-450: #f3706c;
+  --lm-red-500: #ed5151;
+  --lm-red-550: #d54949;
+  --lm-red-600: #be4141;
+  --lm-red-650: #a63939;
+  --lm-red-700: #8e3131;
+  --lm-red-750: #772929;
+  --lm-red-800: #5f2020;
+  --lm-red-850: #471818;
+  --lm-red-900: #2f1010;
+  --lm-red-950: #180808;
+  --lm-green-50: #f4f9f5;
+  --lm-green-100: #eef8ef;
+  --lm-green-150: #e4f5e5;
+  --lm-green-200: #d5f1d8;
+  --lm-green-250: #c4ecc8;
+  --lm-green-300: #b1e6b6;
+  --lm-green-350: #9adfa2;
+  --lm-green-400: #80d88d;
+  --lm-green-450: #61d074;
+  --lm-green-500: #34c759;
+  --lm-green-550: #2fb350;
+  --lm-green-600: #2a9f47;
+  --lm-green-650: #248b3e;
+  --lm-green-700: #1f7735;
+  --lm-green-750: #1a642d;
+  --lm-green-800: #155024;
+  --lm-green-850: #103c1b;
+  --lm-green-900: #0a2812;
+  --lm-green-950: #051409;
+  --lm-amber-50: #fbf7f2;
+  --lm-amber-100: #fbf5ec;
+  --lm-amber-150: #fbf1e0;
+  --lm-amber-200: #fcecd1;
+  --lm-amber-250: #fde6bf;
+  --lm-amber-300: #fedfaa;
+  --lm-amber-350: #fed692;
+  --lm-amber-400: #ffcd75;
+  --lm-amber-450: #ffc351;
+  --lm-amber-500: #ffb800;
+  --lm-amber-550: #e6a600;
+  --lm-amber-600: #cc9300;
+  --lm-amber-650: #b38100;
+  --lm-amber-700: #996e00;
+  --lm-amber-750: #805c00;
+  --lm-amber-800: #664a00;
+  --lm-amber-850: #4d3700;
+  --lm-amber-900: #332500;
+  --lm-amber-950: #191200;
+  --lm-grey-50: #f6f8fd;
+  --lm-grey-100: #f1f3f8;
+  --lm-grey-150: #e8eaf0;
+  --lm-grey-200: #dcdee4;
+  --lm-grey-250: #cfd1d7;
+  --lm-grey-300: #c0c2c8;
+  --lm-grey-350: #afb1b7;
+  --lm-grey-400: #9ea0a6;
+  --lm-grey-450: #8b8d93;
+  --lm-grey-500: #787a80;
+  --lm-grey-550: #6c6e73;
+  --lm-grey-600: #606266;
+  --lm-grey-650: #54555a;
+  --lm-grey-700: #48494d;
+  --lm-grey-750: #3c3d40;
+  --lm-grey-800: #303133;
+  --lm-grey-850: #242526;
+  --lm-grey-900: #18181a;
+  --lm-grey-950: #0c0c0d;
+  --lm-neutral-white: #ffffff;
+  --lm-neutral-black: #000000;
+  --lm-neutral-text-strong: #212121;
+  --lm-neutral-text: #484848;
+  --lm-neutral-border: #b3b6be;
+  --lm-neutral-fill: #eeeeee;
+  --lm-neutral-fill-subtle: #fafafa;
+  --lm-tint-blue: #e8effc;
+  --lm-tint-blue-input: #edf2fc;
+  --lm-tint-blue-surface: #e4e8f2;
+  --lm-tint-teal: #e6fffe;
+  --lm-brand-logo: #2361fc;
+  --lm-brand-logo-dark: #0f3eb2;
+  --lm-brand-blue-mid: #1746bb;
+  --lm-brand-blue-light: #a0bbff;
+  --lm-brand-red-alt: #e54558;
+  --lm-brand-teal-alt: #00b7af;
+  --lm-alpha-black-60: rgba(0, 0, 0, 0.6);
+  --lm-alpha-border-30: rgba(179, 182, 190, 0.3);
+  --lm-alpha-amber-15: rgba(255, 184, 0, 0.15);
+  --lm-alpha-primary-6: rgba(11, 53, 154, 0.06);
+  --lm-illustration-ink: #263238;
+}
+
+/* 2. Semantic colours: what each colour is for (Figma collection "Color") */
+:root {
+  --lm-color-primary: var(--lm-primary-500);
+  --lm-color-primary-light-1: var(--lm-primary-450);
+  --lm-color-primary-light-2: var(--lm-primary-400);
+  --lm-color-primary-light-3: var(--lm-primary-350);
+  --lm-color-primary-light-4: var(--lm-primary-300);
+  --lm-color-primary-light-5: var(--lm-primary-250);
+  --lm-color-primary-light-6: var(--lm-primary-200);
+  --lm-color-primary-light-7: var(--lm-primary-150);
+  --lm-color-primary-light-8: var(--lm-primary-100);
+  --lm-color-primary-light-9: var(--lm-primary-50);
+  --lm-color-secondary: var(--lm-secondary-500);
+  --lm-color-success: var(--lm-green-500);
+  --lm-color-success-light: var(--lm-green-200);
+  --lm-color-success-lighter: var(--lm-green-50);
+  --lm-color-warning: var(--lm-amber-500);
+  --lm-color-warning-light: var(--lm-amber-200);
+  --lm-color-warning-lighter: var(--lm-amber-50);
+  --lm-color-danger: var(--lm-red-500);
+  --lm-color-danger-light: var(--lm-red-200);
+  --lm-color-danger-lighter: var(--lm-red-50);
+  --lm-color-info: var(--lm-grey-500);
+  --lm-color-info-light: var(--lm-grey-200);
+  --lm-color-info-lighter: var(--lm-grey-50);
+  --lm-color-white: var(--lm-neutral-white);
+  --lm-color-black: var(--lm-neutral-black);
+  --lm-text-primary: var(--lm-neutral-black);
+  --lm-text-regular: var(--lm-neutral-text);
+  --lm-text-secondary: var(--lm-grey-500);
+  --lm-text-placeholder: var(--lm-neutral-border);
+  --lm-text-brand: var(--lm-primary-500);
+  --lm-text-accent: var(--lm-secondary-500);
+  --lm-text-on-primary: var(--lm-neutral-white);
+  --lm-text-danger: var(--lm-red-600);
+  --lm-border-base: var(--lm-neutral-border);
+  --lm-border-light: var(--lm-alpha-border-30);
+  --lm-border-lighter: var(--lm-neutral-fill);
+  --lm-border-extra-light: var(--lm-neutral-fill-subtle);
+  --lm-border-strong: var(--lm-grey-400);
+  --lm-border-focus: var(--lm-primary-500);
+  --lm-bg-page: var(--lm-neutral-white);
+  --lm-bg-base: var(--lm-bg-page);
+  --lm-bg-surface: var(--lm-tint-blue-surface);
+  --lm-bg-overlay: var(--lm-alpha-black-60);
+  --lm-border-danger: var(--lm-color-danger);
+  --lm-color-logo: var(--lm-brand-logo-dark);
+  --lm-border-decorative: var(--lm-alpha-primary-6);
+  --lm-bg-card: var(--lm-neutral-white);
+  --lm-bg-control: var(--lm-neutral-white);
+  --lm-bg-icon: var(--lm-tint-blue);
+  --lm-bg-info: var(--lm-tint-blue);
+  --lm-bg-warning: var(--lm-color-warning-light);
+  --lm-bg-brand: var(--lm-primary-500);
+  --lm-bg-brand-subtle: var(--lm-color-primary-light-9);
+  --lm-bg-accent: var(--lm-secondary-500);
+  --lm-bg-placeholder: var(--lm-neutral-fill);
+  --lm-divider: var(--lm-neutral-fill);
+  --lm-accent-bar: var(--lm-secondary-500);
+  --lm-progress-track: var(--lm-neutral-fill);
+  --lm-progress-fill: var(--lm-secondary-500);
+  --lm-badge-required-bg: var(--lm-amber-500);
+  --lm-badge-in-review-bg: var(--lm-tint-blue);
+  --lm-badge-done-bg: var(--lm-secondary-500);
+  --lm-badge-neutral-bg: var(--lm-neutral-fill);
+  --lm-icon-default: var(--lm-neutral-text);
+  --lm-icon-primary: var(--lm-neutral-black);
+  --lm-icon-brand: var(--lm-primary-500);
+  --lm-icon-muted: var(--lm-neutral-border);
+  --lm-icon-on-brand: var(--lm-neutral-white);
+  --lm-icon-warning: var(--lm-color-warning);
+  --lm-bg-disabled: var(--lm-neutral-fill-subtle);
+  --lm-toast-success-bg: var(--lm-green-700);
+  --lm-toast-error-bg: var(--lm-red-600);
+  --lm-icon-warning-strong: var(--lm-amber-700);
+}
+
+/* 3. Layout: spacing, radii, sizes, borders (Figma collection "Layout") */
+:root {
+  --lm-space-0: 0px;
+  --lm-space-2: 2px;
+  --lm-space-4: 4px;
+  --lm-space-6: 6px;
+  --lm-space-8: 8px;
+  --lm-space-12: 12px;
+  --lm-space-16: 16px;
+  --lm-space-20: 20px;
+  --lm-space-24: 24px;
+  --lm-space-28: 28px;
+  --lm-space-36: 36px;
+  --lm-space-40: 40px;
+  --lm-space-44: 44px;
+  --lm-space-safe-bottom: 46px;
+  --lm-radius-2: 2px;
+  --lm-radius-4: 4px;
+  --lm-radius-6: 6px;
+  --lm-radius-8: 8px;
+  --lm-radius-12: 12px;
+  --lm-radius-16: 16px;
+  --lm-radius-20: 20px;
+  --lm-radius-24: 24px;
+  --lm-radius-28: 28px;
+  --lm-radius-32: 32px;
+  --lm-radius-small: var(--lm-radius-6);
+  --lm-radius-base: var(--lm-radius-12);
+  --lm-radius-round: 9999px;
+  --lm-size-button: 52px;
+  --lm-size-button-small: 34px;
+  --lm-size-chip: 34px;
+  --lm-size-input: 56px;
+  --lm-border-width-base: 1px;
+  --lm-border-width-focus: 1.5px;
+}
+
+/* 4. Typography (Figma text styles). Use the classes or the variables. */
+:root {
+  --lm-font-family: 'Outfit', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --lm-font-heading-h1: 600 28px/32px var(--lm-font-family);
+  --lm-font-heading-h2: 700 24px/28px var(--lm-font-family);
+  --lm-font-heading-h3: 600 20px/24px var(--lm-font-family);
+  --lm-font-title-16: 600 16px/20px var(--lm-font-family);
+  --lm-font-title-14: 600 14px/18px var(--lm-font-family);
+  --lm-font-title-12: 600 12px/16px var(--lm-font-family);
+  --lm-font-body-16: 400 16px/20px var(--lm-font-family);
+  --lm-font-body-14: 400 14px/18px var(--lm-font-family);
+  --lm-font-body-12: 400 12px/16px var(--lm-font-family);
+  --lm-font-body-12-light: 300 12px/16px var(--lm-font-family);
+  --lm-font-label-16: 500 16px/20px var(--lm-font-family);
+  --lm-font-label-12: 500 12px/16px var(--lm-font-family);
+  --lm-font-label-10: 500 10px/12px var(--lm-font-family);
+  --lm-font-button-16: 700 16px/20px var(--lm-font-family);
+  --lm-font-button-14: 700 14px/18px var(--lm-font-family);
+  --lm-font-link-12: 700 12px/16px var(--lm-font-family);
+  --lm-font-numeric-otp: 700 28px/40px var(--lm-font-family);
+}
+.lm-heading-h1 { font: var(--lm-font-heading-h1); letter-spacing: 0; }
+.lm-heading-h2 { font: var(--lm-font-heading-h2); letter-spacing: 0; }
+.lm-heading-h3 { font: var(--lm-font-heading-h3); letter-spacing: 0; }
+.lm-title-16 { font: var(--lm-font-title-16); letter-spacing: 0; }
+.lm-title-14 { font: var(--lm-font-title-14); letter-spacing: 0; }
+.lm-title-12 { font: var(--lm-font-title-12); letter-spacing: 0; }
+.lm-body-16 { font: var(--lm-font-body-16); letter-spacing: 0; }
+.lm-body-14 { font: var(--lm-font-body-14); letter-spacing: 0; }
+.lm-body-12 { font: var(--lm-font-body-12); letter-spacing: 0; }
+.lm-body-12-light { font: var(--lm-font-body-12-light); letter-spacing: 0; }
+.lm-label-16 { font: var(--lm-font-label-16); letter-spacing: 0; }
+.lm-label-12 { font: var(--lm-font-label-12); letter-spacing: 0; }
+.lm-label-10 { font: var(--lm-font-label-10); letter-spacing: 0; }
+.lm-button-16 { font: var(--lm-font-button-16); letter-spacing: 0; }
+.lm-button-14 { font: var(--lm-font-button-14); letter-spacing: 0; }
+.lm-link-12 { font: var(--lm-font-link-12); letter-spacing: 0; }
+.lm-numeric-otp { font: var(--lm-font-numeric-otp); letter-spacing: 0; }
+
+/* 5. Effects (Figma effect styles) */
+:root {
+  --lm-shadow-card: 0 4px 16px rgba(0, 15, 40, 0.10);
+  --lm-shadow-sheet: 0 12px 24px rgba(0, 0, 0, 0.06);
+  --lm-shadow-illustration: 0 16px 32px rgba(0, 0, 0, 0.22);
+  --lm-blur-background: blur(10px);   /* backdrop-filter, behind overlays */
+  --lm-blur-hidden-content: blur(6px); /* filter, pharmacy details hidden before verification */
+}
+
+/* 6. Element Plus 1.0.2-beta.71: theme variables (literal values, as 1.0.2 does not derive shades) */
+:root {
+  --el-color-primary: #0b359a;
+  --el-color-primary-light-1: #2f57ac;
+  --el-color-primary-light-2: #5174bc;
+  --el-color-primary-light-3: #718fcb;
+  --el-color-primary-light-4: #8fa8d8;
+  --el-color-primary-light-5: #abbee3;
+  --el-color-primary-light-6: #c5d2ec;
+  --el-color-primary-light-7: #dae3f4;
+  --el-color-primary-light-8: #ebf1fa;
+  --el-color-primary-light-9: #f5f8fd;
+  --el-color-success: #34c759;
+  --el-color-success-light: #d5f1d8;
+  --el-color-success-lighter: #f4f9f5;
+  --el-color-warning: #ffb800;
+  --el-color-warning-light: #fcecd1;
+  --el-color-warning-lighter: #fbf7f2;
+  --el-color-danger: #ed5151;
+  --el-color-danger-light: #ffd8d5;
+  --el-color-danger-lighter: #fdf6f5;
+  --el-color-error: #ed5151;
+  --el-color-error-light: #ffd8d5;
+  --el-color-error-lighter: #fdf6f5;
+  --el-color-info: #787a80;
+  --el-color-info-light: #dcdee4;
+  --el-color-info-lighter: #f6f8fd;
+  --el-color-white: #ffffff;
+  --el-color-black: #000000;
+  --el-text-color-primary: #000000;
+  --el-text-color-regular: #484848;
+  --el-text-color-secondary: #787a80;
+  --el-text-color-placeholder: #b3b6be;
+  --el-border-color-base: #b3b6be;
+  --el-border-color-light: rgba(179, 182, 190, 0.3);
+  --el-border-color-lighter: #eeeeee;
+  --el-border-color-extra-light: #fafafa;
+  --el-background-color-base: #ffffff;
+  --el-border-radius-base: 12px;   /* radius/base */
+  --el-border-radius-small: 6px;   /* radius/small */
+  --el-border-radius-round: 9999px;
+  --el-border-radius-circle: 100%;
+  --el-border-width-base: 1px;
+  --el-font-size-extra-large: 20px;
+  --el-font-size-large: 16px;
+  --el-font-size-medium: 16px;
+  --el-font-size-base: 16px;       /* 16px keeps iOS from zooming into inputs */
+  --el-font-size-small: 14px;
+  --el-font-size-extra-small: 12px;
+  --el-font-weight-primary: 500;
+  --el-box-shadow-base: var(--lm-shadow-card);
+  --el-box-shadow-light: var(--lm-shadow-card);
+  --el-overlay-color-lighter: rgba(0, 0, 0, 0.6); /* bg/overlay */
+}
+body { font-family: var(--lm-font-family); color: var(--lm-text-primary); }
+
+/* Mobile sizes from Figma (Element defaults are desktop sizes) */
+.el-input__inner { height: var(--lm-size-input); font-size: 16px; border-radius: var(--lm-radius-base); }
+.el-button { min-height: var(--lm-size-button); border-radius: var(--lm-radius-base); font: var(--lm-font-button-16); }
+.el-button--small { min-height: var(--lm-size-button-small); font: var(--lm-font-button-14); }

@@ -14,3 +14,7 @@ The old `onboarding-pharmacy-wireframe-upd-v2/` and `onboarding-pharmacy-wirefra
 `archive/` holds prototypes that are no longer shown: `archive/onboarding-pharmacy-wireframe-upd-v1/` (the earlier option with full shift details right after sign-up).
 
 Each prototype is a single self-contained `index.html`. GitHub Pages serves the `gh-pages` branch from the repository root. Push changes to `main`, then fast-forward `gh-pages` to publish.
+
+## Design tokens
+
+`tokens/` holds the Figma variables, text styles and effect styles as CSS variables (`locumate-tokens.css`) and W3C design tokens JSON (`locumate-tokens.json`), including Element Plus 1.0.2 theme variables. The UI prototype panel links to the CSS as "Design tokens", next to "Download code".

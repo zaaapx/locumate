@@ -1089,7 +1089,7 @@ body{height:auto;min-height:100%;box-sizing:border-box;padding:16px 0}
 #phone.kb .sheet{max-height:calc(100% - 24px - var(--kbh,350px))}
 #phone.kb .sheet.tall{height:auto}
 /* password dots: system font, so mobile browsers draw normal-size bullets instead of Outfit's fallback */
-.field input[type=password]:not(:placeholder-shown){font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-weight:400;letter-spacing:1px}
+html.touch .field input[type=password]:not(:placeholder-shown){font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;font-weight:400;letter-spacing:1px}
 .scard.inrev{width:100%;text-align:left;cursor:pointer;padding-top:10px;padding-bottom:10px}
 .scard.inrev .rv-ic{width:32px;height:32px;border-radius:16px;background:#E8EEFB;display:grid;place-items:center;flex:none}
 .scard.inrev .chev{flex:none;display:grid;place-items:center}
@@ -1104,7 +1104,7 @@ html.touch #phone .field .sugg{display:none}
 </head>
 <body>
 <aside class="panel">
-  <a class="allflows" href="../index.html">← All prototypes</a><a class="dlcode" href="index.html" download="locumate-onboarding-pharmacist-shift-work.html" title="One HTML file: markup, styles and logic of every screen and state" onclick="return dlCode(this)">Download code</a>
+  <a class="allflows" href="../index.html">← All prototypes</a><a class="dlcode" href="index.html" download="locumate-onboarding-pharmacist-shift-work.html" title="One HTML file: markup, styles and logic of every screen and state" onclick="return dlCode(this)">Download code</a><a class="dlcode" href="../tokens/locumate-tokens.css" download="locumate-tokens.css" title="Colours, type, spacing, radii and shadows from Figma as CSS variables, plus Element Plus 1.0.2 theme variables" onclick="return dlCode(this)">Design tokens</a>
   <h1>Onboarding &gt; Pharmacy professional &gt; Pharmacist &gt; Shift work</h1>
   <div class="scen" id="scen"></div>
   <details class="devnote"><summary>For developers: buttons above the keyboard</summary>
@@ -1131,7 +1131,7 @@ export function useKeyboardInset() {
   transition: bottom .2s;
 }</pre></details>
   <button class="reset" onclick="resetAll()">Restart flow</button>
-  <div class="build">Updated 25 Nov 2026, 14:45</div>
+  <div class="build">Updated 25 Nov 2026, 15:00</div>
 </aside>
 <main class="phone" id="phone"></main>
 
@@ -2257,7 +2257,7 @@ function render(){setTimeout(()=>{if(S.hq&&document.getElementById('hq'))hqFilte
   const on=nav.querySelector('button.on'),pn=nav.closest('.panel');if(on&&S._ak!==ak){S._ak=ak;const r=on.getBoundingClientRect(),q=pn.getBoundingClientRect();if(r.bottom>q.bottom)pn.scrollTop+=r.bottom-q.bottom+8;else if(r.top<q.top)pn.scrollTop-=q.top-r.top+8;}
 }
 /* developers: download this prototype as one HTML file (markup, styles and logic of every screen and state) */
-function dlCode(a){if(location.protocol==='file:')return true;fetch(location.href.split('#')[0],{cache:'no-store'}).then(r=>r.blob()).then(b=>{const u=URL.createObjectURL(b);const x=document.createElement('a');x.href=u;x.download=a.getAttribute('download');document.body.appendChild(x);x.click();x.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);}).catch(()=>{location.href=a.href;});return false;}
+function dlCode(a){if(location.protocol==='file:')return true;fetch(a.href.startsWith('http')&&!/index\.html$/.test(a.getAttribute('href'))?a.href:location.href.split('#')[0],{cache:'no-store'}).then(r=>r.blob()).then(b=>{const u=URL.createObjectURL(b);const x=document.createElement('a');x.href=u;x.download=a.getAttribute('download');document.body.appendChild(x);x.click();x.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);}).catch(()=>{location.href=a.href;});return false;}
 /* open a scenario from the menu link: index.html#scen=later */
 (()=>{const m=location.hash.match(/scen=(\w+)/);if(m&&SC[m[1]])setScen(m[1]);else render();})();
 </script>
