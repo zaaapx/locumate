@@ -1009,7 +1009,8 @@ function render(){
   const ak=curKey();
   $('#nav').innerHTML=SC[S.scen].l.map(([k,l])=>`<li><button class="${k===ak?'on':''}" onclick="jump('${k}')">${l}</button></li>`).join('');
 }
-render();
+/* open a scenario from the menu link: index.html#scen=later */
+(()=>{const m=location.hash.match(/scen=(\w+)/);if(m&&SC[m[1]])setScen(m[1]);else render();})();
 </script>
 </body>
 </html>

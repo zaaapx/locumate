@@ -13,12 +13,32 @@
   a:hover{border-color:#0B359A}
   a:focus-visible{outline:2px solid #0B359A;outline-offset:2px}
   a span{display:block;color:#757575;font-size:14px;margin-top:4px}
+  /* phones: the prototype's scenario panel is hidden, so a tap on a prototype opens its scenarios in a bottom sheet */
+  .ov{position:fixed;inset:0;background:rgba(0,0,0,.4);opacity:0;pointer-events:none;transition:opacity .2s}
+  .sh{position:fixed;left:0;right:0;bottom:0;background:#fff;border-radius:20px 20px 0 0;padding:20px 16px calc(16px + env(safe-area-inset-bottom));transform:translateY(100%);transition:transform .25s ease-out;max-height:calc(100% - 24px);overflow:auto}
+  .open .ov{opacity:1;pointer-events:auto}.open .sh{transform:none}
+  .sh .hd{display:flex;align-items:flex-start;gap:12px;margin-bottom:8px}
+  .sh .hd b{flex:1;font-size:17px;line-height:22px}
+  .sh .x{width:36px;height:36px;border-radius:18px;border:1px solid #D9D9D9;background:#fff;font-size:18px;line-height:1;flex:none;cursor:pointer}
+  .sh .s{color:#757575;font-size:14px;margin:0 0 8px}
+  .sh a{margin-top:8px;min-height:24px}
 </style>
 </head>
 <body>
 <h1>Locumate prototypes</h1>
 <p>Interactive prototypes for the Locumate mobile app redesign. Dummy data only.</p>
-<a href="onboarding-pharmacy-ui/index.html">UI: Onboarding &gt; Pharmacy professional &gt; Pharmacist &gt; Shift work<span>UI prototype: final screens in the client's current design, with screen states</span></a>
-<a href="onboarding-pharmacy-wireframes/index.html">Wireframes: Onboarding &gt; Pharmacy professional &gt; Pharmacist &gt; Shift work<span>Wireframes: documents-first sign-up, verification states, apply with missing items</span></a>
+<a href="onboarding-pharmacy-ui/index.html" data-scen>UI: Onboarding &gt; Pharmacy professional &gt; Pharmacist &gt; Shift work<span>UI prototype: final screens in the client's current design, with screen states</span></a>
+<a href="onboarding-pharmacy-wireframes/index.html" data-scen>Wireframes: Onboarding &gt; Pharmacy professional &gt; Pharmacist &gt; Shift work<span>Wireframes: documents-first sign-up, verification states, apply with missing items</span></a>
+<div class="ov" onclick="closeSc()"></div><div class="sh" role="dialog" aria-modal="true" aria-labelledby="shT"><div class="hd"><b id="shT"></b><button class="x" aria-label="Close" onclick="closeSc()">✕</button></div><p class="s">Choose a scenario</p><div id="shL"></div></div>
+<script>
+const SCN=[["signup", "1 · Sign up → in review"], ["later", "2 · Documents added later"], ["att", "3 · Document needs attention"], ["verified", "4 · ID verified → apply"]];
+const mob=()=>matchMedia('(max-width:760px)').matches;
+document.querySelectorAll('a[data-scen]').forEach(a=>a.addEventListener('click',e=>{if(!mob())return;e.preventDefault();
+  document.getElementById('shT').textContent=a.firstChild.textContent.trim();
+  document.getElementById('shL').innerHTML=SCN.map(([k,t])=>`<a href="${a.getAttribute('href')}#scen=${k}">${t}</a>`).join('');
+  document.body.classList.add('open');}));
+function closeSc(){document.body.classList.remove('open');}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeSc();});
+</script>
 </body>
 </html>
