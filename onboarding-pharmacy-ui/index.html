@@ -1035,7 +1035,8 @@
 .grp>.gh{padding-top:7px}
 .chip.nf{cursor:default}
 .panel .build{margin-top:10px;font:400 11px/14px var(--ff);color:#787a80}
-.panel .allflows{display:inline-block;margin-bottom:10px;font-size:13px;color:#0b359a;text-decoration:none;font-weight:600}
+.panel .dlcode{display:inline-block;margin:0 0 10px 16px;font-size:13px;color:#0b359a;text-decoration:none;font-weight:600}
+.allflows{display:inline-block;margin-bottom:10px;font-size:13px;color:#0b359a;text-decoration:none;font-weight:600}
 .panel .allflows:hover{text-decoration:underline}
 /* short windows: the page scrolls instead of cutting off the top of the panel and the phone */
 html{height:100%}
@@ -1103,7 +1104,7 @@ html.touch #phone .field .sugg{display:none}
 </head>
 <body>
 <aside class="panel">
-  <a class="allflows" href="../index.html">← All prototypes</a>
+  <a class="allflows" href="../index.html">← All prototypes</a><a class="dlcode" href="index.html" download="locumate-onboarding-pharmacist-shift-work.html" title="One HTML file: markup, styles and logic of every screen and state" onclick="return dlCode(this)">Download code</a>
   <h1>Onboarding &gt; Pharmacy professional &gt; Pharmacist &gt; Shift work</h1>
   <div class="scen" id="scen"></div>
   <details class="devnote"><summary>For developers: buttons above the keyboard</summary>
@@ -1130,7 +1131,7 @@ export function useKeyboardInset() {
   transition: bottom .2s;
 }</pre></details>
   <button class="reset" onclick="resetAll()">Restart flow</button>
-  <div class="build">Updated 25 Nov 2026, 14:40</div>
+  <div class="build">Updated 25 Nov 2026, 14:45</div>
 </aside>
 <main class="phone" id="phone"></main>
 
@@ -1700,11 +1701,16 @@ document.addEventListener('focusin',e=>{if(TOUCH)return;const el=e.target;if(!(e
 document.addEventListener('focusout',e=>{const id=e.target&&e.target.id;if(!S.dk||!S.dk.gen||S.dk.k!==id)return;const was=S.dk;setTimeout(()=>{if(S.dk!==was)return;const a=document.activeElement;if(!(a&&a.id===id)){S.dk=null;kbRemove();}},0);});
 
 /* real phones: the primary action rides above the system keyboard (same approach as in the app: visualViewport, or WebToNative's keyboard event inside the app) */
-let KBN=0;function kbApply(){const p=$('#phone');if(!p||!TOUCH||!p.classList.contains('kbnative'))return;const t=p.querySelector('.tsug');if(t)t.style.bottom=KBN+'px';p.style.setProperty('--kbh',(KBN+(t?44:0))+'px');}
-(function(){const set=kb=>{const p=$('#phone');if(!p||!TOUCH)return;if(kb>80){KBN=kb;p.classList.add('kb','kbnative');kbApply();}else if(p.classList.contains('kbnative')){p.classList.remove('kb','kbnative');p.style.removeProperty('--kbh');}};
-  const vv=window.visualViewport;if(vv){const upd=()=>set(window.innerHeight-vv.height-vv.offsetTop);vv.addEventListener('resize',upd);vv.addEventListener('scroll',upd);}
-  if(window.WTN&&WTN.on)WTN.on('keyboard',e=>set(e.data.visible?e.data.height/(/Android/i.test(navigator.userAgent)?devicePixelRatio:1):0));})();
-function kbScroll(el){if(el&&el.id&&!el.isConnected)el=document.getElementById(el.id);const p=$('#phone'),sc=el&&el.closest('.scroll');if(!p||!sc)return;const pr=p.getBoundingClientRect();const f=p.querySelector('.foot:not(.kbfoot)');const kbh=parseFloat(getComputedStyle(p).getPropertyValue('--kbh'))||350;
+/* real phones: the app fits the visible area above the system keyboard (like the app does in WebToNative),
+   so the primary action and the suggestion bar sit right on top of the keyboard even when the browser scrolls the page */
+let KBN=0,FIT=false;function kbApply(){const p=$('#phone');if(!p||!TOUCH||!p.classList.contains('kbnative'))return;const t=p.querySelector('.tsug');const base=FIT?0:KBN;if(t)t.style.bottom=base+'px';p.style.setProperty('--kbh',(base+(t?44:0))+'px');}
+(function(){const vv=window.visualViewport;
+  const on=(kb,fit)=>{const p=$('#phone');if(!p)return;KBN=kb;FIT=fit;p.classList.add('kb','kbnative');
+    if(fit){Object.assign(p.style,{position:'fixed',top:'0',left:'0',height:vv.height+'px',transform:`translateY(${vv.offsetTop}px)`});}kbApply();};
+  const off=()=>{const p=$('#phone');if(!p||!p.classList.contains('kbnative'))return;p.classList.remove('kb','kbnative');p.style.removeProperty('--kbh');['position','top','left','height','transform'].forEach(k=>p.style.removeProperty(k));FIT=false;};
+  if(vv){const upd=()=>{if(!TOUCH)return;const kb=window.innerHeight-vv.height;if(kb>80)on(kb,true);else off();};vv.addEventListener('resize',upd);vv.addEventListener('scroll',upd);}
+  if(window.WTN&&WTN.on)WTN.on('keyboard',e=>{if(!TOUCH)return;const h=e.data.visible?e.data.height/(/Android/i.test(navigator.userAgent)?devicePixelRatio:1):0;if(h>80)on(h,false);else off();});})();
+function kbScroll(el){if(el&&el.id&&!el.isConnected)el=document.getElementById(el.id);const p=$('#phone'),sc=el&&el.closest('.scroll');if(!p||!sc)return;const pr=p.getBoundingClientRect();const f=p.querySelector('.foot:not(.kbfoot)');const kbh=(v=>isNaN(v)?350:v)(parseFloat(getComputedStyle(p).getPropertyValue('--kbh')));
   const limit=pr.bottom-kbh-(f&&getComputedStyle(f).position==='absolute'?f.offsetHeight:0)-16;const fld=el.closest('.field')||el;const r=fld.getBoundingClientRect();const sg=fld.querySelector('.sugg,.dd');const extra=sg?Math.max(0,sg.getBoundingClientRect().bottom-r.bottom):0;
   const over=r.bottom+extra-limit;const top=sc.getBoundingClientRect().top+8;if(over>0)sc.scrollBy({top:Math.min(over,r.top-top)});else if(r.top<top)sc.scrollBy({top:r.top-top,behavior:'smooth'});}
 function kbRemove(){const p=$('#phone');if(!p)return;p.classList.remove('kb');p.style.removeProperty('--kbh');p.querySelector('.dkb')?.remove();}
@@ -2250,6 +2256,8 @@ function render(){setTimeout(()=>{if(S.hq&&document.getElementById('hq'))hqFilte
   nav.innerHTML=SC[SCN].l.map(([k,c,n])=>`<li><button class="${k===nk?'on':''}" onclick="navGo('${k}')">${c} ${n}</button>${figLink(k,c)}</li>${k===nk?stH:''}`).join('');
   const on=nav.querySelector('button.on'),pn=nav.closest('.panel');if(on&&S._ak!==ak){S._ak=ak;const r=on.getBoundingClientRect(),q=pn.getBoundingClientRect();if(r.bottom>q.bottom)pn.scrollTop+=r.bottom-q.bottom+8;else if(r.top<q.top)pn.scrollTop-=q.top-r.top+8;}
 }
+/* developers: download this prototype as one HTML file (markup, styles and logic of every screen and state) */
+function dlCode(a){if(location.protocol==='file:')return true;fetch(location.href.split('#')[0],{cache:'no-store'}).then(r=>r.blob()).then(b=>{const u=URL.createObjectURL(b);const x=document.createElement('a');x.href=u;x.download=a.getAttribute('download');document.body.appendChild(x);x.click();x.remove();setTimeout(()=>URL.revokeObjectURL(u),1000);}).catch(()=>{location.href=a.href;});return false;}
 /* open a scenario from the menu link: index.html#scen=later */
 (()=>{const m=location.hash.match(/scen=(\w+)/);if(m&&SC[m[1]])setScen(m[1]);else render();})();
 </script>
