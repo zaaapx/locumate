@@ -17,4 +17,4 @@ Each prototype is a single self-contained `index.html`. GitHub Pages serves the 
 
 ## Design tokens
 
-`tokens/` holds the Figma variables, text styles and effect styles as CSS variables (`locumate-tokens.css`) and W3C design tokens JSON (`locumate-tokens.json`), including Element Plus 1.0.2 theme variables. The UI prototype panel links to the CSS as "Design tokens", next to "Download code".
+`tokens/` holds the Figma variables, text styles and effect styles as CSS variables (`locumate-tokens.css`) and W3C design tokens JSON (`locumate-tokens.json`), including Element Plus 1.0.2 theme variables. The prototypes menu (index.html) links to them under the UI prototype, next to "Download code (.html)".

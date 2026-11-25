@@ -22,12 +22,20 @@
   .sh .x{width:36px;height:36px;border-radius:18px;border:1px solid #D9D9D9;background:#fff;font-size:18px;line-height:1;flex:none;cursor:pointer}
   .sh .s{color:#757575;font-size:14px;margin:0 0 8px}
   .sh a{margin-top:8px;min-height:24px}
+  /* a prototype card with downloads for developers */
+  .card{margin-top:16px;border:1px solid #D9D9D9;border-radius:14px}
+  .card:has(a.main:hover){border-color:#0B359A}
+  .card>a.main{margin:0;border:0;border-radius:14px}
+  .dl{display:flex;flex-wrap:wrap;gap:8px 20px;padding:0 16px 16px}
+  .dl a{display:inline-block;margin:0;padding:4px 0;border:0;border-radius:0;color:#0B359A;font-size:14px;font-weight:600}
+  .dl a:hover{text-decoration:underline}
 </style>
 </head>
 <body>
 <h1>Locumate prototypes</h1>
 <p>Interactive prototypes for the Locumate mobile app redesign. Dummy data only.</p>
-<a href="onboarding-pharmacy-ui/index.html" data-scen>UI: Onboarding &gt; Pharmacy professional &gt; Pharmacist &gt; Shift work<span>UI prototype: final screens in the client's current design, with screen states</span></a>
+<div class="card"><a class="main" href="onboarding-pharmacy-ui/index.html" data-scen>UI: Onboarding &gt; Pharmacy professional &gt; Pharmacist &gt; Shift work<span>UI prototype: final screens in the client's current design, with screen states</span></a>
+<div class="dl"><a href="onboarding-pharmacy-ui/index.html" download="locumate-onboarding-pharmacist-shift-work.html" title="The prototype as one HTML file: markup, styles and logic of every screen and state">Download code (.html)</a><a href="tokens/locumate-tokens.css" download="locumate-tokens.css" title="Figma colours, type, spacing, radii and shadows as CSS variables, plus Element Plus 1.0.2 theme variables">Design tokens (.css)</a><a href="tokens/locumate-tokens.json" download="locumate-tokens.json" title="The same tokens in the W3C design tokens format">Design tokens (.json)</a></div></div>
 <a href="onboarding-pharmacy-wireframes/index.html" data-scen>Wireframes: Onboarding &gt; Pharmacy professional &gt; Pharmacist &gt; Shift work<span>Wireframes: documents-first sign-up, verification states, apply with missing items</span></a>
 <div class="ov" onclick="closeSc()"></div><div class="sh" role="dialog" aria-modal="true" aria-labelledby="shT"><div class="hd"><b id="shT"></b><button class="x" aria-label="Close" onclick="closeSc()">✕</button></div><p class="s">Choose a scenario</p><div id="shL"></div></div>
 <script>
