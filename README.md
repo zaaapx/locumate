@@ -4,7 +4,7 @@ Interactive HTML prototypes for the Locumate mobile app redesign. Dummy data onl
 
 | Prototype | Folder | Live link |
 |---|---|---|
-| **Sign Up > Pharmacy professional > Pharmacist > Shift work**: UI prototype, final screens in the client's current design, built from Figma, with screen states | `onboarding-pharmacy-ui/` | https://zaaapx.github.io/locumate/onboarding-pharmacy-ui/ |
+| **UI: Onboarding > Pharmacy professional > Pharmacist > Shift work**: UI prototype, final screens in the client's current design, built from Figma, with screen states | `onboarding-pharmacy-ui/` | https://zaaapx.github.io/locumate/onboarding-pharmacy-ui/ |
 | **Wireframes Onboarding > Pharmacy professional > Pharmacist > Shift work**: wireframe prototype; shift details blurred until verified; Apply collects missing items in a row, with Do this later and autosave | `onboarding-pharmacy-wireframes/` | https://zaaapx.github.io/locumate/onboarding-pharmacy-wireframes/ |
 
 The root `index.html` is the menu. Every prototype has an "All prototypes" link back to it.
